@@ -1,8 +1,0 @@
-README.rst
-arff.py
-setup.cfg
-setup.py
-liac_arff.egg-info/PKG-INFO
-liac_arff.egg-info/SOURCES.txt
-liac_arff.egg-info/dependency_links.txt
-liac_arff.egg-info/top_level.txt

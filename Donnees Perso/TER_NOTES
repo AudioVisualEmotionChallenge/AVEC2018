@@ -1,9 +1,0 @@
-arousal : excitation ou non
-valense : positif ou negatif
-
-Varier de 2 a 8 sec
-varier de 0.480 par 200ms jusqu'a la taille de la fenetre
-
-Baseline 40ms et valence : 6 arousal : 4
-
-Normalisation des valeurs concaténé : par parametre ou normalisation unique ?
