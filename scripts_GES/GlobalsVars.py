@@ -44,7 +44,7 @@ errColor = '\033[91m'
 endColor = '\x1b[0m'
 
 #Template for the ARFF file
-arffTempPath = "/home/adrien/Bureau/TER/templates/templateGS.arff"
+arffTempPath = "/home/adrien/Bureau/TER/GIT/templates/templateGS.arff"
 
 #Number of emotional dimensions and there name
 nDim = 2
