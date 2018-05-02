@@ -1,37 +1,36 @@
 #This file contain all the global variables used in the scripts, they can change on each PC
 #The approch of standardisation is Online in this script
 
-#fconf = "MFCC1_12_logEnergy_LLD"
-#aconf = "./opensmile-2.3.0/config/MFCC/"+fconf+".conf"
+#SET THESE VAR
+
+#DESCRIPTORS FILES
+#Folder for all audio descriptor
+audioDesc = "/media/adrien/OS/TER/ARFF_Descriptors"
 
 #SOFTWARES
+#OpenSmile base folder
+baseFOS = "/home/adrien/Bureau/TER/softwares/opensmile-2.3.0/"
+#Number of threads for OSmile Extract
+nbOSmile = 8
 #Configuration file used and address of it 
 fconf = "eGeMAPSv01a"
-aconf = "/home/adrien/Bureau/TER/softwares/opensmile-2.3.0/config/gemaps/"+fconf+".conf"
+aconf = baseFOS+"config/gemaps/"+fconf+".conf"
 #Address of configuration file for extraction
-inconf = "/home/adrien/Bureau/TER/softwares/opensmile-2.3.0/config/shared/FrameModeFunctionals.conf.inc"
+inconf = baseFOS+"config/shared/FrameModeFunctionals.conf.inc"
 #Address for openSmile Extract
-oSmile = "/home/adrien/Bureau/TER/softwares/opensmile-2.3.0/inst/bin/SMILExtract"
+oSmile = baseFOS+"inst/bin/SMILExtract"
 #Path of library LabLinear
 labLinearPath = "/home/adrien/Bureau/TER/softwares/liblinear-2.20/python/"
 
-#DESCRIPTORS FILES
-#Folder for concatenated audio descriptor
-aarffdc = "/media/adrien/OS/TER/ARFF_Descriptors/Conc/"
-#Folder for normalised audio descriptor
-aarffdn = "/media/adrien/OS/TER/ARFF_Descriptor/Norm/"
-#Folder for audio descriptor
-aarffd = "/media/adrien/OS/TER/ARFF_Descriptors/Descriptors/"
-
 #GOLD STANDARDS
+#Folder for all Gold Standard
+gsFolder = "/media/adrien/OS/TER/GS/"
 #Path of "Gold Standard"
-gsPath = "/media/adrien/OS/TER/GS/Ratings/"
+gsPath = gsFolder+"Ratings/"
 #Folder for gold standards
 ags = [gsPath+"arousal/",gsPath+"valence/"]
 #Folder for individuals gold standards tab
-agsi = ["/media/adrien/OS/TER/GS/Individual/arousal/","/media/adrien/OS/TER/GS/Individual/valence/"]
-#Folder for concatenated gold standards
-agsn = "/media/adrien/OS/TER/GS/Conc/"
+agsi = [gsFolder+"Individual/arousal/",gsFolder+"/Individual/valence/"]
 
 #AUDIO FILES
 #Folder for normalised recording audio

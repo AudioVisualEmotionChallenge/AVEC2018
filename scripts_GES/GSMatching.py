@@ -12,9 +12,9 @@ def gsOpen(wSize,wStep):
 	va = {}
 	d = {}
 	for s in "dev","train","test":
-		ar[s] = arff.load(open(v.agsn+s+"_arousal.arff","rb"))
-		va[s] = arff.load(open(v.agsn+s+"_valence.arff","rb"))
-		d[s] = arff.load(open(v.aarffdn+v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
+		ar[s] = arff.load(open(v.TODODODODOD+s+"_arousal.arff","rb"))
+		va[s] = arff.load(open(v.TODODODODOD+s+"_valence.arff","rb"))
+		d[s] = arff.load(open(v.TODODODODOD+v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
 	return ar,va,d
 #End goldStandardOpen
 

@@ -6,7 +6,7 @@ import numpy as np
 #Normalisation of all the features of an ARFF file
 def normFeaturesFile(wSize, wStep, norm, pb):
 	valKey = {}
-	dFile = v.aarffdc+v.fconf+"_train_"+str(wSize)+"_"+str(wStep)+".arff"
+	dFile = v.audioDesc+"Norm/"+v.fconf+"_train_"+str(wSize)+"_"+str(wStep)+".arff"
 	if (os.path.isfile(dFile) == True):
 		#We load the corresponding train descriptor
 		d = arff.load(open(dFile,"rb"))
@@ -25,7 +25,7 @@ def normFeaturesFile(wSize, wStep, norm, pb):
 				valKey[key] = [mean,std]
 		#Now we apply the normalisation on the partitions
 		for s in ('test','dev','train'):
-			dFile = v.aarffdc+v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+".arff"
+			dFile = v.audioDesc+"Norm/"+v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+".arff"
 			if (os.path.isfile(dFile) == True):
 				d = arff.load(open(dFile,"rb"))
 				for ind, att in enumerate(d['attributes']):
@@ -35,7 +35,7 @@ def normFeaturesFile(wSize, wStep, norm, pb):
 							key = str(att[0])
 							val[ind] = (float(val[ind])-float(valKey[key][0]))/float(valKey[key][1])
 				#We write the normalised file
-				f = open(v.aarffdn+v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+"_norm.arff", "w")
+				f = open(v.audioDesc+"Norm/"+v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+"_norm.arff", "w")
 				f.write(arff.dumps(d))
 				norm += 1
 			else :
@@ -51,9 +51,9 @@ def normFeatures(wSize, wStep):
 	alNorm = 0
 	pb = 0
 	valAtt = {}
-	fTests = v.aarffdn+v.fconf+"_test_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
-	fTrains = v.aarffdn+v.fconf+"_train_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
-	fDevs = v.aarffdn+v.fconf+"_dev_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
+	fTests = v.audioDesc+"Norm/"+v.fconf+"_test_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
+	fTrains = v.audioDesc+"Norm/"+v.fconf+"_train_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
+	fDevs = v.audioDesc+"Norm/"+v.fconf+"_dev_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
 	if (os.path.isfile(fTests) == False or os.path.isfile(fTrains) == False or os.path.isfile(fDevs) == False):
 		[valKey, pb, norm] = normFeaturesFile(wSize, wStep, norm, pb)
 		valAtt.update(valKey)

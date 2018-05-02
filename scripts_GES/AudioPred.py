@@ -33,9 +33,9 @@ def nanToZero(arff):
 
 def unimodalPredPrep(wSize, wStep):
 	#We open corresponding files
-	train = arff.load(open(v.aarffdn+v.fconf+"_train_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
-	dev = arff.load(open(v.aarffdn+v.fconf+"_dev_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
-	test = arff.load(open(v.aarffdn+v.fconf+"_test_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
+	train = arff.load(open(v.gsFolder+"Conc/"+v.fconf+"_train_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
+	dev = arff.load(open(v.gsFolder+"Conc/"+v.fconf+"_dev_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
+	test = arff.load(open(v.gsFolder+"Conc/"+v.fconf+"_test_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
 	#We remove first and last column
 	train = removeColArff(train)
 	dev = removeColArff(dev)

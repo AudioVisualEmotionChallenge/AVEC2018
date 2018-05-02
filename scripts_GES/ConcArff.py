@@ -44,9 +44,9 @@ def concGs():
 					fNames[s].append(f)
 		for s in "dev","train","test":
 			if (st == v.ags[1]):
-				succ = concArff(st, fNames[s], v.agsn, s+"_valence.arff")
+				succ = concArff(st, fNames[s], v.gsFolder+"Conc/", s+"_valence.arff")
 			elif (st == v.ags[0]):
-				succ = concArff(st, fNames[s], v.agsn, s+"_arousal.arff")
+				succ = concArff(st, fNames[s], v.gsFolder+"Conc/", s+"_arousal.arff")
 			if (succ == 2):
 				AlConc += 1
 			elif (succ == 1):
@@ -61,7 +61,7 @@ def concRec(wSize, wStep):
 	Conc = 0
 	AlConc = 0
 	Pb = 0
-	files = os.listdir(v.aarffd)
+	files = os.listdir(v.audioDesc+"Descriptors/")
 	descf = {}
 	fNames = {}
 	for f in files :
@@ -72,7 +72,7 @@ def concRec(wSize, wStep):
 				fNames[s].append(f)
 	for s in "test","dev","train":
 		fName = v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+".arff"
-		succ = concArff(v.aarffd, fNames[s], v.aarffdc, fName)
+		succ = concArff(v.audioDesc+"Descriptors/", fNames[s], v.audioDesc+"Conc/", fName)
 		if (succ == 2):
 			AlConc += 1
 		elif (succ == 1):
