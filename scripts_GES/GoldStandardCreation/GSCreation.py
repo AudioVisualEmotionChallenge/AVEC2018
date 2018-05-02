@@ -161,3 +161,5 @@ def gsCreation():
 	print("Perform CCC centring...")
 	cccCentring(ra, combnk, files, aRa, rGoldIndiv)
 #End gsCreation
+
+gsCreation()
