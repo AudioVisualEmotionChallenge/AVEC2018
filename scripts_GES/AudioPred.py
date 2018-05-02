@@ -5,6 +5,8 @@ from FeatsNorm import normFeatures
 from PostTreats import postTreatDev
 from Tests import *
 from Print import printBestVal
+sys.path.append("../Utils/")
+from PredUtils import unimodalPredPrep
 import operator
 import arff
 import os
@@ -15,59 +17,6 @@ from scipy import signal
 sys.path.append(v.labLinearPath)
 from liblinearutil import train, predict
 import timeit
-
-#Remove the first and last column of a ARFF matrix
-def removeColArff(arff):
-	arff['attributes'] = arff['attributes'][1:-1]
-	arff['data'] = np.array(arff['data'])[:,1:-1]
-	return arff	
-#Fin removeColArff
-
-#Put to 0 NaN values in ARFF
-def nanToZero(arff):
-	for ind, att in enumerate(arff['attributes']):
-		for val in arff['data']:
-			if (np.isnan(val[ind])):
-				val[ind] = 0
-	return arff
-
-def unimodalPredPrep(wSize, wStep):
-	#We open corresponding files
-	train = arff.load(open(v.gsFolder+"Conc/"+v.fconf+"_train_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
-	dev = arff.load(open(v.gsFolder+"Conc/"+v.fconf+"_dev_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
-	test = arff.load(open(v.gsFolder+"Conc/"+v.fconf+"_test_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
-	#We remove first and last column
-	train = removeColArff(train)
-	dev = removeColArff(dev)
-	test = removeColArff(test)
-	#We put to 0 NaN values
-	train = nanToZero(train)
-	dev = nanToZero(dev)
-	test = nanToZero(test)
-	#We transform it in array
-	tr = np.array(train['data'])
-	de = np.array(dev['data'])
-	te = np.array(test['data'])
-	return tr,de,te
-
-#Unimodal prediction on Test partition
-def unimodalPredTest(gs, c, tr, te, medf, nDim):
-	gsTe = np.array(gs['test'])[:,nDim]
-	gsTr = np.array(gs['train'])[:,nDim]
-	#We apply the median filter if necessary
-	if (medf == 1) :
-		tr = sp.signal.medfilt(tr)
-		te = sp.signal.medfilt(te)
-	#Options for liblinear
-	options = "-s "+str(v.sVal)+" -c "+str(c)+" -B 1 -q"
-	#We learn the model on train
-	model = train(gsTr,tr,options)
-	#We predict on test data
-	pred = np.array(predict(gsTe,te,model,"-q"))[0]
-	#We calculate the correlation and store it
-	cccTest = cccCalc(np.array(pred),gsTe)
-	return cccTest, pred
-#Fin unimodalPredictionDev
 
 #Unimodal prediction on Dev partition
 def unimodalPredDev(gs, c, tr, de, medf, earlystop):

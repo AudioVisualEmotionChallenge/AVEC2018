@@ -1,5 +1,5 @@
 import GlobalsVars as v
-from GSMatching import cccCalc
+from PredUtils import cccCalc
 import arff
 import os
 import numpy as np
@@ -9,25 +9,22 @@ sys.path.append(v.labLinearPath)
 import liblinearutil as llu
 
 #Do the post treatement for test partition and save if there are better results
-def postTreatTest(pred, gs, ccc, bias, scale, biasB, scaleB, nDim):
-	gsT = np.array(gs['test'])[:,nDim]
-	#We save the ccc from Test
-	cccSave = ccc
+def postTreatTest(gs, predTest, cccTest, predDev, cccDev, bias, scale, biasB, scaleB, nDim):
+	gsDev = np.array(gs['dev'])[:,nDim]
+	gsTest = np.array(gs['test'])[:,nDim]
 	if (biasB == True):
 		#We add the bias to the prediction and save if there is an improvement
-		predCenter = np.array(pred) + bias
-		cccBias = cccCalc(predCenter,gsT)
-		if (cccBias > cccSave):
-			cccSave = cccBias
-			biasB = True
+		predDev = np.array(predDev) + bias
+		cccDev = cccCalc(predDev,gsDev)
+		predTest = np.array(predTest) + bias
+		cccTest = cccCalc(predTest,gsTest)
 	if (scaleB == True):
 		#We apply the scale and save if improvement
-		predScale = np.multiply(pred,scale)
-		cccScale = cccCalc(predCenter,gsT)
-		if (cccScale > cccSave) :
-			cccSave = cccScale
-			scaleB = True
-	return cccSave
+		predScaleDev = np.multiply(predDev,scale)
+		cccDev = cccCalc(predScaleDev,gsDev)
+		predScaleTest = np.multiply(predTest,scale)
+		cccTest = cccCalc(predScaleTest,gsTest)
+	return cccTest, cccDev
 #End postTreatementTest	
 
 #Do the post treatement for dev partition and save if there are better results
@@ -49,6 +46,7 @@ def postTreatDev(cccDev, pred, gs, earlystop):
 			cccBias = cccCalc(predCenter,gsDev[:,nDim])
 			if (cccBias > cccSave[nDim]):
 				cccSave[nDim] = cccBias
+				pred = predCenter
 				biasB = True
 			#We now scale the prediction and do the same thing
 			#First we calculate the scale
@@ -60,6 +58,7 @@ def postTreatDev(cccDev, pred, gs, earlystop):
 			cccScale = cccCalc(predScale,gsDev[:,nDim])
 			if (cccScale > cccSave[nDim]) :
 				cccSave[nDim] = cccScale
+				pred = predScale
 				scaleB = True
 		else :
 			cccSave.append(-1.0)

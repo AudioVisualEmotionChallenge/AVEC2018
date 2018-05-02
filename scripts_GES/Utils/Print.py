@@ -5,19 +5,20 @@ from mpl_toolkits.mplot3d import Axes3D
 
 #Print the CCC value and parameters
 def printValTest(ccc):
-	print("The values on Test are :")
+	print("The values are :")
 	print(v.eName[ccc[0]]+"\n"
-		+"Value:"+str(ccc[1])
-		+"\nWindow size:"+str(ccc[2])
-		+"\nWindow step:"+str(ccc[3])
-		+"\nDelay:"+str(ccc[4])
-		+"\nComplexity:"+str(ccc[5])
-		+"\nMedian filter:"+str(ccc[6])
-		+"\nMethod of GS matching:"+ccc[7]
-		+"\nUse of Bias:"+str(ccc[8])
-		+"\nUse of Scale:"+str(ccc[9])
-		+"\nBias value:"+str(ccc[10])
-		+"\nScaling value:"+str(ccc[11]))
+		+"Value Dev:"+str(ccc[1])
+		+"\nValue Test:"+str(ccc[2])
+		+"\nWindow size:"+str(ccc[3])
+		+"\nWindow step:"+str(ccc[4])
+		+"\nDelay:"+str(ccc[5])
+		+"\nComplexity:"+str(ccc[6])
+		+"\nMedian filter:"+str(ccc[7])
+		+"\nMethod of GS matching:"+ccc[8]
+		+"\nUse of Bias:"+str(ccc[9])
+		+"\nUse of Scale:"+str(ccc[10])
+		+"\nBias value:"+str(ccc[11])
+		+"\nScaling value:"+str(ccc[12]))
 #End printValue	
 
 #Print the best CCC values

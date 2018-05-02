@@ -5,7 +5,7 @@
 
 #DESCRIPTORS FILES
 #Folder for all audio descriptor
-audioDesc = "/media/adrien/OS/TER/ARFF_Descriptors"
+audioDesc = "/media/adrien/OS/TER/ARFF_Descriptors/"
 
 #SOFTWARES
 #Path of library LabLinear
@@ -20,13 +20,12 @@ gsPath = gsFolder+"Ratings/"
 ags = [gsPath+"arousal/",gsPath+"valence/"]
 
 #THIS PART DOES NOT CHANGE
+fconf = "eGeMAPSv01a"
+
 #System variables
 goodColor = '\033[92m'
 errColor = '\033[91m'
 endColor = '\x1b[0m'
-
-#Template for the ARFF file
-arffTempPath = "/home/adrien/Bureau/TER/GIT/templates/templateGS.arff"
 
 #Number of emotional dimensions and there name
 nDim = 2
@@ -40,18 +39,6 @@ nAn = 6
 matchGS = ["moy","central"]
 #Sampling period of features
 ts=0.04
-#Window Size
-sizeBeg = 3.0
-sizeStep = 1.0
-sizeMax = 9.0
-#Window Step
-stepBeg = 0.40
-stepStep = 0.40
-stepMax = 2.80
-#Delay
-delBeg = 0.00
-delStep = 0.40
-delMax = 9.60
 #Complexity value used for the SVR
 C = [0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
 #Value used for the SVR
