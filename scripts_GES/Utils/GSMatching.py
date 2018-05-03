@@ -16,9 +16,9 @@ def gsOpen(wSize,wStep, modeTest):
 	for s in "dev","train","test":
 		if (modeTest != True and s == "test"):
 			break
-		ar[s] = arff.load(open(v.gsFolder+"Conc/"+s+"_arousal.arff","rb"))
-		va[s] = arff.load(open(v.gsFolder+"Conc/"+s+"_valence.arff","rb"))
-		d[s] = arff.load(open(v.audioDesc+"Norm/"+v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
+		ar[s] = arff.load(open(v.gsConc+s+"_arousal.arff","rb"))
+		va[s] = arff.load(open(v.gsConc+s+"_valence.arff","rb"))
+		d[s] = arff.load(open(v.audioDescNorm+v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
 	return ar,va,d
 #End goldStandardOpen
 

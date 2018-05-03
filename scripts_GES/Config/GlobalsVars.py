@@ -5,20 +5,20 @@ import Config as c
 
 #GOLD STANDARD
 #Baseline Folder of Gold Standard
-gsFolder = c.gsFolder
+gsFolder = c.basePath+"labels/"
 #Path of "Gold Standard"
-gsPath = gsFolder+"Ratings/"
+gsPath = gsFolder+c.gsUse+"/"
+gsConc = gsFolder+c.gsUse+"/Conc/"
 #Folder for gold standards
 ags = [gsPath+"arousal/",gsPath+"valence/"]
 #Folder for individuals gold standards tab
-agsi = [gsFolder+"Individual/arousal/",gsFolder+"/Individual/valence/"]
+agsi = [gsFolder+"individual/arousal/",gsFolder+"/individual/valence/"]
 
 #DESCRIPTORS FILES
-#Folder for all audio descriptor
-audioDesc = c.audioDesc
-
-#Template for the ARFF file
-arffTempPath = c.arffTempPath
+#Folder for all audio descriptor eGeMAPS
+audioDesc = c.basePath+"features/audio/eGeMAPSfunct/"
+audioDescConc = audioDesc+"Conc/"
+audioDescNorm = audioDesc+"Norm/"
 
 #OPENSMILE
 #OpenSmile base folder
@@ -39,7 +39,7 @@ labLinearPath = c.labLinearPath
 
 #AUDIO FILES
 #Folder for recording audio
-daud = c.daud
+daud = c.basePath+"recordings/audio/"
 
 #TEMPLATE FOR GOLD STANDARD
 #Template for the ARFF file

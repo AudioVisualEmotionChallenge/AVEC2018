@@ -90,7 +90,7 @@ def audioPred():
 		#Data for the graphic
 		tPlt = []
 		#Concatenation of Gold Standards
-		concGs()
+		concGs(False)
 		wSize = v.sizeBeg
 		while (wSize <= v.sizeMax) :
 			wStep = v.stepBeg

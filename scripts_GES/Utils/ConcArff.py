@@ -1,3 +1,5 @@
+import sys
+sys.path.append("../Config/")
 import GlobalsVars as v
 import os
 import arff
@@ -28,7 +30,7 @@ def concArff(sourceD, fNames, destinationD, fileName):
 #End concatenationArff : Return 0 if the file is written, 1 if one of the files was missing, 2 if the file already exists
 
 #Concatenation of golds standards per partition (test/dev/train)
-def concGs():
+def concGs(modeTest):
 	Conc = 0
 	AlConc = 0
 	Pb = 0
@@ -38,15 +40,19 @@ def concGs():
 		fNames = {}												
 		for f in files :
 			for s in "dev","train","test":
+				if (modeTest == True and s == "test"):
+					break
 				if (f.find(s) != -1) :
 					if (fNames.get(s,None) == None) :
 							fNames[s] = []
 					fNames[s].append(f)
 		for s in "dev","train","test":
+			if (modeTest == True and s == "test"):
+				break
 			if (st == v.ags[1]):
-				succ = concArff(st, fNames[s], v.gsFolder+"Conc/", s+"_valence.arff")
+				succ = concArff(st, fNames[s], v.gsConc, s+"_valence.arff")
 			elif (st == v.ags[0]):
-				succ = concArff(st, fNames[s], v.gsFolder+"Conc/", s+"_arousal.arff")
+				succ = concArff(st, fNames[s], v.gsConc, s+"_arousal.arff")
 			if (succ == 2):
 				AlConc += 1
 			elif (succ == 1):
@@ -61,7 +67,7 @@ def concRec(wSize, wStep):
 	Conc = 0
 	AlConc = 0
 	Pb = 0
-	files = os.listdir(v.audioDesc+"Descriptors/")
+	files = os.listdir(v.audioDesc)
 	descf = {}
 	fNames = {}
 	for f in files :
@@ -72,7 +78,7 @@ def concRec(wSize, wStep):
 				fNames[s].append(f)
 	for s in "test","dev","train":
 		fName = v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+".arff"
-		succ = concArff(v.audioDesc+"Descriptors/", fNames[s], v.audioDesc+"Conc/", fName)
+		succ = concArff(v.audioDesc, fNames[s], v.audioDescConc, fName)
 		if (succ == 2):
 			AlConc += 1
 		elif (succ == 1):

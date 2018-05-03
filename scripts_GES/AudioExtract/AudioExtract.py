@@ -23,9 +23,9 @@ def extractAudio(wSize, wStep):
 	for f in files :
 		fi = f.replace(".wav","")
 		name = v.fconf+"_"+fi+"_"+str(wSize)+"_"+str(wStep)
-		if (os.path.isfile(v.audioDesc+"Descriptors/"+name+".arff") == False):
+		if (os.path.isfile(v.audioDesc+name+".arff") == False):
 			if (os.path.isfile(v.daud+f) == True) :
-				output = subprocess.Popen([v.oSmile, "-C", v.aconf, "-I", v.daud+f, "-O", v.audioDesc+"Descriptors/"+name+".arff", "2>> ", "log.txt"],stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=current)
+				output = subprocess.Popen([v.oSmile, "-C", v.aconf, "-I", v.daud+f, "-O", v.audioDesc+name+".arff", "2>> ", "log.txt"],stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=current)
 				procs.append(output)
 				extract += 1
 				time.sleep(1)

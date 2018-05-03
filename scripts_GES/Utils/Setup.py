@@ -6,17 +6,19 @@ import os
 def folderCreation() :
 	try :
 		#DescriptorFile
-		if (os.path.isdir(v.audioDesc+"Conc/") == False):
-			os.mkdir(v.audioDesc+"Conc/")
-		if (os.path.isdir(v.audioDesc+"Norm/") == False):
-			os.mkdir(v.audioDesc+"Norm/")
-		if (os.path.isdir(v.audioDesc+"Descriptors/") == False):
-			os.mkdir(v.audioDesc+"Descriptors/")
+		if (os.path.isdir(v.audioDesc) == False):
+			os.mkdir(v.audioDesc)
+		if (os.path.isdir(v.audioDescConc) == False):
+			os.mkdir(v.audioDescConc)
+		if (os.path.isdir(v.audioDescNorm) == False):
+			os.mkdir(v.audioDescNorm)
 		#GoldStandard
-		if (os.path.isdir(v.gsFolder+"Conc/") == False):
-			os.mkdir(v.gsFolder+"Conc/")
-		if (os.path.isdir(v.gsFolder+"Ratings/") == False):
-			os.mkdir(v.gsFolder+"Ratings/")
+		if (os.path.isdir(v.gsPath) == False):
+			os.mkdir(v.gsPath)
+		if (os.path.isdir(v.gsFolder) == False):
+			os.mkdir(v.gsFolder)
+		if (os.path.isdir(v.gsConc) == False):
+			os.mkdir(v.gsConc)
 	except : 
 		print("Check your configuration file, path for folder must not be ok")	
 
