@@ -82,5 +82,5 @@ sVal = 12
 #Best values used for prediction on Test
 #Value/wSize/wStep/Delay/Complexity/MedianFilter/MethodMatching/BiasUse/ScaleUse/BiasValue/ScaleValue
 bAudio = [[0.8,9.0,1.6,4.0,0.01,"moy",True,True,-0.018114934492835508,1.1394442116937562], #Arousal
-	[0.46,7.0,2.4,3.2,0.05,"central",True,True,0.023342096046530064,1.1330534273659931]] #Valence
+	[0.46,7.0,2.4,3.2,0.05,"moy",True,True,0.023342096046530064,1.1330534273659931]] #Valence
 

@@ -81,6 +81,7 @@ def earlyStopDelay(earlystop, bDmU, bD, bDelay):
 #Try all the possibilities given and find the best CCCs values and parameters for each dimensions
 def audioPred():
 	try:
+		m
 		#Var for storing differents CCC
 		ccc = []
 		#Data for the graphic
@@ -107,17 +108,17 @@ def audioPred():
 				#We open the files for the Gold Standard Matching
 				[art, vat, dt] = gsOpen(wSize,wStep, False)
 				while (delay <= v.delMax):
-					for mGS in range(2):
-						#We matche GoldStandards with parameters(wStep/fsize) and stock them
-						gs = gsMatch(v.matchGS[mGS], delay, wSize, wStep, art, vat, dt, False)
-						for comp in range(len(v.C)):
-							#We do the prediction
-							[cccDev, pred] = unimodalPredDev(gs, v.C[comp], tr, de, earlystop)
-							#Post-treatement
-							[cccSave, biasB, scaleB, bias, scale] = postTreatDev(cccDev, pred, gs, earlystop)
-							#We store the results
-							ccc.append([round(wSize,2), round(wStep,2), round(cccSave[0],2), round(cccSave[1],2)
-							, round(delay,2), v.C[comp], v.matchGS[mGS], biasB, scaleB, bias[0], bias[1], scale[0], scale[1]])
+					mGs = "mean"
+					#We matche GoldStandards with parameters(wStep/fsize) and stock them
+					gs = gsMatch(v.matchGS[mGS], delay, wSize, wStep, art, vat, dt, False)
+					for comp in range(len(v.C)):
+						#We do the prediction
+						[cccDev, pred] = unimodalPredDev(gs, v.C[comp], tr, de, earlystop)
+						#Post-treatement
+						[cccSave, biasB, scaleB, bias, scale] = postTreatDev(cccDev, pred, gs, earlystop)
+						#We store the results
+						ccc.append([round(wSize,2), round(wStep,2), round(cccSave[0],2), round(cccSave[1],2)
+						, round(delay,2), v.C[comp], v.matchGS[mGS], biasB, scaleB, bias[0], bias[1], scale[0], scale[1]])
 					#We get the best CCC for all the delay [0] Arousal/ [1] Valence
 					bDelay = bestdelay(ccc, wSize, wStep, delay)
 					#We see if we must earlystop or not
