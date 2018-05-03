@@ -13,12 +13,11 @@ def printValTest(ccc):
 		+"\nWindow step:"+str(ccc[4])
 		+"\nDelay:"+str(ccc[5])
 		+"\nComplexity:"+str(ccc[6])
-		+"\nMedian filter:"+str(ccc[7])
-		+"\nMethod of GS matching:"+ccc[8]
-		+"\nUse of Bias:"+str(ccc[9])
-		+"\nUse of Scale:"+str(ccc[10])
-		+"\nBias value:"+str(ccc[11])
-		+"\nScaling value:"+str(ccc[12]))
+		+"\nMethod of GS matching:"+ccc[7]
+		+"\nUse of Bias:"+str(ccc[8])
+		+"\nUse of Scale:"+str(ccc[9])
+		+"\nBias value:"+str(ccc[10])
+		+"\nScaling value:"+str(ccc[11]))
 #End printValue	
 
 #Print the best CCC values
@@ -38,14 +37,13 @@ def printBestVal(ccc, tPlt):
 				+"\nWindow step:"+str(ccc[ind][1])
 				+"\nDelay:"+str(ccc[ind][4])
 				+"\nComplexity:"+str(ccc[ind][5])
-				+"\nMedian filter:"+str(ccc[ind][6])
-				+"\nMethod of GS matching:"+ccc[ind][7]
-				+"\nUse of Bias:"+str(ccc[ind][8])
-				+"\nUse of Scale:"+str(ccc[ind][9])
-				+"\nBias value arousal:"+str(ccc[ind][10])
-				+"\nBias value valence:"+str(ccc[ind][11])
-				+"\nScaling value arousal:"+str(ccc[ind][12])
-				+"\nScaling value valence:"+str(ccc[ind][13]))
+				+"\nMethod of GS matching:"+ccc[ind][6]
+				+"\nUse of Bias:"+str(ccc[ind][7])
+				+"\nUse of Scale:"+str(ccc[ind][8])
+				+"\nBias value arousal:"+str(ccc[ind][9])
+				+"\nBias value valence:"+str(ccc[ind][10])
+				+"\nScaling value arousal:"+str(ccc[ind][11])
+				+"\nScaling value valence:"+str(ccc[ind][12]))
 		#We print it in graphical form
 		fig = plt.figure()
 		ax = fig.add_subplot(111, projection='3d')

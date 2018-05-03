@@ -21,13 +21,9 @@ from liblinearutil import train, predict
 import timeit
 
 #Unimodal prediction on Dev partition
-def unimodalPredDev(gs, c, tr, de, medf, earlystop):
+def unimodalPredDev(gs, c, tr, de, earlystop):
 	[model, pred, cccDev] = [[] for i in range(3)]
 	gsC = np.array(gs['dev'])
-	#We apply the median filter if necessary
-	if (medf == 1) :
-		tr = sp.signal.medfilt(tr)
-		de = sp.signal.medfilt(de)
 	#Options for liblinear
 	options = "-s "+str(v.sVal)+" -c "+str(c)+" -B 1 -q"
 	#[0] = Arousal/[1] = Valence
@@ -115,14 +111,13 @@ def audioPred():
 						#We matche GoldStandards with parameters(wStep/fsize) and stock them
 						gs = gsMatch(v.matchGS[mGS], delay, wSize, wStep, art, vat, dt, False)
 						for comp in range(len(v.C)):
-							for medf in range(2):
-								#We do the prediction
-								[cccDev, pred] = unimodalPredDev(gs, v.C[comp], tr, de, medf, earlystop)
-								#Post-treatement
-								[cccSave, biasB, scaleB, bias, scale] = postTreatDev(cccDev, pred, gs, earlystop)
-								#We store the results
-								ccc.append([round(wSize,2), round(wStep,2), round(cccSave[0],2), round(cccSave[1],2)
-								, round(delay,2), v.C[comp], medf, v.matchGS[mGS], biasB, scaleB, bias[0], bias[1], scale[0], scale[1]])
+							#We do the prediction
+							[cccDev, pred] = unimodalPredDev(gs, v.C[comp], tr, de, earlystop)
+							#Post-treatement
+							[cccSave, biasB, scaleB, bias, scale] = postTreatDev(cccDev, pred, gs, earlystop)
+							#We store the results
+							ccc.append([round(wSize,2), round(wStep,2), round(cccSave[0],2), round(cccSave[1],2)
+							, round(delay,2), v.C[comp], v.matchGS[mGS], biasB, scaleB, bias[0], bias[1], scale[0], scale[1]])
 					#We get the best CCC for all the delay [0] Arousal/ [1] Valence
 					bDelay = bestdelay(ccc, wSize, wStep, delay)
 					#We see if we must earlystop or not
