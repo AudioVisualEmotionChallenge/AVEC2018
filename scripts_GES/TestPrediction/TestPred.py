@@ -1,12 +1,14 @@
-import GlobalsVars as v
-from GSMatching import gsOpen, gsMatch
 import sys
+sys.path.append("../Config/")
+import GlobalsVars as v
 sys.path.append("../Utils/")
+from Setup import setup
 from ConcArff import concGs, concRec
 from FeatsNorm import normFeatures
 from PostTreats import postTreatTest
 from PredUtils import unimodalPredPrep, cccCalc
 from Print import printValTest
+from GSMatching import gsOpen, gsMatch
 sys.path.append(v.labLinearPath)
 from liblinearutil import train, predict
 import numpy as np
@@ -62,10 +64,9 @@ def predictTest():
 		#We open the files for the unimodal prediction
 		[tr,de, te] = unimodalPredPrep(wSize, wStep)
 		#We open the files for the Gold Standard Matching
-		[art, vat, dt] = gsOpen(wSize,wStep)
+		[art, vat, dt] = gsOpen(wSize,wStep, True)
 		#We matche GoldStandards with parameters(wStep/fsize) and stock them
-		gs = gsMatch(method, dl, wSize, wStep, art, vat, dt)
-		#DEV
+		gs = gsMatch(method, dl, wSize, wStep, art, vat, dt, True)
 		#We do the prediction on Dev/Test
 		[cccTest, predTest, cccDev, predDev] = unimodalPredTest(gs, c, tr, te, de, medF, nDim)
 		#Post-treatement
@@ -75,4 +76,5 @@ def predictTest():
 		printValTest(ccc)
 #End predictTest
 
+setup()
 predictTest()

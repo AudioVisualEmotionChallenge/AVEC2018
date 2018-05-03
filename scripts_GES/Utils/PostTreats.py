@@ -46,7 +46,7 @@ def postTreatDev(cccDev, pred, gs, earlystop):
 			cccBias = cccCalc(predCenter,gsDev[:,nDim])
 			if (cccBias > cccSave[nDim]):
 				cccSave[nDim] = cccBias
-				pred = predCenter
+				pred[nDim] = predCenter
 				biasB = True
 			#We now scale the prediction and do the same thing
 			#First we calculate the scale
@@ -58,7 +58,7 @@ def postTreatDev(cccDev, pred, gs, earlystop):
 			cccScale = cccCalc(predScale,gsDev[:,nDim])
 			if (cccScale > cccSave[nDim]) :
 				cccSave[nDim] = cccScale
-				pred = predScale
+				pred[nDim] = predScale
 				scaleB = True
 		else :
 			cccSave.append(-1.0)

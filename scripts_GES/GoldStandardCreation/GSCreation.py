@@ -1,4 +1,8 @@
+import sys
+sys.path.append("../Config/")
 import GlobalsVars as v
+sys.path.append("../Utils/")
+from Setup import setup
 import csv
 import os
 import arff
@@ -162,4 +166,5 @@ def gsCreation():
 	cccCentring(ra, combnk, files, aRa, rGoldIndiv)
 #End gsCreation
 
+setup()
 gsCreation()

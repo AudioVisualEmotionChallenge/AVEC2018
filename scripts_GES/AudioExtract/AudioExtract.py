@@ -1,4 +1,8 @@
+import sys
+sys.path.append("../Config/")
 import GlobalsVars as v
+sys.path.append("../Utils/")
+from Setup import setup
 import subprocess
 import time
 import os
@@ -51,4 +55,5 @@ def audioExtract():
 	print("Finished extracting")
 #End audioExtract
 
+setup()
 audioExtract()

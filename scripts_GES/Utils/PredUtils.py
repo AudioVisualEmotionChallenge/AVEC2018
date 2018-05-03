@@ -1,3 +1,5 @@
+import sys
+sys.path.append("../Config/")
 import GlobalsVars as v
 import arff
 import os
