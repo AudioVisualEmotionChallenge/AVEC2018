@@ -41,6 +41,10 @@ labLinearPath = c.labLinearPath
 #Folder for recording audio
 daud = c.daud
 
+#TEMPLATE FOR GOLD STANDARD
+#Template for the ARFF file
+arffTempPath = "../GoldStandardCreation/templateGS.arff"
+
 #COLOR VARIABLES
 goodColor = '\033[92m'
 errColor = '\033[91m'

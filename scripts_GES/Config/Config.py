@@ -21,10 +21,6 @@ gsFolder = "/media/adrien/OS/TER/GS/"
 #Put all the individual gold standards in folder named Individual inside this one (Path is GS -> Individual -> valence / arousal -> all the ratings) 
 #Put all the gold standards you've done in a folder named Ratings inside this one (Path is GS -> Ratings -> valence / arousal -> all the ratings) 
 
-#TEMPLATE FOR GOLD STANDARD
-#Template for the ARFF file
-arffTempPath = "/home/adrien/Bureau/TER/GIT/scripts_GES/GoldStandardCreation/templateGS.arff"
-
 #AUDIO FILES
 #Folder for recording audio
 daud = "/media/adrien/OS/TER/Audio_Recordings/Recordings/"
