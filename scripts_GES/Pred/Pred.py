@@ -139,7 +139,7 @@ def unimodalPred(nMod):
 				wStep += v.stepStep[nMod]
 			wSize += v.sizeStep[nMod]
 		bVal = printBestVal(cccTab, tPlt, nMod)
-		f = open("./bVals.txt","a").write("\n"+v.nameMod[nMod]+" : "+str(bVal))
+		f = open("./BestValues.txt","a").write("\n"+v.nameMod[nMod]+" : "+str(bVal))
 	except KeyboardInterrupt :
 		printBestVal(cccTab, tPlt, nMod)
 		raise
@@ -148,6 +148,7 @@ def unimodalPred(nMod):
 #Try all the possibilities given and find the best CCCs values and parameters for each dimensions
 def multimodalPred():
 	try :
+		f = open("./BestValues.txt","wb").write("")
 		ps = []
 		pActive = 1
 		#For each modality

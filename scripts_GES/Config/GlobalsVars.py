@@ -1,6 +1,7 @@
 #This file contain all the global variables used in the scripts
 import sys
 import os
+import plateform
 sys.path.append("../Utils/")
 import Config as c
 
@@ -17,6 +18,7 @@ agsi = [gsFolder+"individual/arousal/",gsFolder+"/individual/valence/"]
 
 #DESCRIPTORS FILES
 #Folder for all descriptors
+fconf = ["eGeMAPS","","","","","","",""]
 audioFeat = c.basePath+"features/audio/"
 videoFeat = c.basePath+"features/video/"
 physioFeat = c.basePath+"features/physio/"
@@ -40,9 +42,14 @@ labLinearPath = c.labLinearPath
 arffTempPath = "../GoldStandardCreation/templateGS.arff"
 
 #COLOR VARIABLES
-goodColor = '\033[92m'
-errColor = '\033[91m'
-endColor = '\x1b[0m'
+if (platform.system() == "Linux"):
+	goodColor = '\033[92m'
+	errColor = '\033[91m'
+	endColor = '\x1b[0m'
+else :
+	goodColor = ''
+	errColor = ''
+	endColor = ''
 
 #EMOTIONS (DIMENSIONS)
 nDim = 2

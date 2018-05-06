@@ -35,37 +35,39 @@ def unimodalPredTest(gs, c, tr, te, de, nDim):
 
 #Predict on test the best values found with Dev and print the results
 def predictTest(nMod):
-	for nDim in range(len(v.bAudio)):
-		#Value/wSize/wStep/Delay/Complexity/MethodMatching/BiasUse/ScaleUse/BiasValue/ScaleValue
-		wSize = v.bAudio[nDim][1]
-		wStep = v.bAudio[nDim][2]
-		dl = v.bAudio[nDim][3]
-		c = v.bAudio[nDim][4]
-		method = v.bAudio[nDim][5]
-		biasB = v.bAudio[nDim][6]
-		scaleB = v.bAudio[nDim][7]
-		bias = v.bAudio[nDim][8]
-		scale = v.bAudio[nDim][9]
-		#Var for storing differents CCC
-		ccc = []
-		#Concatenation of Gold Standards
-		concGs(True)
-		print(v.goodColor+"Test prediction in progress..."+v.endColor)
-		#Concatenation of ARFF data
-		concRec(wSize, wStep, nMod)
-		#Normalisation of Features
-		normFeatures(wSize, wStep, nMod)
-		#We open the files for the unimodal prediction
-		[tr,de, te] = unimodalPredPrep(wSize, wStep, nMod)
-		#We open the files for the Gold Standard Matching
-		[art, vat, dt] = gsOpen(wSize,wStep, True, nMod)
-		#We matche GoldStandards with parameters(wStep/fsize) and stock them
-		gs = gsMatch(method, dl, wSize, wStep, art, vat, dt, True)
-		#We do the prediction on Dev/Test
-		[cccTest, predTest, cccDev, predDev] = unimodalPredTest(gs, c, tr, te, de, nDim)
-		#Post-treatement
-		[cccTest, cccDev] = postTreatTest(gs, predTest, cccTest, predDev, cccDev, bias, scale, biasB, scaleB, nDim)
-		#We store the results
-		ccc = [nDim, round(cccDev,2), round(cccTest,2), round(wSize,2), round(wStep,2), round(dl,2), c, method, biasB, scaleB, bias, scale]
-		printValTest(ccc)
+	#Concatenation of Gold Standards
+	concGs(True)
+	for nMod in range(len(v.desc)):
+		for nDim in range(len(v.bAudio)):
+			bVals = v.bVals[nMod][nDim]
+			#Value/wSize/wStep/Delay/Complexity/MethodMatching/BiasUse/ScaleUse/BiasValue/ScaleValue
+			wSize = bVals[1]
+			wStep = bVals[2]
+			dl = bVals[3]
+			c = bVals[4]
+			method = bVals[5]
+			biasB = bVals[6]
+			scaleB = bVals[7]
+			bias = bVals[8]
+			scale = bVals[9]
+			#Var for storing differents CCC
+			ccc = []
+			print(v.goodColor+"Test prediction in progress..."+v.endColor)
+			#Concatenation of ARFF data
+			concRec(wSize, wStep, nMod)
+			#Normalisation of Features
+			normFeatures(wSize, wStep, nMod)
+			#We open the files for the unimodal prediction
+			[tr,de, te] = unimodalPredPrep(wSize, wStep, nMod)
+			#We open the files for the Gold Standard Matching
+			[art, vat, dt] = gsOpen(wSize,wStep, True, nMod)
+			#We matche GoldStandards with parameters(wStep/fsize) and stock them
+			gs = gsMatch(method, dl, wSize, wStep, art, vat, dt, True)
+			#We do the prediction on Dev/Test
+			[cccTest, predTest, cccDev, predDev] = unimodalPredTest(gs, c, tr, te, de, nDim)
+			#Post-treatement
+			[cccTest, cccDev] = postTreatTest(gs, predTest, cccTest, predDev, cccDev, bias, scale, biasB, scaleB, nDim)
+			#We store the results
+			ccc = [nDim, round(cccDev,2), round(cccTest,2), round(wSize,2), round(wStep,2), round(dl,2), c, method, biasB, scaleB, bias, scale]
+			printValTest(ccc)
 #End predictTest

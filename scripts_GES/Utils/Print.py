@@ -4,20 +4,15 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 #Print the CCC value and parameters
-def printValTest(ccc):
+def printValTest(ccc, nMod):
 	print("The values are :")
-	print(v.eName[ccc[0]]+"\n"
-		+"Value Dev:"+str(ccc[1])
-		+"\nValue Test:"+str(ccc[2])
-		+"\nWindow size:"+str(ccc[3])
-		+"\nWindow step:"+str(ccc[4])
-		+"\nDelay:"+str(ccc[5])
-		+"\nComplexity:"+str(ccc[6])
-		+"\nMethod of GS matching:"+ccc[7]
-		+"\nUse of Bias:"+str(ccc[8])
-		+"\nUse of Scale:"+str(ccc[9])
-		+"\nBias value:"+str(ccc[10])
-		+"\nScaling value:"+str(ccc[11]))
+	print(v.eName[ccc[0]]+"/"+v.nameMod[nMod])
+	print("Value Dev/Test : "+str(ccc[1])+"/"+str(ccc[2]))
+	print("Window size/step : "+str(ccc[3])+"/"+str(ccc[4]))
+	print("Delay/Complexity : "+str(ccc[5])+"/"+str(ccc[6]))
+	print("GS method : "+ccc[7])
+	print("Use of Bias/Scale : "+str(ccc[8])+"/"+str(ccc[9]))
+	print("Bias/Scaling value : "+str(ccc[10])+"/"+str(ccc[11]))
 #End printValue	
 
 #Print the best CCC values
@@ -34,9 +29,9 @@ def printBestVal(ccc, tPlt, nMod):
 		print("Best values : "+v.nameMod[nMod]+" "+v.eName[nDim])
 		bVal.append(v.nameMod[nMod])
 		bVal.append(v.eName[nDim])
-		print("Value/GS Method : "+str(ccc[ind][2+nDim])+"/"+ccc[ind][6])
+		print("Value/GS method : "+str(ccc[ind][2+nDim])+"/"+ccc[ind][6])
 		bVal.append(ccc[ind][2+nDim])
-		print("Window size/Window step : "+str(ccc[ind][0])+"/"+str(ccc[ind][1]))
+		print("Window size/step : "+str(ccc[ind][0])+"/"+str(ccc[ind][1]))
 		bVal.append(ccc[ind][0])
 		bVal.append(ccc[ind][1])
 		print("Delay/Complexity : "+str(ccc[ind][4])+"/"+str(ccc[ind][5]))
@@ -64,7 +59,6 @@ def printBestVal(ccc, tPlt, nMod):
 		ax.set_zlabel(v.nameMod[nMod]+" : CCC for "+v.eName[nDim])
 		#We show the plot
 		plt.pause(0.001)
-		plt.ion()		
-		plt.show()
+		plt.show(block=False)
 		return bVal
 #End printBestValues
