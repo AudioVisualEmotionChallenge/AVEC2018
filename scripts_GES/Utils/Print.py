@@ -21,29 +21,39 @@ def printValTest(ccc):
 #End printValue	
 
 #Print the best CCC values
-def printBestVal(ccc, tPlt):
+def printBestVal(ccc, tPlt, nMod):
 	#We take the best values
 	ccc = np.array(ccc)
 	tPlt = np.array(tPlt)
 	iMax = np.zeros(v.nDim)
 	for nDim in range(v.nDim):
+		bVal = []
 		iMax[nDim] = np.where(ccc[:,nDim+2] == max(ccc[:,nDim+2]))[0][0]
 		#We print the results
 		ind = int(iMax[nDim])
-		print("The best values are :")
-		print(v.eName[nDim]+"\n"
-				+"Value:"+str(ccc[ind][2+nDim])
-				+"\nWindow size:"+str(ccc[ind][0])
-				+"\nWindow step:"+str(ccc[ind][1])
-				+"\nDelay:"+str(ccc[ind][4])
-				+"\nComplexity:"+str(ccc[ind][5])
-				+"\nMethod of GS matching:"+ccc[ind][6]
-				+"\nUse of Bias:"+str(ccc[ind][7])
-				+"\nUse of Scale:"+str(ccc[ind][8])
-				+"\nBias value arousal:"+str(ccc[ind][9])
-				+"\nBias value valence:"+str(ccc[ind][10])
-				+"\nScaling value arousal:"+str(ccc[ind][11])
-				+"\nScaling value valence:"+str(ccc[ind][12]))
+		print("Best values : "+v.nameMod[nMod]+" "+v.eName[nDim])
+		bVal.append(v.nameMod[nMod])
+		bVal.append(v.eName[nDim])
+		print("Value/GS Method : "+str(ccc[ind][2+nDim])+"/"+ccc[ind][6])
+		bVal.append(ccc[ind][2+nDim])
+		print("Window size/Window step : "+str(ccc[ind][0])+"/"+str(ccc[ind][1]))
+		bVal.append(ccc[ind][0])
+		bVal.append(ccc[ind][1])
+		print("Delay/Complexity : "+str(ccc[ind][4])+"/"+str(ccc[ind][5]))
+		bVal.append(ccc[ind][4])
+		bVal.append(ccc[ind][5])
+		bVal.append(ccc[ind][6])
+		print("Use of Bias/Scale : "+str(ccc[ind][7])+"/"+str(ccc[ind][8]))
+		bVal.append(ccc[ind][7])
+		bVal.append(ccc[ind][8])
+		if (nDim == 0):
+			print ("Bias/Scaling value arousal : "+str(ccc[ind][9])+"/"+str(ccc[ind][11]))
+			bVal.append(ccc[ind][9])
+			bVal.append(ccc[ind][11])
+		else :
+			print("Bias/Scaling value valence : "+str(ccc[ind][10])+"/"+str(ccc[ind][12]))
+			bVal.append(ccc[ind][10])
+			bVal.append(ccc[ind][12])
 		#We print it in graphical form
 		fig = plt.figure()
 		ax = fig.add_subplot(111, projection='3d')
@@ -51,7 +61,10 @@ def printBestVal(ccc, tPlt):
 		#Labels for axes
 		ax.set_xlabel("Window Size")
 		ax.set_ylabel("Window Step")
-		ax.set_zlabel("CCC for "+v.eName[nDim])
+		ax.set_zlabel(v.nameMod[nMod]+" : CCC for "+v.eName[nDim])
 		#We show the plot
+		plt.pause(0.001)
+		plt.ion()		
 		plt.show()
+		return bVal
 #End printBestValues

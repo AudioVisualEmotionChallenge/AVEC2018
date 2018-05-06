@@ -9,7 +9,7 @@ sys.path.append(v.labLinearPath)
 import liblinearutil as llu
 
 #Open the differents ARFF needed for the matching
-def gsOpen(wSize,wStep, modeTest):
+def gsOpen(wSize, modeTest, nMod):
 	ar = {}
 	va = {}
 	d = {}
@@ -18,12 +18,12 @@ def gsOpen(wSize,wStep, modeTest):
 			break
 		ar[s] = arff.load(open(v.gsConc+s+"_arousal.arff","rb"))
 		va[s] = arff.load(open(v.gsConc+s+"_valence.arff","rb"))
-		d[s] = arff.load(open(v.audioDescNorm+v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
+		d[s] = arff.load(open(v.descNorm[nMod]+v.fconf[nMod]+"_"+s+"_"+str(wSize)+"_"+str(v.tsp)+"_norm.arff","rb"))
 	return ar,va,d
 #End goldStandardOpen
 
 #Apply the gold standards to the differents parameters and treatments
-def gsMatch(method, dl, wSize, wStep, art, vat, dt, modeTest):
+def gsMatch(method, dl, wSize, art, vat, dt, modeTest):
 	#Tab who will countain the matching
 	vGoldS = {}
 	for s in "dev","train","test":
@@ -41,14 +41,14 @@ def gsMatch(method, dl, wSize, wStep, art, vat, dt, modeTest):
 			for j in range(tFD):
 				#The central method is : we take the mid point of earch window
 				if (method == "central"):
-					calcul = (((float(wSize)/2.0)+wStep*float(j)+dl)/v.ts)+float(tFS*i)
+					calcul = (((float(wSize)/2.0)+v.tsp*float(j)+dl)/v.ts)+float(tFS*i)
 					ind = int(calcul)
 					if (ind >= tFS+tFS*i):
 						ind = tFS+tFS*i-1
 					vals = [ar['data'][ind][2],va['data'][ind][2]]
 				#Else we use the mean method : we do the mean of each value in the window 
 				else :	
-					calcul = ((wStep*float(j)+dl)/v.ts)+float(tFS*i)
+					calcul = ((v.tsp*float(j)+dl)/v.ts)+float(tFS*i)
 					ind = int(calcul)
 					indA = ind+int((float(wSize)/v.ts))
 					if (ind >= tFS+tFS*i):

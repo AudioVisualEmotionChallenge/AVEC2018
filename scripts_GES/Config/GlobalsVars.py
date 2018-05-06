@@ -1,5 +1,6 @@
 #This file contain all the global variables used in the scripts
 import sys
+import os
 sys.path.append("../Utils/")
 import Config as c
 
@@ -15,31 +16,24 @@ ags = [gsPath+"arousal/",gsPath+"valence/"]
 agsi = [gsFolder+"individual/arousal/",gsFolder+"/individual/valence/"]
 
 #DESCRIPTORS FILES
-#Folder for all audio descriptor eGeMAPS
-audioDesc = c.basePath+"features/audio/eGeMAPSfunct/"
-audioDescConc = audioDesc+"Conc/"
-audioDescNorm = audioDesc+"Norm/"
-
-#OPENSMILE
-#OpenSmile base folder
-baseFOS = c.baseFOS
-#Number of threads for OSmile Extract
-nbOSmile = 8
-#Configuration file used and address of it 
-fconf = "eGeMAPSv01a"
-aconf = baseFOS+"config/gemaps/"+fconf+".conf"
-#Address of configuration file for extraction
-inconf = baseFOS+"config/shared/FrameModeFunctionals.conf.inc"
-#Address for openSmile Extract
-oSmile = baseFOS+"inst/bin/SMILExtract"
+#Folder for all descriptors
+audioFeat = c.basePath+"features/audio/"
+videoFeat = c.basePath+"features/video/"
+physioFeat = c.basePath+"features/physio/"
+desc = [audioFeat+"eGeMAPSfunct/",videoFeat+"appearance/",videoFeat+"AU/",physioFeat+"ECG/", physioFeat+"EDA/", physioFeat+"HRHRV/", physioFeat+"SCL/", physioFeat+"SCR/"]
+nameMod = ["eGeMAPSfunct","appearance","AU","ECG", "EDA", "HRHRV", "SCL", "SCR"]
+descConc = []
+for i in range(len(desc)):
+	descConc.append(desc[i]+"Conc/")
+descNorm = []
+for i in range(len(desc)):
+	descNorm.append(desc[i]+"Norm/")
+#This is the name of the column we must remove in each descriptors
+removedColArff = [["name","class"],["frameTime"],["frameTime"],["frameTime"],["frameTime"],["frameTime"],["frameTime"],["frameTime"]]
 
 #LIBLINEAR
 #Path of library LabLinear
 labLinearPath = c.labLinearPath
-
-#AUDIO FILES
-#Folder for recording audio
-daud = c.basePath+"recordings/audio/"
 
 #TEMPLATE FOR GOLD STANDARD
 #Template for the ARFF file
@@ -57,30 +51,38 @@ eName = ["Arousal","Valence"]
 #Number of annotators
 nAn = 6
 
+#Number of thread for multimodal prediction
+nThreads = c.nThreads
+
 #OPTIMISATION FOR AUDIO
 #Methods for the gold standards matching
 matchGS = ["moy","central"]
 #Sampling period of features
 ts=0.04
+#Sampling period for prediction
+tsp=0.4
 #Window Size
-sizeBeg = 3.0
-sizeStep = 1.0
-sizeMax = 9.0
+sizeBeg = [3.0,3.0,3.0,2.0,2.0,2.0,2.0,2.0]
+sizeStep = [1.0,1.0,1.0,2.0,2.0,2.0,2.0,2.0]
+sizeMax = [9.0,9.0,9.0,16.0,16.0,16.0,16.0,16.0]
 #Window Step
-stepBeg = 0.40
-stepStep = 0.40
-stepMax = 2.80
+stepBeg = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
+stepStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
+stepMax = [1.20,1.20,1.20,1.20,1.20,1.20,1.20,1.20]
 #Delay
-delBeg = 0.00
-delStep = 0.40
-delMax = 9.60
+delBeg = [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00]
+delStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
+delMax = [9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60]
 #Complexity value used for the SVR
 C = [0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
 #Value used for the SVR
 sVal = 12
 
+#Best values are here
+bVals = []
 #Best values used for prediction on Test
 #Value/wSize/wStep/Delay/Complexity/MedianFilter/MethodMatching/BiasUse/ScaleUse/BiasValue/ScaleValue
-bAudio = [[0.8,9.0,1.6,4.0,0.01,"moy",True,True,-0.018114934492835508,1.1394442116937562], #Arousal
-	[0.46,7.0,2.4,3.2,0.05,"moy",True,True,0.023342096046530064,1.1330534273659931]] #Valence
-
+bData = [[[0.8,8.0,0.4,3.6,0.001,"moy",True,True,-0.02986170308623753,1.2328311601080673], #Arousal eGeMAPS
+	[0.39,7.0,0.4,2.0,0.02,"moy",True,True,0.02832145964863232,1.0740683266868216]], #Valence eGeMAPS
+	[[0.39,3.0,0.4,2.4,0.0002,"moy",True,True,-0.052121926351620725,2.688747302641205], #Arousal geometric
+	[0.46,4.0,0.4,2.0,0.002,"moy",True,True,-0.009327672186332764,1.2522661526645982]]] #Valence geometric

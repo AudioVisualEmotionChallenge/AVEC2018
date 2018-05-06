@@ -34,7 +34,7 @@ def unimodalPredTest(gs, c, tr, te, de, nDim):
 #Fin unimodalPredictionDev
 
 #Predict on test the best values found with Dev and print the results
-def predictTest():
+def predictTest(nMod):
 	for nDim in range(len(v.bAudio)):
 		#Value/wSize/wStep/Delay/Complexity/MethodMatching/BiasUse/ScaleUse/BiasValue/ScaleValue
 		wSize = v.bAudio[nDim][1]
@@ -52,13 +52,13 @@ def predictTest():
 		concGs(True)
 		print(v.goodColor+"Test prediction in progress..."+v.endColor)
 		#Concatenation of ARFF data
-		concRec(wSize, wStep)
+		concRec(wSize, wStep, nMod)
 		#Normalisation of Features
-		normFeatures(wSize, wStep)
+		normFeatures(wSize, wStep, nMod)
 		#We open the files for the unimodal prediction
-		[tr,de, te] = unimodalPredPrep(wSize, wStep)
+		[tr,de, te] = unimodalPredPrep(wSize, wStep, nMod)
 		#We open the files for the Gold Standard Matching
-		[art, vat, dt] = gsOpen(wSize,wStep, True)
+		[art, vat, dt] = gsOpen(wSize,wStep, True, nMod)
 		#We matche GoldStandards with parameters(wStep/fsize) and stock them
 		gs = gsMatch(method, dl, wSize, wStep, art, vat, dt, True)
 		#We do the prediction on Dev/Test
@@ -69,6 +69,3 @@ def predictTest():
 		ccc = [nDim, round(cccDev,2), round(cccTest,2), round(wSize,2), round(wStep,2), round(dl,2), c, method, biasB, scaleB, bias, scale]
 		printValTest(ccc)
 #End predictTest
-
-setup()
-predictTest()

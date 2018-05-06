@@ -7,13 +7,12 @@
 basePath = "/media/adrien/OS/TER/"
 
 #LIBLINEAR
-#Path of library LabLinear
+#Path of library LabLinear/must set the python directory 
 labLinearPath = "/home/adrien/Bureau/TER/softwares/liblinear-2.20/python/"
-
-#OPENSMILE
-#OpenSmile base folder
-baseFOS = "/home/adrien/Bureau/TER/softwares/opensmile-2.3.0/"
 
 #GOLD STANDARDS
 #Which GS to use (gs_1/gs_2/gs_3/gs_4/gs_5/gs_participants
 gsUse = "gs_1"
+
+#NUMBER OF THREADS
+nThreads = 4

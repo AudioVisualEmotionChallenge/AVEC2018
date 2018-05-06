@@ -5,13 +5,14 @@ import os
 
 def folderCreation() :
 	try :
-		#DescriptorFile
-		if (os.path.isdir(v.audioDesc) == False):
-			os.mkdir(v.audioDesc)
-		if (os.path.isdir(v.audioDescConc) == False):
-			os.mkdir(v.audioDescConc)
-		if (os.path.isdir(v.audioDescNorm) == False):
-			os.mkdir(v.audioDescNorm)
+		for i in range(len(v.desc)):
+			#DescriptorFile
+			if (os.path.isdir(v.desc[i]) == False):
+				os.mkdir(v.desc[i])
+			if (os.path.isdir(v.descConc[i]) == False):
+				os.mkdir(v.descConc[i])
+			if (os.path.isdir(v.descNorm[i]) == False):
+				os.mkdir(v.descNorm[i])
 		#GoldStandard
 		if (os.path.isdir(v.gsPath) == False):
 			os.mkdir(v.gsPath)

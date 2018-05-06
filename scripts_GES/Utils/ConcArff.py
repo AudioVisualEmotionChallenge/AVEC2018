@@ -62,12 +62,12 @@ def concGs(modeTest):
 	print("Concatenated Gold Standards/was already/problems : "+v.goodColor+str(Conc)+v.endColor+"/"+str(AlConc)+"/"+v.errColor+str(Pb)+v.endColor)
 #End concGoldStandard
 
-#Concatener the recordings per partition (train / dev / test)
-def concRec(wSize, wStep):
+#Concatener the recordings per partition (train / dev / test) and per modality
+def concRec(wSize, wStep, nMod):
 	Conc = 0
 	AlConc = 0
 	Pb = 0
-	files = os.listdir(v.audioDesc)
+	files = os.listdir(v.desc[nMod])
 	descf = {}
 	fNames = {}
 	for f in files :
@@ -77,13 +77,13 @@ def concRec(wSize, wStep):
 					fNames[s] = []
 				fNames[s].append(f)
 	for s in "test","dev","train":
-		fName = v.fconf+"_"+s+"_"+str(wSize)+"_"+str(wStep)+".arff"
-		succ = concArff(v.audioDesc, fNames[s], v.audioDescConc, fName)
+		fName = v.fconf[nMod]+"_"+s+"_"+str(wSize)+"_"+str(wStep)+".arff"
+		succ = concArff(v.desc[nMod], fNames[s], v.descConc[nMod], fName)
 		if (succ == 2):
 			AlConc += 1
 		elif (succ == 1):
 			Pb += 1
 		else :
 			Conc += 1
-	print("Concatenated files/was already/problems : "+v.goodColor+str(Conc)+v.endColor+"/"+str(AlConc)+"/"+v.errColor+str(Pb)+v.endColor)
+	print(v.nameMod[nMod]+" : Concatenated files/was already/problems : "+v.goodColor+str(Conc)+v.endColor+"/"+str(AlConc)+"/"+v.errColor+str(Pb)+v.endColor)
 #End concRecording
