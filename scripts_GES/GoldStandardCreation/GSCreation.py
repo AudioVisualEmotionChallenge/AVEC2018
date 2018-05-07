@@ -139,7 +139,7 @@ def cccCentring(ra, combnk, files, aRa, rGoldIndiv):
 				data["data"][line][1] = round(csv[line+1,0],2)
 				data["data"][line][2] = round(newGs,6)
 			#We write the csv in the Gold Standard folder
-			f = open(v.ags[i]+fname.replace(".csv",".arff"), "w")
+			f = open(v.agsc[i]+fname.replace(".csv",".arff"), "w")
 			f.write(arff.dumps(data))	
 	return None
 #End cccCentring

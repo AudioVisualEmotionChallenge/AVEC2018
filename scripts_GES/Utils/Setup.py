@@ -20,6 +20,11 @@ def folderCreation() :
 			os.mkdir(v.gsFolder)
 		if (os.path.isdir(v.gsConc) == False):
 			os.mkdir(v.gsConc)
+		if (os.path.isdir(v.agsCreat) == False):
+			os.mkdir(v.agsCreat)
+		for i in range(len(v.agsc)):
+			if (os.path.isdir(v.agsc[i]) == False):
+				os.mkdir(v.agsc[i])	
 	except : 
 		print("Check your configuration file, path for folder must not be ok")	
 

@@ -1,4 +1,4 @@
-@relation GOLDSTANDARD_AROUSAL
+@relation GOLDSTANDARD
 
 @attribute Instance_name string
 @attribute frameTime numeric

@@ -61,9 +61,9 @@ def normFeatures(wSize, wStep, nMod):
 	alNorm = 0
 	pb = 0
 	valAtt = {}
-	fTests = v.descConc[nMod]+v.fconf[nMod]+"_test_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
-	fTrains = v.descConc[nMod]+v.fconf[nMod]+"_train_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
-	fDevs = v.descConc[nMod]+v.fconf[nMod]+"_dev_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
+	fTests = v.descNorm[nMod]+v.fconf[nMod]+"_test_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
+	fTrains = v.descNorm[nMod]+v.fconf[nMod]+"_train_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
+	fDevs = v.descNorm[nMod]+v.fconf[nMod]+"_dev_"+str(wSize)+"_"+str(wStep)+"_norm.arff"
 	if (os.path.isfile(fTests) == False or os.path.isfile(fTrains) == False or os.path.isfile(fDevs) == False):
 		[valKey, pb, norm] = normFeaturesFile(wSize, wStep, norm, pb, nMod)
 		valAtt.update(valKey)

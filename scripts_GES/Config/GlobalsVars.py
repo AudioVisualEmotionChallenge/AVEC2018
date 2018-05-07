@@ -1,7 +1,7 @@
 #This file contain all the global variables used in the scripts
 import sys
 import os
-import plateform
+import platform
 sys.path.append("../Utils/")
 import Config as c
 
@@ -13,6 +13,9 @@ gsPath = gsFolder+c.gsUse+"/"
 gsConc = gsFolder+c.gsUse+"/Conc/"
 #Folder for gold standards
 ags = [gsPath+"arousal/",gsPath+"valence/"]
+#GOLD STANDARD CREATION
+agsCreat = gsFolder+"gs_created/"
+agsc = [agsCreat+"arousal/",agsCreat+"valence/"]
 #Folder for individuals gold standards tab
 agsi = [gsFolder+"individual/arousal/",gsFolder+"/individual/valence/"]
 
@@ -75,7 +78,7 @@ sizeMax = [9.0,9.0,9.0,16.0,16.0,16.0,16.0,16.0]
 #Window Step
 stepBeg = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
 stepStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
-stepMax = [1.20,1.20,1.20,1.20,1.20,1.20,1.20,1.20]
+stepMax = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
 #Delay
 delBeg = [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00]
 delStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
@@ -84,12 +87,3 @@ delMax = [9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60]
 C = [0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
 #Value used for the SVR
 sVal = 12
-
-#Best values are here
-bVals = []
-#Best values used for prediction on Test
-#Value/wSize/wStep/Delay/Complexity/MedianFilter/MethodMatching/BiasUse/ScaleUse/BiasValue/ScaleValue
-bData = [[[0.8,8.0,0.4,3.6,0.001,"moy",True,True,-0.02986170308623753,1.2328311601080673], #Arousal eGeMAPS
-	[0.39,7.0,0.4,2.0,0.02,"moy",True,True,0.02832145964863232,1.0740683266868216]], #Valence eGeMAPS
-	[[0.39,3.0,0.4,2.4,0.0002,"moy",True,True,-0.052121926351620725,2.688747302641205], #Arousal geometric
-	[0.46,4.0,0.4,2.0,0.002,"moy",True,True,-0.009327672186332764,1.2522661526645982]]] #Valence geometric

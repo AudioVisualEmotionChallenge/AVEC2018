@@ -14,6 +14,7 @@ from liblinearutil import train, predict
 import numpy as np
 import scipy as sp
 import timeit
+import cPickle
 
 #Unimodal prediction on Test partition
 def unimodalPredTest(gs, c, tr, te, de, nDim):
@@ -35,21 +36,21 @@ def unimodalPredTest(gs, c, tr, te, de, nDim):
 
 #Predict on test the best values found with Dev and print the results
 def predictTest(nMod):
+	bestVals=cPickle.load(open("../Pred/BestValues.txt"))
 	#Concatenation of Gold Standards
 	concGs(True)
 	for nMod in range(len(v.desc)):
 		for nDim in range(len(v.bAudio)):
-			bVals = v.bVals[nMod][nDim]
-			#Value/wSize/wStep/Delay/Complexity/MethodMatching/BiasUse/ScaleUse/BiasValue/ScaleValue
+			bVals = bestVals[nMod][nDim]
+			#Value/wSize/wStep/Delay/Complexity/BiasUse/ScaleUse/BiasValue/ScaleValue
 			wSize = bVals[1]
 			wStep = bVals[2]
 			dl = bVals[3]
 			c = bVals[4]
-			method = bVals[5]
-			biasB = bVals[6]
-			scaleB = bVals[7]
-			bias = bVals[8]
-			scale = bVals[9]
+			biasB = bVals[5]
+			scaleB = bVals[6]
+			bias = bVals[7]
+			scale = bVals[8]
 			#Var for storing differents CCC
 			ccc = []
 			print(v.goodColor+"Test prediction in progress..."+v.endColor)

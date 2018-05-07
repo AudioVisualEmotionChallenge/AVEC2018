@@ -10,6 +10,7 @@ sys.path.append("../Utils/")
 from PredUtils import unimodalPredPrep, cccCalc, resamplingTab
 from Setup import setup
 import operator
+import cPickle
 import arff
 import os
 from multiprocessing import Process
@@ -139,7 +140,11 @@ def unimodalPred(nMod):
 				wStep += v.stepStep[nMod]
 			wSize += v.sizeStep[nMod]
 		bVal = printBestVal(cccTab, tPlt, nMod)
-		f = open("./BestValues.txt","a").write("\n"+v.nameMod[nMod]+" : "+str(bVal))
+		f = open("./BestValues.txt","rb")
+		bVals = cPickle.load(f)
+		bVals[v.nameMod[nMod]] = bVal
+		f = open("./BestValues.txt","wb")
+		cPickle.dump(bVals,f)
 	except KeyboardInterrupt :
 		printBestVal(cccTab, tPlt, nMod)
 		raise
@@ -148,7 +153,9 @@ def unimodalPred(nMod):
 #Try all the possibilities given and find the best CCCs values and parameters for each dimensions
 def multimodalPred():
 	try :
-		f = open("./BestValues.txt","wb").write("")
+		bVals = {}
+		f = open("./BestValues.txt","wb")
+		cPickle.dump(bVals, f)
 		ps = []
 		pActive = 1
 		#For each modality
@@ -163,6 +170,10 @@ def multimodalPred():
 					if (not(ps[i].is_alive())):
 						ps[i].join()
 						pActive -= 1
+		#We wait for all processus to end
+		for i in range(len(ps)):
+			if (ps[i].is_alive()):
+				ps[i].join()
 	except KeyboardInterrupt:
 		for i in range(len(ps)):
 			ps[i].terminate()

@@ -17,6 +17,7 @@ The base folders will be those in the AVEC2018, please don't change structure or
 #HOW TO RUN
 For the Gold Standard Creation (recreating in the GS Folder the baseline Gold Standard), go in the GoldStandardCreation
 folder and type "python GSCreationMain.py"
+ATTENTION : when you use GSCreationMain the result will go to "gs_1" folder
 For the Audio Prediction, go in the AudioPred folder and type "python AudioPredMain.py", if you don't put any argument the multimodal prediction will launch
 Otherwise you can put a number for the modality (for the number correspondance, type "python AudioPredMain.py help")
 And for the Test Prediction, go in the TestPred folder and type "python TestPredMain.py"

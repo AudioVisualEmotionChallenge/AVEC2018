@@ -21,14 +21,13 @@ def printBestVal(ccc, tPlt, nMod):
 	ccc = np.array(ccc)
 	tPlt = np.array(tPlt)
 	iMax = np.zeros(v.nDim)
+	bVals = []
 	for nDim in range(v.nDim):
 		bVal = []
 		iMax[nDim] = np.where(ccc[:,nDim+2] == max(ccc[:,nDim+2]))[0][0]
 		#We print the results
 		ind = int(iMax[nDim])
 		print("Best values : "+v.nameMod[nMod]+" "+v.eName[nDim])
-		bVal.append(v.nameMod[nMod])
-		bVal.append(v.eName[nDim])
 		print("Value/GS method : "+str(ccc[ind][2+nDim])+"/"+ccc[ind][6])
 		bVal.append(ccc[ind][2+nDim])
 		print("Window size/step : "+str(ccc[ind][0])+"/"+str(ccc[ind][1]))
@@ -49,6 +48,7 @@ def printBestVal(ccc, tPlt, nMod):
 			print("Bias/Scaling value valence : "+str(ccc[ind][10])+"/"+str(ccc[ind][12]))
 			bVal.append(ccc[ind][10])
 			bVal.append(ccc[ind][12])
+		bVals.append(bVal)
 		#We print it in graphical form
 		fig = plt.figure()
 		ax = fig.add_subplot(111, projection='3d')
@@ -57,8 +57,8 @@ def printBestVal(ccc, tPlt, nMod):
 		ax.set_xlabel("Window Size")
 		ax.set_ylabel("Window Step")
 		ax.set_zlabel(v.nameMod[nMod]+" : CCC for "+v.eName[nDim])
-		#We show the plot
-		plt.pause(0.001)
-		plt.show(block=False)
-		return bVal
+		#We save the plot
+		f = open("../Figures/"+v.nameMod[nMod]+"_"+v.eName[nDim]+".png","wb")
+		plt.savefig(f)
+	return bVals
 #End printBestValues
