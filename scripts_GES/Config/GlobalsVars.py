@@ -1,3 +1,4 @@
+#Author: Adrien Michaud
 #This file contain all the global variables used in the scripts
 import sys
 import os

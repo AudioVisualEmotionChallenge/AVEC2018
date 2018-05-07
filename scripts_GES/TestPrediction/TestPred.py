@@ -1,3 +1,4 @@
+#Author: Adrien Michaud
 import sys
 sys.path.append("../Config/")
 import GlobalsVars as v
@@ -35,22 +36,23 @@ def unimodalPredTest(gs, c, tr, te, de, nDim):
 #Fin unimodalPredictionDev
 
 #Predict on test the best values found with Dev and print the results
-def predictTest(nMod):
+def predictTest():
 	bestVals=cPickle.load(open("../Pred/BestValues.txt"))
 	#Concatenation of Gold Standards
 	concGs(True)
 	for nMod in range(len(v.desc)):
-		for nDim in range(len(v.bAudio)):
-			bVals = bestVals[nMod][nDim]
+		for nDim in range(len(v.eName)):
+			bVals = bestVals[v.nameMod[nMod]][nDim]
 			#Value/wSize/wStep/Delay/Complexity/BiasUse/ScaleUse/BiasValue/ScaleValue
-			wSize = bVals[1]
-			wStep = bVals[2]
-			dl = bVals[3]
-			c = bVals[4]
-			biasB = bVals[5]
-			scaleB = bVals[6]
-			bias = bVals[7]
-			scale = bVals[8]
+			wSize = float(bVals[1])
+			wStep = float(bVals[2])
+			dl = float(bVals[3])
+			c = float(bVals[4])
+			method = str(bVals[5])
+			biasB = bVals[6]
+			scaleB = bVals[7]
+			bias = float(bVals[8])
+			scale = float(bVals[9])
 			#Var for storing differents CCC
 			ccc = []
 			print(v.goodColor+"Test prediction in progress..."+v.endColor)
@@ -61,14 +63,14 @@ def predictTest(nMod):
 			#We open the files for the unimodal prediction
 			[tr,de, te] = unimodalPredPrep(wSize, wStep, nMod)
 			#We open the files for the Gold Standard Matching
-			[art, vat, dt] = gsOpen(wSize,wStep, True, nMod)
+			[art, vat, dt] = gsOpen(wSize, True, nMod)
 			#We matche GoldStandards with parameters(wStep/fsize) and stock them
-			gs = gsMatch(method, dl, wSize, wStep, art, vat, dt, True)
+			gs = gsMatch(method, dl, wSize, art, vat, dt, True)
 			#We do the prediction on Dev/Test
 			[cccTest, predTest, cccDev, predDev] = unimodalPredTest(gs, c, tr, te, de, nDim)
 			#Post-treatement
 			[cccTest, cccDev] = postTreatTest(gs, predTest, cccTest, predDev, cccDev, bias, scale, biasB, scaleB, nDim)
 			#We store the results
 			ccc = [nDim, round(cccDev,2), round(cccTest,2), round(wSize,2), round(wStep,2), round(dl,2), c, method, biasB, scaleB, bias, scale]
-			printValTest(ccc)
+			printValTest(ccc,nMod)
 #End predictTest

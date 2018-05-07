@@ -1,3 +1,4 @@
+#Author: Adrien Michaud
 import GlobalsVars as v
 import numpy as np
 import matplotlib.pyplot as plt

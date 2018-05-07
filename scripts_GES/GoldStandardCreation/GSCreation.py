@@ -1,3 +1,4 @@
+#Author: Adrien Michaud
 import sys
 sys.path.append("../Config/")
 import GlobalsVars as v

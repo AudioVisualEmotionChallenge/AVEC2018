@@ -1,3 +1,4 @@
+#Author: Adrien Michaud
 import GlobalsVars as v
 from PredUtils import cccCalc
 import arff

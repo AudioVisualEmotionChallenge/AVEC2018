@@ -1,3 +1,4 @@
+#Author: Adrien Michaud
 import sys
 sys.path.append("../Config/")
 import GlobalsVars as v
@@ -142,9 +143,11 @@ def unimodalPred(nMod):
 		bVal = printBestVal(cccTab, tPlt, nMod)
 		f = open("./BestValues.txt","rb")
 		bVals = cPickle.load(f)
+		f.close()
 		bVals[v.nameMod[nMod]] = bVal
 		f = open("./BestValues.txt","wb")
 		cPickle.dump(bVals,f)
+		f.close()
 	except KeyboardInterrupt :
 		printBestVal(cccTab, tPlt, nMod)
 		raise
@@ -156,6 +159,7 @@ def multimodalPred():
 		bVals = {}
 		f = open("./BestValues.txt","wb")
 		cPickle.dump(bVals, f)
+		f.close()
 		ps = []
 		pActive = 1
 		#For each modality

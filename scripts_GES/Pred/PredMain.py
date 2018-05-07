@@ -1,3 +1,4 @@
+#Author: Adrien Michaud
 from Pred import Pred
 import sys
 import multiprocessing
