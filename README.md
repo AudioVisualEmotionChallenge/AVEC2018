@@ -12,3 +12,8 @@ Baseline scripts (Python 2) for the Cross-cultural Emotion Sub-Challenge (CES)
 
 * read\_csv.py, write\_csv.py: auxiliary scripts
 
+scripts_GES/:
+Baseline scripts (Python 2) for the GES Challenge
+
+See the readme_GES.md in the folder for setup and informations
+
