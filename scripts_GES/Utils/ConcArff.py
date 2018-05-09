@@ -2,32 +2,39 @@
 import sys
 sys.path.append("../Config/")
 import GlobalsVars as v
+sys.path.append("../Utils/")
+from PredUtils import removeColArff
 import os
 import arff
 
 #Concatenate ARFF files given in one
 def concArff(sourceD, fNames, destinationD, fileName):
-	fNames = sorted(fNames)
-	arffs = {}
-	b = 0
-	#We verify that the file dont already exist
-	if (not os.path.isfile(destinationD+fileName)) :
-		for i in range(len(fNames)):
-			if (os.path.isfile(sourceD+fNames[i])):
-				#We search for the corresponding descriptor with the parameters
-				if (i == 0):
-					arffs = arff.load(open(sourceD+fNames[i],"rb"))
-				else :
-					d = arff.load(open(sourceD+fNames[i],"rb"))
-					arffs['data'] += d['data'] 
-			else:
-				b = 1
-	else :
-		b = 2
-	if (b == 0):
-		f = open(destinationD+fileName, "w")
-		f.write(arff.dumps(arffs))
-	return b
+	try :
+		fNames = sorted(fNames)
+		arffs = {}
+		b = 0
+		#We verify that the file dont already exist
+		if (not os.path.isfile(destinationD+fileName)) :
+			for i in range(len(fNames)):
+				if (os.path.isfile(sourceD+fNames[i])):
+					#We search for the corresponding descriptor with the parameters
+					if (i == 0):
+						arffs = arff.load(open(sourceD+fNames[i],"rb"))
+					else :
+						d = arff.load(open(sourceD+fNames[i],"rb"))
+						arffs['data'] += d['data']
+				else:
+					b = 1
+		else :
+			b = 2
+		if (b == 0):
+			f = open(destinationD+fileName, "w")
+			arffs = removeColArff(arffs)
+			f.write(arff.dumps(arffs))
+		return b
+	except KeyboardInterrupt:
+		os.remove(destinationD+fileName)
+		raise
 #End concatenationArff : Return 0 if the file is written, 1 if one of the files was missing, 2 if the file already exists
 
 #Concatenation of golds standards per partition (test/dev/train)
@@ -78,7 +85,7 @@ def concRec(wSize, wStep, nMod):
 					fNames[s] = []
 				fNames[s].append(f)
 	for s in "test","dev","train":
-		fName = v.fconf[nMod]+"_"+s+"_"+str(wSize)+"_"+str(wStep)+".arff"
+		fName = s+"_"+str(wSize)+"_"+str(wStep)+".arff"
 		succ = concArff(v.desc[nMod], fNames[s], v.descConc[nMod], fName)
 		if (succ == 2):
 			AlConc += 1

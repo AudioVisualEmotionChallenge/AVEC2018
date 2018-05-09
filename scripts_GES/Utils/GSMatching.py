@@ -19,7 +19,7 @@ def gsOpen(wSize, modeTest, nMod):
 			break
 		ar[s] = arff.load(open(v.gsConc+s+"_arousal.arff","rb"))
 		va[s] = arff.load(open(v.gsConc+s+"_valence.arff","rb"))
-		d[s] = arff.load(open(v.descNorm[nMod]+v.fconf[nMod]+"_"+s+"_"+str(wSize)+"_"+str(v.tsp)+"_norm.arff","rb"))
+		d[s] = arff.load(open(v.descNorm[nMod]+s+"_"+str(wSize)+"_"+str(v.tsp)+".arff","rb"))
 	return ar,va,d
 #End goldStandardOpen
 

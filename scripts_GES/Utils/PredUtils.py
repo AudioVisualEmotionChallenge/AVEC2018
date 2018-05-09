@@ -18,7 +18,12 @@ def resamplingTab(tab, size):
 	#for i in range(size):
 	#	ind = int(float(len(tab)/size)*float(i))
 	# 	t.append(tab[ind])
-	return signal.resample(tab,size)
+	s = signal.resample(tab,size)
+	#for i in range(len(s)):
+	#	print tab
+	#	if (s[i] > 1 or s[i] < -1):
+	#		print s[i]
+	return s
 	#return t 
 #End resamplingTab
 
@@ -41,15 +46,19 @@ def cccCalc(pred,ref):
 #End cccCalc
 
 #Remove the column that are not necessary in ARFF
-def removeColArff(arff, nMod):
+def removeColArff(arff):
 	ind = 0;
+	lenght = len(arff['attributes'])
 	while (ind < len(arff['attributes'])):
 		remove = False
-		for i in range(len(v.removedColArff[nMod])):
-			if (arff['attributes'][ind][0] == v.removedColArff[nMod][i]):
-				arff['attributes'] = np.delete(arff['attributes'],ind,0)
+		for i in range(len(v.removedColArff)):
+			if (ind == len(arff['attributes'])):
+				break
+			if (arff['attributes'][ind][0] == v.removedColArff[i]):
+				del(arff['attributes'][ind])
 				arff['data'] = np.delete(arff['data'],ind,1)
 				remove = True
+				lenght = len(arff['attributes'])
 		if (remove == False) :
 			ind += 1
 	return arff	
@@ -73,16 +82,12 @@ def arffToNan(arff):
 
 def unimodalPredPrep(wSize, wStep, nMod):
 	#We need the number of line for a wStep of v.tsp
-	train = arff.load(open(v.descNorm[nMod]+v.fconf[nMod]+"_train_"+str(wSize)+"_"+str(v.tsp)+"_norm.arff","rb"))
+	train = arff.load(open(v.descNorm[nMod]+"train_"+str(wSize)+"_"+str(v.tsp)+".arff","rb"))
 	trainLen = len(train['data'])
 	#We open corresponding files
-	train = arff.load(open(v.descNorm[nMod]+v.fconf[nMod]+"_train_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
-	dev = arff.load(open(v.descNorm[nMod]+v.fconf[nMod]+"_dev_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
-	test = arff.load(open(v.descNorm[nMod]+v.fconf[nMod]+"_test_"+str(wSize)+"_"+str(wStep)+"_norm.arff","rb"))
-	#We remove column that are not good
-	train = removeColArff(train, nMod)
-	dev = removeColArff(dev, nMod)
-	test = removeColArff(test, nMod)
+	train = arff.load(open(v.descNorm[nMod]+"train_"+str(wSize)+"_"+str(wStep)+".arff","rb"))
+	dev = arff.load(open(v.descNorm[nMod]+"dev_"+str(wSize)+"_"+str(wStep)+".arff","rb"))
+	test = arff.load(open(v.descNorm[nMod]+"test_"+str(wSize)+"_"+str(wStep)+".arff","rb"))
 	#We put to 0 NaN values
 	train = arffNan(train)
 	dev = arffNan(dev)
