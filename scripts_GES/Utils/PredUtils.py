@@ -18,13 +18,12 @@ def resamplingTab(tab, size):
 	#for i in range(size):
 	#	ind = int(float(len(tab)/size)*float(i))
 	# 	t.append(tab[ind])
-	s = signal.resample(tab,size)
-	#for i in range(len(s)):
-	#	print tab
-	#	if (s[i] > 1 or s[i] < -1):
-	#		print s[i]
-	return s
 	#return t 
+	if (len(tab) != size):
+		s = signal.resample(tab,size)
+		return s
+	else :
+		return tab
 #End resamplingTab
 
 #Calculus of CCC
