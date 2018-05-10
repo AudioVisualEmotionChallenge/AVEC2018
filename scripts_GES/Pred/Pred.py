@@ -52,7 +52,7 @@ def bestdelay(ccc, wSize, wStep, delay):
 		b[i] = -1
 	for i in range(len(ccc)):
 		for nDim in range(v.nDim):
-			if (ccc[i][0] == wSize and ccc[i][1] == wStep and ccc[i][4] == delay and ccc[i][2+nDim] > b[nDim]):
+			if (round(ccc[i][0],2) == round(wSize,2) and round(ccc[i][1],2) == round(wStep,2) and round(ccc[i][4],2) == round(delay,2) and ccc[i][2+nDim] > b[nDim]):
 				b[nDim] = ccc[i][2+nDim]
 	return b	
 
@@ -62,7 +62,7 @@ def bestVal(ccc, wSize, wStep):
 	bD = np.zeros(v.nDim)
 	for i in range(len(ccc)):
 		for nDim in range(v.nDim):
-			if (ccc[i][0] == wSize and ccc[i][1] == wStep and ccc[i][2+nDim] > b[nDim]):
+			if (round(ccc[i][0],2) == round(wSize,2) and round(ccc[i][1],2) == round(wStep,2) and ccc[i][2+nDim] > b[nDim]):
 				b[nDim] = ccc[i][2+nDim]
 				bD[nDim] = ccc[i][4]
 	return b, bD
@@ -123,7 +123,7 @@ def unimodalPred(nMod):
 						#Post-treatement
 						[cccSave, biasB, scaleB, bias, scale] = postTreatDev(cccDev, pred, gs, earlystop)
 						#We store the results
-						cccTab.append([round(wSize,2), round(wStep,2), round(cccSave[0],2), round(cccSave[1],2)
+						cccTab.append([round(wSize,2), round(wStep,2), round(cccSave[0],3), round(cccSave[1],3)
 						, round(delay,2), v.C[comp], v.matchGS[0], biasB, scaleB, bias[0], bias[1], scale[0], scale[1]])
 					#We get the best CCC for all the delay [0] Arousal/ [1] Valence
 					bDelay = bestdelay(cccTab, round(wSize,2), round(wStep,2), round(delay,2))
@@ -135,7 +135,7 @@ def unimodalPred(nMod):
 				print(v.goodColor+v.nameMod[nMod]+" : Unimodal prediction finished : "+str(wSize)+"/"+str(wStep)+v.endColor)
 				[b, bD] = bestVal(cccTab, wSize, wStep)
 				print(v.nameMod[nMod]+" : Best values for wSize : "+str(wSize)+" wStep : "+str(wStep)+" Ar/Va "+str(b)+" DlAr/DlVa "+str(bD))
-				tPlt.append([wSize, wStep, b[0], b[1]])
+				tPlt.append([wSize, wStep, round(b[0],3), round(b[1],3)])
 				#We write in this file for keeping a trace of what we do
 				f = open("./cccTab"+v.nameMod[nMod]+".txt","wb").write(str(cccTab))
 				wStep += v.stepStep[nMod]
