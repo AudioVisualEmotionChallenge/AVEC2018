@@ -7,11 +7,12 @@ from Setup import setup
 from ConcArff import concGs, concRec
 from FeatsNorm import normFeatures
 from PostTreats import postTreatTest
-from PredUtils import unimodalPredPrep, cccCalc
+from PredUtils import unimodalPredPrep, cccCalc, cutTab, predMulti
 from Print import printValTest
 from GSMatching import gsOpen, gsMatch
 sys.path.append(v.labLinearPath)
 from liblinearutil import train, predict
+from sklearn import linear_model
 import numpy as np
 import scipy as sp
 import timeit
@@ -32,7 +33,7 @@ def unimodalPredTest(gs, c, tr, te, de, nDim):
 	#We calculate the correlation and store it
 	cccTest = cccCalc(np.array(predTest),gsTe)
 	cccDev = cccCalc(np.array(predDev),gsDe)
-	return cccTest, predTest, cccDev, predDev
+	return cccTest, predTest, cccDev, predDev, gsDe, gsTe
 #Fin unimodalPredictionDev
 
 #Predict on test the best values found with Dev and print the results
@@ -40,6 +41,16 @@ def predictTest():
 	bestVals=cPickle.load(open("../Pred/BestValues.txt"))
 	#Concatenation of Gold Standards
 	concGs(True)
+	#Tab for the linear regression
+	predictionsDev = []
+	predictionsTest = []
+	gsDev = []
+	gsTest = []
+	for nDim in range(len(v.eName)):
+		predictionsDev.append([])
+		predictionsTest.append([])
+		gsDev.append([])
+		gsTest.append([])
 	for nMod in range(len(v.desc)):
 		for nDim in range(len(v.eName)):
 			bVals = bestVals[v.nameMod[nMod]][nDim]
@@ -67,10 +78,29 @@ def predictTest():
 			#We matche GoldStandards with parameters(wStep/fsize) and stock them
 			gs = gsMatch(method, dl, wSize, art, vat, dt, True)
 			#We do the prediction on Dev/Test
-			[cccTest, predTest, cccDev, predDev] = unimodalPredTest(gs, c, tr, te, de, nDim)
+			[cccTest, predTest, cccDev, predDev, gsDe, gsTe] = unimodalPredTest(gs, c, tr, te, de, nDim)
+			if (len(gsDev[nDim]) > len(gsDe) or len(gsDev[nDim]) == 0):
+				gsDev[nDim] = gsDe
+			if (len(gsTest[nDim]) > len(gsTe) or len(gsTest[nDim]) == 0):
+				gsTest[nDim] = gsTe
 			#Post-treatement
-			[cccTest, cccDev] = postTreatTest(gs, predTest, cccTest, predDev, cccDev, bias, scale, biasB, scaleB, nDim)
+			[cccTest, cccDev, predDev, predTest] = postTreatTest(gs, predTest, cccTest, predDev, cccDev, bias, scale, biasB, scaleB, nDim)
+			predictionsDev[nDim].append(predDev)
+			predictionsTest[nDim].append(predTest)
 			#We store the results
 			ccc = [nDim, round(cccDev,2), round(cccTest,2), round(wSize,2), round(wStep,2), round(dl,2), c, method, biasB, scaleB, bias, scale]
 			printValTest(ccc,nMod)
+	#We fix the size of the tab of prediction
+	predictionsDev = cutTab(predictionsDev)
+	predictionsTest = cutTab(predictionsTest)
+	#Now we do the linear regression
+	for nDim in range(len(v.eName)):
+		#Getting the coefficient for each modality on Dev
+		reg = linear_model.LinearRegression()
+		reg.fit(np.transpose(predictionsDev[nDim]),np.array(gsDev[nDim]))
+		coef = reg.coef_
+		print ("The coefficients for each modality are : "+str(coef))
+		#Doing the new prediction
+		predM = predMulti(coef,predictionsDev[nDim])
+		print cccCalc(predM,gsDev[nDim])
 #End predictTest
