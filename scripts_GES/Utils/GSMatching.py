@@ -10,34 +10,31 @@ sys.path.append(v.labLinearPath)
 import liblinearutil as llu
 
 #Open the differents ARFF needed for the matching
-def gsOpen(wSize, modeTest, nMod):
-	ar = {}
-	va = {}
-	d = {}
-	for s in "dev","train","test":
-		if (modeTest != True and s == "test"):
-			break
-		ar[s] = arff.load(open(v.gsConc+s+"_arousal.arff","rb"))
-		va[s] = arff.load(open(v.gsConc+s+"_valence.arff","rb"))
-		d[s] = arff.load(open(v.descNorm[nMod]+s+"_"+str(wSize)+"_"+str(v.tsp)+".arff","rb"))
-	return ar,va,d
+def gsOpen(wSize, modeTest):
+	gs = {}
+	for e in v.eName:
+		gs[e] = {}
+		for s in "dev","train","test":
+			if (modeTest != True and s == "test"):
+				break
+			gs[e][s] = arff.load(open(v.gsConc+s+"_"+e.lower()+".arff","rb"))
+	return gs
 #End goldStandardOpen
 
 #Apply the gold standards to the differents parameters and treatments
-def gsMatch(method, dl, wSize, art, vat, dt, modeTest):
+def gsMatch(method, dl, wSize, gs, nMod, trainLen, modeTest):
 	#Tab who will countain the matching
 	vGoldS = {}
+	tFD = trainLen/9
 	for s in "dev","train","test":
 		if (modeTest != True and s == "test"):
 			break
-		ar = art[s]
-		va = vat[s]
-		d = dt[s]
+		ar = gs['Arousal'][s]['data']
+		va = gs['Valence'][s]['data']
 		#In the concatenate file, we have 9 files
-		tFD = len(d['data'])/9
-		tFS = len(ar['data'])/9
+		tFS = len(ar)/9
 		#We get the data for each 9 files
-		for i in range(9):
+		for i in range(v.nbFPart):
 			#For all the value of a file
 			for j in range(tFD):
 				#The central method is : we take the mid point of earch window
@@ -46,7 +43,7 @@ def gsMatch(method, dl, wSize, art, vat, dt, modeTest):
 					ind = int(calcul)
 					if (ind >= tFS+tFS*i):
 						ind = tFS+tFS*i-1
-					vals = [ar['data'][ind][2],va['data'][ind][2]]
+					vals = [ar[ind][2],va[ind][2]]
 				#Else we use the mean method : we do the mean of each value in the window 
 				else :	
 					calcul = ((v.tsp*float(j)+dl)/v.ts)+float(tFS*i)
@@ -59,11 +56,11 @@ def gsMatch(method, dl, wSize, art, vat, dt, modeTest):
 					if (indA != ind):
 						moy = [0.0,0.0]
 						for k in range(ind, indA):
-							moy[0] += ar['data'][k][2]
-							moy[1] += va['data'][k][2]
+							moy[0] += ar[k][2]
+							moy[1] += va[k][2]
 						vals = [moy[0]/(indA-ind),moy[1]/(indA-ind)]
 					else:
-						vals = [ar['data'][ind][2],va['data'][ind][2]]
+						vals = [ar[ind][2],va[ind][2]]
 				if (vGoldS.get(s+"_ind",None) == None):
 					vGoldS[s] = []
 				vGoldS[s+"_ind"] = ind

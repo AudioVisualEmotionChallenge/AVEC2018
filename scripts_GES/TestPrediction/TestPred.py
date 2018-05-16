@@ -19,22 +19,79 @@ import timeit
 import cPickle
 
 #Unimodal prediction on Test partition
-def unimodalPredTest(gs, c, tr, te, de, nDim):
-	gsTe = np.array(gs['test'])[:,nDim]
-	gsDe = np.array(gs['dev'])[:,nDim]
-	gsTr = np.array(gs['train'])[:,nDim]
+def unimodalPredTest(gs, c, feat, nDim):
+	gsu = {}
+	pred = {}
+	ccc = {}
+	for s in v.part:
+		gsu[s] = np.array(gs[s])[:,nDim]
 	#Options for liblinear
 	options = "-s "+str(v.sVal)+" -c "+str(c)+" -B 1 -q"
 	#We learn the model on train
-	model = train(gsTr,tr,options)
+	model = train(gsu['train'],feat['train'],options)
 	#We predict on test data
-	predTest = np.array(predict(gsTe,te,model,"-q"))[0]
-	predDev = np.array(predict(gsDe,de,model,"-q"))[0]
-	#We calculate the correlation and store it
-	cccTest = cccCalc(np.array(predTest),gsTe)
-	cccDev = cccCalc(np.array(predDev),gsDe)
-	return cccTest, predTest, cccDev, predDev, gsDe, gsTe
+	for s in 'dev','test':
+		pred[s] = np.array(predict(gsu[s],feat[s],model,"-q"))[0]
+		#We calculate the correlation and store it
+		ccc[s] = cccCalc(np.array(pred[s]),gsu[s])
+	return ccc, pred, gsu
 #Fin unimodalPredictionDev
+
+#Print the best results for the unidimensionnal linear regression
+def bestLinearRegressionMono(results):
+	for nDim in range(len(v.eName)):
+		for a in range(len(v.aPart)):
+			#We get the best ccc for the dimension and partition
+			best = results[0]
+			for i in range(1,len(results)):
+				if (results[i][4+a] > best[4+a]):
+					best = result[i]
+			#We print it
+			print best
+			print ("The best linear regression for "+best[0])
+			print ("With func/complexity : "+str(best[1])+"/"+str(best[2]))
+			print ("The coefficients for each modality are : ")
+			for nMod in range(len(v.desc)):
+				print(v.nameMod[nMod]+" : "+str(best[3][nMod]))
+			print ("With ccc dev/test "+str(best[4])+"/"+str(best[5]))
+#End bestLinearRegressionMono
+
+#Do the multimodal linear regression and print the results
+def linearRegressionMono(preds, gsa):
+	results = []
+	#We fix the size of the tab of prediction
+	for s in v.aPart:
+		preds[s] = cutTab(preds[s])
+	#For all the functions used
+	for nbFunc in range(len(lFunc)):
+		for param in range(len(parFunc[nbFunc])):
+			for c in param :
+				#Now we do the linear regression
+				for nDim in range(len(v.eName)):
+					func = lFunc[nbFunc][0]
+					funcType = lFunc[nbFunc][1]
+					res = [v.eName[nDim],func,c]
+					#Getting the coefficient for each modality on Dev
+					if (c != 0):
+						reg = func(alpha=c)
+					else :
+						reg = func()
+					if (funcType == 0):
+						reg.fit(np.transpose(preds['dev'][nDim]),np.array(gsa['dev'][nDim]))
+						res.append(reg.coef_)
+						coef = reg.coef_
+					else:
+						reg.fit(np.transpose(preds['dev']),np.array(gsa['dev']))
+						res.append(reg.coef_[nDim])
+						coef = reg.coef_[nDim]
+					#Doing the new prediction
+					predM = {}
+					for s in v.aPart :
+						predM[s] = predMulti(coef,preds[s][nDim])	
+						res.append(round(cccCalc(predM[s],gsa[s][nDim]),3))
+					results.append(res)
+	return results
+#End linearRegression
 
 #Predict on test the best values found with Dev and print the results
 def predictTest():
@@ -42,15 +99,14 @@ def predictTest():
 	#Concatenation of Gold Standards
 	concGs(True)
 	#Tab for the linear regression
-	predictionsDev = []
-	predictionsTest = []
-	gsDev = []
-	gsTest = []
-	for nDim in range(len(v.eName)):
-		predictionsDev.append([])
-		predictionsTest.append([])
-		gsDev.append([])
-		gsTest.append([])
+	preds = {}
+	gsa = {}
+	for s in v.aPart :
+		preds[s] = []
+		gsa[s] = []
+		for nDim in range(len(v.eName)):
+			preds[s].append([])
+			gsa[s].append([])
 	for nMod in range(len(v.desc)):
 		for nDim in range(len(v.eName)):
 			bVals = bestVals[v.nameMod[nMod]][nDim]
@@ -72,35 +128,24 @@ def predictTest():
 			#Normalisation of Features
 			normFeatures(wSize, wStep, nMod)
 			#We open the files for the unimodal prediction
-			[tr,de, te] = unimodalPredPrep(wSize, wStep, nMod)
+			feats = unimodalPredPrep(wSize, wStep, nMod)
 			#We open the files for the Gold Standard Matching
-			[art, vat, dt] = gsOpen(wSize, True, nMod)
+			gsBase = gsOpen(wSize, True)
 			#We matche GoldStandards with parameters(wStep/fsize) and stock them
-			gs = gsMatch(method, dl, wSize, art, vat, dt, True)
+			gs = gsMatch(method, dl, wSize, gsBase, nMod, True)
 			#We do the prediction on Dev/Test
-			[cccTest, predTest, cccDev, predDev, gsDe, gsTe] = unimodalPredTest(gs, c, tr, te, de, nDim)
-			if (len(gsDev[nDim]) > len(gsDe) or len(gsDev[nDim]) == 0):
-				gsDev[nDim] = gsDe
-			if (len(gsTest[nDim]) > len(gsTe) or len(gsTest[nDim]) == 0):
-				gsTest[nDim] = gsTe
+			[ccc, pred, gsu] = unimodalPredTest(gs, c, feats, nDim)
 			#Post-treatement
-			[cccTest, cccDev, predDev, predTest] = postTreatTest(gs, predTest, cccTest, predDev, cccDev, bias, scale, biasB, scaleB, nDim)
-			predictionsDev[nDim].append(predDev)
-			predictionsTest[nDim].append(predTest)
+			[ccc, pred] = postTreatTest(gs, pred, ccc, bias, scale, biasB, scaleB, nDim)
+			#We save the predictions and GS
+			for s in v.aPart :
+				if (len(gsa[s][nDim]) > len(gsu[s]) or len(gsa[s][nDim]) == 0):
+					gsa[s][nDim] = gsu[s]
+				preds[s][nDim].append(pred[s])
 			#We store the results
-			ccc = [nDim, round(cccDev,2), round(cccTest,2), round(wSize,2), round(wStep,2), round(dl,2), c, method, biasB, scaleB, bias, scale]
+			ccc = [nDim, round(ccc['dev'],2), round(ccc['test'],2), round(wSize,2), round(wStep,2), round(dl,2), c, method, biasB, scaleB, bias, scale]
 			printValTest(ccc,nMod)
-	#We fix the size of the tab of prediction
-	predictionsDev = cutTab(predictionsDev)
-	predictionsTest = cutTab(predictionsTest)
-	#Now we do the linear regression
-	for nDim in range(len(v.eName)):
-		#Getting the coefficient for each modality on Dev
-		reg = linear_model.LinearRegression()
-		reg.fit(np.transpose(predictionsDev[nDim]),np.array(gsDev[nDim]))
-		coef = reg.coef_
-		print ("The coefficients for each modality are : "+str(coef))
-		#Doing the new prediction
-		predM = predMulti(coef,predictionsDev[nDim])
-		print cccCalc(predM,gsDev[nDim])
+	#Unidimensionnal
+	results = linearRegressionMono(preds, gsa)
+	bestLinearRegressionMono(results)
 #End predictTest

@@ -15,6 +15,9 @@ def main():
 		if (endOrNot == True):
 			if (len(sys.argv) > 1) :
 				arg = sys.argv[1]
+				for i in range(len(sys.argv)):
+					if (sys.argv[i] == "--debug"):
+						v.debugMode = True
 				if (arg >= "0" and arg <= str(int(len(v.desc)))):
 					Pred(int(arg))
 				elif (arg == "help"):

@@ -12,6 +12,29 @@ import scipy as sp
 from scipy import signal
 import timeit
 
+#Used to uniformize tab
+def cutTab(tab):
+	for nDim in range(len(v.eName)):
+		#First we get the min size of the dimension
+		minTab = 0
+		for nMod in range(len(v.desc)):
+			if (len(tab[nDim][nMod]) < minTab or minTab == 0):
+				minTab = len(tab[nDim][nMod])
+		#We need now to cut all tab to reach this size
+		for nMod in range(len(v.desc)):
+			oneF = int(minTab/9)
+			lTabC = len(tab[nDim][nMod])
+			temp = []
+			for i in range(v.nbFPart):
+				#We copy the elements
+				for j in range(oneF):
+					ind = (int(lTabC/9)*i)+j
+					temp.append(tab[nDim][nMod][ind])
+			tab[nDim][nMod] = temp
+	return tab
+#End cutTab
+		
+
 #Used to resample the tab
 def resamplingTab(tab, size):
 	#t = []
@@ -53,7 +76,7 @@ def removeColArff(arff):
 		for i in range(len(v.removedColArff)):
 			if (ind == len(arff['attributes'])):
 				break
-			if (arff['attributes'][ind][0] == v.removedColArff[i]):
+			if (str(arff['attributes'][ind][0]) == str(v.removedColArff[i])):
 				del(arff['attributes'][ind])
 				arff['data'] = np.delete(arff['data'],ind,1)
 				remove = True
@@ -63,6 +86,15 @@ def removeColArff(arff):
 	return arff	
 #Fin removeColArff
 
+#Returning the multimodal prediction according to coef
+def predMulti(coef, preds):
+	pred = []
+	for i in range(len(preds[0])):
+		p = 0
+		for nMod in range(len(v.desc)):
+			p += coef[nMod]*preds[nMod][i]
+		pred.append(p)
+	return pred
 #Put to 0 NaN values in ARFF
 def arffNan(arff):
 	for ind, att in enumerate(arff['attributes']):
@@ -80,23 +112,18 @@ def arffToNan(arff):
 	return arff
 
 def unimodalPredPrep(wSize, wStep, nMod):
+	feats = {}
 	#We need the number of line for a wStep of v.tsp
 	train = arff.load(open(v.descNorm[nMod]+"train_"+str(wSize)+"_"+str(v.tsp)+".arff","rb"))
 	trainLen = len(train['data'])
+	print trainLen
 	#We open corresponding files
-	train = arff.load(open(v.descNorm[nMod]+"train_"+str(wSize)+"_"+str(wStep)+".arff","rb"))
-	dev = arff.load(open(v.descNorm[nMod]+"dev_"+str(wSize)+"_"+str(wStep)+".arff","rb"))
-	test = arff.load(open(v.descNorm[nMod]+"test_"+str(wSize)+"_"+str(wStep)+".arff","rb"))
-	#We put to 0 NaN values
-	train = arffNan(train)
-	dev = arffNan(dev)
-	test = arffNan(test)
-	#We transform it in array
-	tr = np.array(train['data'])
-	de = np.array(dev['data'])
-	te = np.array(test['data'])
-	#We resample it to be at a wSize of v.tsp
-	tr = resamplingTab(tr, trainLen)
-	de = resamplingTab(de, trainLen)
-	te = resamplingTab(te, trainLen)
-	return tr,de,te
+	for s in v.part:	
+		feats[s] = arff.load(open(v.descNorm[nMod]+s+"_"+str(wSize)+"_"+str(wStep)+".arff","rb"))
+		#We put to 0 NaN values
+		feats[s] = arffNan(feats[s])
+		#We transform it in array
+		feats[s] = np.array(feats[s]['data'])
+		#We resample it to be at a wSize of v.tsp
+		feats[s] = resamplingTab(feats[s], trainLen)
+	return feats, trainLen

@@ -51,7 +51,7 @@ def setupDescAndGs(modeTest) :
 									found = True
 							if (found == False):
 								#One file is missing
-								print(name+" file is missing !")
+								print(v.nameMod[nDim]+" : "+name+" file is missing !")
 								endOrNot = False
 					wStep += v.stepStep[nDim]
 				wSize += v.sizeStep[nDim]

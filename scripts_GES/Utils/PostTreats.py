@@ -10,22 +10,19 @@ sys.path.append(v.labLinearPath)
 import liblinearutil as llu
 
 #Do the post treatement for test partition and save if there are better results
-def postTreatTest(gs, predTest, cccTest, predDev, cccDev, bias, scale, biasB, scaleB, nDim):
-	gsDev = np.array(gs['dev'])[:,nDim]
-	gsTest = np.array(gs['test'])[:,nDim]
-	if (biasB == True):
-		#We add the bias to the prediction and save if there is an improvement
-		predDev = np.array(predDev) + bias
-		cccDev = cccCalc(predDev,gsDev)
-		predTest = np.array(predTest) + bias
-		cccTest = cccCalc(predTest,gsTest)
-	if (scaleB == True):
-		#We apply the scale and save if improvement
-		predScaleDev = np.multiply(predDev,scale)
-		cccDev = cccCalc(predScaleDev,gsDev)
-		predScaleTest = np.multiply(predTest,scale)
-		cccTest = cccCalc(predScaleTest,gsTest)
-	return cccTest, cccDev
+def postTreatTest(gs, pred, ccc, bias, scale, biasB, scaleB, nDim):
+	gspt = {}
+	for s in 'dev','test':
+		gspt[s] = np.array(gs[s])[:,nDim]
+		if (biasB == True):
+			#We add the bias to the prediction and save if there is an improvement
+			pred[s] = np.array(pred[s]) + bias
+			ccc[s] = cccCalc(pred[s],gs[s])
+		if (scaleB == True):
+			#We apply the scale and save if improvement
+			pred[s] = np.multiply(pred[s],scale)
+			ccc[s] = cccCalc(pred[s],gs[s])
+	return ccc, pred
 #End postTreatementTest	
 
 #Do the post treatement for dev partition and save if there are better results

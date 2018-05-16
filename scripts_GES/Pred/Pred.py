@@ -24,7 +24,7 @@ from liblinearutil import train, predict
 import timeit
 
 #Unimodal prediction on Dev partition
-def unimodalPredDev(gs, c, tr, de, earlystop):
+def unimodalPredDev(gs, c, feats, earlystop):
 	[model, pred, cccDev] = [[] for i in range(3)]
 	gsC = np.array(gs['dev'])
 	#Options for liblinear
@@ -33,9 +33,9 @@ def unimodalPredDev(gs, c, tr, de, earlystop):
 	for nDim in range(v.nDim):
 		if (earlystop[nDim] != 0):
 			#We learn the model on train
-			model.append(train(np.array(gs['train'])[:,nDim],tr,options))
+			model.append(train(np.array(gs['train'])[:,nDim],feats['train'],options))
 			#We predict on dev data
-			pred.append(predict(gsC[:,nDim],de,model[nDim],"-q")[0])
+			pred.append(predict(gsC[:,nDim],feats['dev'],model[nDim],"-q")[0])
 			#We calculate the correlation and store it
 			cccDev.append(cccCalc(np.array(pred[nDim]),gsC[:,nDim]))
 		else :
@@ -110,16 +110,16 @@ def unimodalPred(nMod):
 				bDmU = [None,None]
 				bD = [None,None]
 				#We open the files for the unimodal prediction
-				[tr,de, te] = unimodalPredPrep(wSize, wStep, nMod)
+				[feats,trainLen] = unimodalPredPrep(wSize, wStep, nMod)
 				#We open the files for the Gold Standard Matching
-				[art, vat, dt] = gsOpen(wSize, False, nMod)
+				gsBase = gsOpen(wSize, False)
 				while (delay <= v.delMax[nMod]):
 					#We match GoldStandards with parameters(wSize, delay) and stock them
 					#wStep is always v.tsp for comparison
-					gs = gsMatch(v.matchGS[0], delay, wSize, art, vat, dt, False)
+					gs = gsMatch(v.matchGS[0], delay, wSize, gsBase, nMod, trainLen, False)
 					for comp in range(len(v.C)):
 						#We do the prediction
-						[cccDev, pred] = unimodalPredDev(gs, v.C[comp], tr, de, earlystop)
+						[cccDev, pred] = unimodalPredDev(gs, v.C[comp],feats, earlystop)
 						#Post-treatement
 						[cccSave, biasB, scaleB, bias, scale] = postTreatDev(cccDev, pred, gs, earlystop)
 						#We store the results
@@ -129,12 +129,14 @@ def unimodalPred(nMod):
 					bDelay = bestdelay(cccTab, round(wSize,2), round(wStep,2), round(delay,2))
 					#We see if we must earlystop or not
 					if (earlyStopDelay(earlystop, bDmU, bD, bDelay)) :
-						print (v.nameMod[nMod]+" : Earlystopping active pour le delay : "+str(delay))
+						if (v.debugMode == True):
+							print (v.nameMod[nMod]+" : Earlystopping active pour le delay : "+str(delay))
 						break
 					delay += v.delStep[nMod]
 				print(v.goodColor+v.nameMod[nMod]+" : Unimodal prediction finished : "+str(wSize)+"/"+str(wStep)+v.endColor)
 				[b, bD] = bestVal(cccTab, wSize, wStep)
-				print(v.nameMod[nMod]+" : Best values for wSize : "+str(wSize)+" wStep : "+str(wStep)+" Ar/Va "+str(b)+" DlAr/DlVa "+str(bD))
+				if (v.debugMode == True):
+					print(v.nameMod[nMod]+" : Best values for wSize : "+str(wSize)+" wStep : "+str(wStep)+" Ar/Va "+str(b)+" DlAr/DlVa "+str(bD))
 				tPlt.append([wSize, wStep, round(b[0],3), round(b[1],3)])
 				#We write in this file for keeping a trace of what we do
 				f = open("./cccTab"+v.nameMod[nMod]+".txt","wb").write(str(cccTab))

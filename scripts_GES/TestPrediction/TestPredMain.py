@@ -7,6 +7,9 @@ from Setup import setup
 def main():
 	endOrNot = setup(True)
 	if (endOrNot == True):
+		for i in range(len(sys.argv)):
+			if (sys.argv[i] == "--debug"):
+				v.debugMode = True
 		predictTest()
 	else :
 		print ("Error on setup, please check files")
