@@ -14,7 +14,7 @@ def gsOpen(wSize, modeTest):
 	gs = {}
 	for e in v.eName:
 		gs[e] = {}
-		for s in "dev","train","test":
+		for s in v.part:
 			if (modeTest != True and s == "test"):
 				break
 			gs[e][s] = arff.load(open(v.gsConc+s+"_"+e.lower()+".arff","rb"))
@@ -22,7 +22,7 @@ def gsOpen(wSize, modeTest):
 #End goldStandardOpen
 
 #Apply the gold standards to the differents parameters and treatments
-def gsMatch(method, dl, wSize, gs, nMod, trainLen, modeTest):
+def gsMatch(method, dl, wSize, gs, trainLen, modeTest):
 	#Tab who will countain the matching
 	vGoldS = {}
 	tFD = trainLen/9

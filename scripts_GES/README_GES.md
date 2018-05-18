@@ -22,7 +22,7 @@ For Gold Standard Creation (recreating in the GS Folder the baseline Gold Standa
 - Results will go to "gs_created" folder.
 For the Audio Prediction :
 - Go in the AudioPred folder
-- Type "python AudioPredMain.py ARGS"
+- Type "python PredMain.py ARGS"
 - If you don't put any argument the multimodal prediction will launch.
 - Otherwise you can put a number for the modality (for the number correspondance, type "python AudioPredMain.py help")
 

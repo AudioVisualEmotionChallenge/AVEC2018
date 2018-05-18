@@ -24,8 +24,14 @@ def main():
 					print("For unimodal prediction, here the correspondance")
 					for i in range(len(v.desc)):
 						print i,v.nameMod[i]
+				elif (arg == "--debug"):
+					Pred(None)
 				else :
 					print("Error on arguments")
+					print("For unimodal prediction, here the correspondance")
+					for i in range(len(v.desc)):
+						print i,v.nameMod[i]
+					print("For debug mode, type --debug")
 			else :
 				Pred(None)
 		else :

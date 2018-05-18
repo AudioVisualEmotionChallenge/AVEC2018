@@ -83,9 +83,10 @@ def setupDescAndGs(modeTest) :
 						print(name+" file is missing !")
 						endOrNot = False	
 		print("End of verifying files")
+		print("")
 		return endOrNot
 	except : 
-		print("Check your configuration file, path for Folder must not be ok")	
+		print("Check your configuration file, path for Folder must not be ok")
 
 def setup(modeTest):
 	return setupDescAndGs(modeTest)

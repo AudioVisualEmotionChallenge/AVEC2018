@@ -16,3 +16,7 @@ gsUse = "gs_1"
 
 #NUMBER OF THREADS
 nThreads = 4
+
+#CCC MODE
+#0 = normal mode on all the partition / 1 = mean of all ccc by subject
+cccMode = 1

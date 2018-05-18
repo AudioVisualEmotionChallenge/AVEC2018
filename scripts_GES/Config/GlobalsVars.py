@@ -60,6 +60,10 @@ else :
 
 #DEBUG MODE
 debugMode = False
+earlystop = 3
+
+#CCC MODE
+cccMode = c.cccMode
 
 #FUNCTION USED FOR LINEAR REGRESSION
 #0 = unidimentionnal regression/1 = multidimentionnal regression

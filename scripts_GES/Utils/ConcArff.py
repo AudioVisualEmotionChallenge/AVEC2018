@@ -70,6 +70,7 @@ def concGs(modeTest):
 				Conc += 1
 	if (v.debugMode == True):
 		print("Concatenated Gold Standards/was already/problems : "+v.goodColor+str(Conc)+v.endColor+"/"+str(AlConc)+"/"+v.errColor+str(Pb)+v.endColor)
+	print("")
 #End concGoldStandard
 
 #Concatener the recordings per partition (train / dev / test) and per modality

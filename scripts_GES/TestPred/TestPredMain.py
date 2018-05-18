@@ -3,6 +3,8 @@ from TestPred import predictTest
 import sys
 sys.path.append("../Utils/")
 from Setup import setup
+sys.path.append("../Config/")
+import GlobalsVars as v
 
 def main():
 	endOrNot = setup(True)
