@@ -1,42 +1,35 @@
 #Author: Adrien Michaud
 import sys
-sys.path.append("../Config/")
-import GlobalsVars as v
-sys.path.append("../Utils/")
-from Setup import setup
-from LinearRegression import linearRegression
-from ConcArff import concGs, concRec
-from FeatsNorm import normFeatures
-from PostTreats import postTreatTest
-from PredUtils import unimodalPredPrep, cccCalc, cutTab, predMulti
-from Print import printValTest, bestLinearRegression
-from GSMatching import gsOpen, gsMatch
-sys.path.append(v.labLinearPath)
-from liblinearutil import train, predict
-from sklearn import linear_model
 import numpy as np
 import scipy as sp
 import timeit
+import copy
 import cPickle
+sys.path.append("../Config/")
+import GlobalsVars as v
+sys.path.append("../Utils/")
+from sklearn import linear_model
+from Setup import setup
+from LinearRegression import regression
+from NormConc import normFeatures, concGs, concFeats
+from PredUtils import unimodalPredPrep, cccCalc, cutTab, predMulti, saveObject, restaurObject
+from Print import printValTest
+from GSMatching import gsOpen, gsMatch
 
-#Unimodal prediction on Test partition
-def unimodalPredTest(gs, c, feat, nDim):
-	gsu = {}
-	pred = {}
-	ccc = {}
-	for s in v.part:
-		gsu[s] = np.array(gs[s])[:,nDim]
-	#Options for liblinear
-	options = "-s "+str(v.sVal)+" -c "+str(c)+" -B 1 -q"
-	#We learn the model on train
-	model = train(gsu['train'],feat['train'],options)
-	#We predict on test data
-	for s in v.part:
-		pred[s] = np.array(predict(gsu[s],feat[s],model,"-q"))[0]
-		#We calculate the correlation and store it
-		ccc[s] = cccCalc(np.array(pred[s]),gsu[s])
-	return ccc, pred, gsu
-#Fin unimodalPredictionDev
+#Do the post treatement for test partition and save it
+def postTreatTest(gs, pred, ccc, bias, scale, nDim):
+	for s in 'dev','test':
+		gspt = np.array(gs[s])[:,nDim]
+		if (bias != 0.0):
+			#We add the bias to the prediction and save if there is an improvement
+			pred[s] = np.array(pred[s]) + bias
+			ccc[s] = cccCalc(pred[s],gspt)
+		if (scale != 0.0):
+			#We apply the scale and save if improvement
+			pred[s] = np.multiply(pred[s],scale)
+			ccc[s] = cccCalc(pred[s],gspt)
+	return ccc, pred
+#End postTreatementTest	
 
 #Predict on test the best values found with Dev and print the results
 def predictTest():
@@ -44,12 +37,15 @@ def predictTest():
 	#Concatenation of Gold Standards
 	concGs(True)
 	#Tab for the linear regression
-	preds = {}
-	gsPart = {}
-	for s in v.aPart :
-		preds[s] = []
-		for nDim in range(len(v.eName)):
-			preds[s].append([])
+	datas = {}
+	for s in 'dev','test','gs','cccs':
+		datas[s] = []
+	for nDim in range(len(v.eName)):
+		for s in 'dev','test','gs','cccs':
+			datas[s].append([])
+		for nMod in range(len(v.desc)):
+			for s in 'dev','test','cccs' :
+				datas[s][nDim].append([])
 	print(v.goodColor+"Test prediction in progress..."+v.endColor)
 	for nMod in range(len(v.desc)):
 		for nDim in range(len(v.eName)):
@@ -64,27 +60,37 @@ def predictTest():
 			#Var for storing differents CCC
 			ccc = []
 			#Concatenation of ARFF data
-			concRec(wSize, wStep, nMod)
+			concFeats(wSize, wStep, nMod)
 			#Normalisation of Features
 			normFeatures(wSize, wStep, nMod)
 			#We open the files for the unimodal prediction
-			[feats,trainLen] = unimodalPredPrep(wSize, wStep, nMod)
-			#We open the files for the Gold Standard Matching
-			gsBase = gsOpen(wSize, True)
+			feats = unimodalPredPrep(wSize, wStep, nMod)
 			#We matche GoldStandards with parameters(wStep/fsize) and stock them
-			gs = gsMatch(v.matchGS[0], dl, wSize, gsBase, trainLen,True)
+			gs = gsMatch(v.matchGS[1], dl, wSize, nMod, True)
 			#We do the prediction on Dev/Test
-			[ccc, pred, gsu] = unimodalPredTest(gs, c, feats, nDim)
+			[cccs, preds] = unimodalPred(gs, c, feats, nDim, True)
 			#Post-treatement
-			[ccc, pred] = postTreatTest(gs, pred, ccc, bias, scale, nDim)
-			#We save the predictions and GS
+			[cccs, preds] = postTreatTest(gs, pred, cccs, bias, scale, nDim)
+			#We save the predictions/cccs and GS
 			for s in v.aPart :
-				preds[s][nDim].append(pred[s])
-				if (gsPart.get(s,None) == None or len(gsPart[s]) > len(gs[s])):
-					gsPart[s] = gs[s]
-			#We store the results
-			ccc = [nDim, round(ccc['dev'],3), round(ccc['test'],3), round(wSize,2), round(wStep,2), round(dl,2), c, v.matchGS[0], bias, scale]
-			printValTest(ccc,nMod)
-	results = linearRegression(preds, gsPart)
-	bestLinearRegression(results)
+				datas[s][nDim][nMod] = pred[s]
+			if (len(datas['gs'][nDim]) == 0 or len(datas['gs'][nDim]) > len(gs[nDim])):
+				datas['gs'][nDim] = gs[nDim]
+			datas['cccs'][nDim][nMod] = [[round(cccs['dev'],3), round(cccs['test'],3)], round(wSize,2), round(wStep,2), round(dl,2), c, bias, scale]
+			printValTest(datas['cccs'],nMod, nDim)
+	saveObject(preds,"./datas.obj")
+	datas = restaurObject("./datas.obj")
+	regression(datas, True)
 #End predictTest
+
+def main():
+	endOrNot = setup(True)
+	if (endOrNot == True):
+		for i in range(len(sys.argv)):
+			if (sys.argv[i] == "--debug"):
+				v.debugMode = True
+		predictTest()
+	else :
+		print ("Error on setup, please check files")
+
+main()

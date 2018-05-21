@@ -18,13 +18,13 @@ The base folders will be those of the AVEC_2018 GES repository; structure and na
 #HOW TO RUN
 For Gold Standard Creation (recreating in the GS Folder the baseline Gold Standard) :
 - Go in the GoldStandardCreation folder
-- Type "python GSCreationMain.py"
+- Type "python GSCreation.py"
 - Results will go to "gs_created" folder.
 For the Audio Prediction :
 - Go in the AudioPred folder
-- Type "python PredMain.py ARGS"
+- Type "python Pred.py ARGS"
 - If you don't put any argument the multimodal prediction will launch.
-- Otherwise you can put a number for the modality (for the number correspondance, type "python AudioPredMain.py help")
+- Otherwise you can put a number for the modality (for the number correspondance, type "python AudioPred.py help")
 
 #HOW TO INSTALL PYTHON AND ALL LIBRARY IN WINDOWS (tested on Windows 7 - 64bits)
 - Download python2.7, you can get it here : https://www.python.org/downloads/release/python-2715/

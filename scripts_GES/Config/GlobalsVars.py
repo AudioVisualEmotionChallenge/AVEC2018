@@ -20,6 +20,8 @@ agsCreat = gsFolder+"gs_created/"
 agsc = [agsCreat+"arousal/",agsCreat+"valence/"]
 #Folder for individuals gold standards tab
 agsi = [gsFolder+"individual/arousal/",gsFolder+"/individual/valence/"]
+#Var for gs
+gsBase = None
 
 #DESCRIPTORS FILES
 #Folder for all descriptors
@@ -29,6 +31,8 @@ videoFeat = c.basePath+"features/video/"
 physioFeat = c.basePath+"features/physio/"
 desc = [audioFeat+"eGeMAPSfunct/",audioFeat+"AUDeep/",videoFeat+"appearance/",videoFeat+"AU/",physioFeat+"ECG/", physioFeat+"HRHRV/", physioFeat+"EDA/", physioFeat+"SCL/", physioFeat+"SCR/"]
 nameMod = ["eGeMAPSfunct","AUDeep","appearance","AU","ECG", "HRHRV","EDA","SCL","SCR"]
+catMod = ["Audio","Video","Physio"]
+catModApp = [["eGeMAPSfunct","AUDeep"],["appearance","AU"],["ECG", "HRHRV","EDA","SCL","SCR"]]
 descConc = []
 for i in range(len(desc)):
 	descConc.append(desc[i]+"Conc/")
@@ -67,7 +71,7 @@ cccMode = c.cccMode
 
 #FUNCTION USED FOR LINEAR REGRESSION
 #0 = unidimentionnal regression/1 = multidimentionnal regression
-lFunc =[[linear_model.LinearRegression,0],[linear_model.Ridge,0],[linear_model.Lasso,0],[linear_model.MultiTaskLasso,1], [linear_model.ElasticNet,1],[linear_model.MultiTaskElasticNet,1]]
+lFunc =[[linear_model.LinearRegression,0,"RegLin"],[linear_model.Ridge,0,"Ridge"],[linear_model.Lasso,0,"Lasso"],[linear_model.MultiTaskLasso,1,"Multitask-Lasso"], [linear_model.ElasticNet,1,"ElasticNet"],[linear_model.MultiTaskElasticNet,1,"Multitask-ElasticNet"]]
 parFunc = [[0.0],
 		[0.01,0.001,0.0001,0.00001,0.00001,0.0000001,0.00000001,0.000000001],
 		[0.01,0.001,0.0001,0.00001,0.00001,0.0000001,0.00000001,0.000000001],

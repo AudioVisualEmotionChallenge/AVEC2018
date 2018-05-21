@@ -9,8 +9,26 @@ import time
 import numpy as np
 import sys
 import scipy as sp
-from scipy import signal
 import timeit
+import cPickle
+from scipy import signal
+sys.path.append(v.labLinearPath)
+from liblinearutil import train, predict
+
+#Save an object on the disk using cPickle module
+def saveObject(obj, addr):
+	f = open(addr,"wb")
+	cPickle.dump(obj, f)
+	f.close()
+#End saveObject
+
+#Restaure an object saved on the disk using cPickle module
+def restaurObject(addr):
+	f = open(addr,"rb")
+	obj = cPickle.load(f)
+	f.close()
+	return obj
+#End restaurObject
 
 #Used to uniformize tab
 def cutTab(tab):
@@ -38,11 +56,6 @@ def cutTab(tab):
 
 #Used to resample the tab
 def resamplingTab(tab, size):
-	#t = []
-	#for i in range(size):
-	#	ind = int(float(len(tab)/size)*float(i))
-	# 	t.append(tab[ind])
-	#return t 
 	if (len(tab) != size):
 		s = signal.resample(tab,size)
 		return s
@@ -111,12 +124,12 @@ def predMulti(coef, preds, nDim, funcType):
 	for i in range(len(preds[nDim][0])):
 		p = 0
 		if (funcType == 0):
-			for nMod in range(len(v.desc)):
+			for nMod in range(len(preds[nDim])):
 				p += coef[nMod]*preds[nDim][nMod][i]
 		else:
 			for dim in range(len(v.eName)):
-				for nMod in range(len(v.desc)):
-					p+= coef[nDim][nMod+dim*len(v.desc)]*preds[dim][nMod][i]
+				for nMod in range(len(preds[nDim])):
+					p+= coef[nDim][nMod+dim*len(preds[nDim])]*preds[dim][nMod][i]
 		pred.append(p)
 	return pred
 #Put to 0 NaN values in ARFF
@@ -135,11 +148,11 @@ def arffToNan(arff):
 				val[ind] = np.nan
 	return arff
 
+#Load and prepare files for the unimodal prediction
 def unimodalPredPrep(wSize, wStep, nMod):
 	feats = {}
 	#We need the number of line for a wStep of v.tsp
-	train = arff.load(open(v.descNorm[nMod]+"train_"+str(wSize)+"_"+str(v.tsp)+".arff","rb"))
-	trainLen = len(train['data'])
+	trainLen = len(arff.load(open(v.descNorm[nMod]+"train_"+str(wSize)+"_"+str(v.tsp)+".arff","rb"))['data'])
 	#We open corresponding files
 	for s in v.part:	
 		feats[s] = arff.load(open(v.descNorm[nMod]+s+"_"+str(wSize)+"_"+str(wStep)+".arff","rb"))
@@ -149,4 +162,24 @@ def unimodalPredPrep(wSize, wStep, nMod):
 		feats[s] = np.array(feats[s]['data'])
 		#We resample it to be at a wSize of v.tsp
 		feats[s] = resamplingTab(feats[s], trainLen)
-	return feats, trainLen
+	return feats
+#End unimodalPredPrep
+
+#Unimodal prediction on partitions
+def unimodalPred(gs, c, feats, nDim, modeTest):
+	[gsPreds, cccs, preds] = [{} for i in range(3)]
+	if (modeTest == True):
+		parts = ['dev','test']
+	else :
+		parts = ['dev']
+	#Options for liblinear
+	options = "-s "+str(v.sVal)+" -c "+str(c)+" -B 1 -q"
+	#We learn the model on train
+	model = train(gs['train'][nDim],feats['train'],options)
+	#We predict on data
+	for s in parts:
+		preds[s] = np.array(predict(gs[s][nDim],feats[s],model,"-q"))[0]
+		#We calculate the correlation and store it
+		cccs[s] = cccCalc(np.array(preds[s]),gs[s][nDim])
+	return cccs, preds
+#Fin unimodalPred

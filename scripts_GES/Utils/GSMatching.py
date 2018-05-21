@@ -2,15 +2,11 @@
 import sys
 sys.path.append("../Config/")
 import GlobalsVars as v
-import arff
-import os
 import numpy as np
-import sys
-sys.path.append(v.labLinearPath)
-import liblinearutil as llu
+import arff
 
 #Open the differents ARFF needed for the matching
-def gsOpen(wSize, modeTest):
+def gsOpen(modeTest):
 	gs = {}
 	for e in v.eName:
 		gs[e] = {}
@@ -22,15 +18,19 @@ def gsOpen(wSize, modeTest):
 #End goldStandardOpen
 
 #Apply the gold standards to the differents parameters and treatments
-def gsMatch(method, dl, wSize, gs, trainLen, modeTest):
+def gsMatch(method, dl, wSize, nMod, modeTest):
+	if (v.gsBase == None):
+		#We open files for the Gold Standard Matching
+		v.gsBase = gsOpen(modeTest)
 	#Tab who will countain the matching
-	vGoldS = {}
+	gs = {}
+	trainLen = len(arff.load(open(v.descNorm[nMod]+"train_"+str(wSize)+"_"+str(v.tsp)+".arff","rb"))['data'])
 	tFD = trainLen/9
-	for s in "dev","train","test":
+	for s in v.part :
 		if (modeTest != True and s == "test"):
 			break
-		ar = gs['Arousal'][s]['data']
-		va = gs['Valence'][s]['data']
+		ar = v.gsBase['Arousal'][s]['data']
+		va = v.gsBase['Valence'][s]['data']
 		#In the concatenate file, we have 9 files
 		tFS = len(ar)/9
 		#We get the data for each 9 files
@@ -61,11 +61,16 @@ def gsMatch(method, dl, wSize, gs, trainLen, modeTest):
 						vals = [moy[0]/(indA-ind),moy[1]/(indA-ind)]
 					else:
 						vals = [ar[ind][2],va[ind][2]]
-				if (vGoldS.get(s+"_ind",None) == None):
-					vGoldS[s] = []
-				vGoldS[s+"_ind"] = ind
-				if (vGoldS.get(s,None) == None):
-					vGoldS[s] = []
-				vGoldS[s].append(vals)
-	return vGoldS
+				#if (gs.get(s+"_ind",None) == None):
+				#	gs[s] = []
+				#gs[s+"_ind"] = ind
+				if (gs.get(s,None) == None):
+					gs[s] = []
+				gs[s].append(vals)
+	#We reformat the tab
+	for s in v.part:
+		if (modeTest != True and s == "test"):
+			break
+		gs[s] = np.transpose(np.array(gs[s]))
+	return gs
 #End goldStandardMatch : return a tab countaining the matching

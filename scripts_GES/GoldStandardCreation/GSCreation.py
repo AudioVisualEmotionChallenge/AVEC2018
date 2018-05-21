@@ -1,13 +1,13 @@
 #Author: Adrien Michaud
 import sys
-sys.path.append("../Config/")
-import GlobalsVars as v
-sys.path.append("../Utils/")
-from Setup import setup
 import csv
 import os
 import arff
 import numpy as np
+sys.path.append("../Config/")
+import GlobalsVars as v
+sys.path.append("../Utils/")
+from Setup import setupGS
 
 #Return a collection countaining all CSV files in the form tab[Dimension][File]
 def openingRatingIndividual():
@@ -166,3 +166,9 @@ def gsCreation():
 	print("Perform CCC centring...")
 	cccCentring(ra, combnk, files, aRa, rGoldIndiv)
 #End gsCreation
+
+def main():
+	setupGS()
+	gsCreation()
+
+main()
