@@ -12,7 +12,7 @@ from sklearn import linear_model
 from Setup import setup
 from LinearRegression import regression
 from NormConc import normFeatures, concGs, concFeats
-from PredUtils import unimodalPredPrep, cccCalc, cutTab, predMulti, saveObject, restaurObject
+from PredUtils import unimodalPredPrep, cccCalc, cutTab, predMulti, saveObject, restaurObject, initTabData, unimodalPred
 from Print import printValTest
 from GSMatching import gsOpen, gsMatch
 
@@ -33,19 +33,11 @@ def postTreatTest(gs, pred, ccc, bias, scale, nDim):
 
 #Predict on test the best values found with Dev and print the results
 def predictTest():
-	bestVals=cPickle.load(open("../Pred/BestValues.txt"))
+	bestVals = restaurObject("../Pred/BestValues.obj")
 	#Concatenation of Gold Standards
 	concGs(True)
 	#Tab for the linear regression
-	datas = {}
-	for s in 'dev','test','gs','cccs':
-		datas[s] = []
-	for nDim in range(len(v.eName)):
-		for s in 'dev','test','gs','cccs':
-			datas[s].append([])
-		for nMod in range(len(v.desc)):
-			for s in 'dev','test','cccs' :
-				datas[s][nDim].append([])
+	datas = initTabData()
 	print(v.goodColor+"Test prediction in progress..."+v.endColor)
 	for nMod in range(len(v.desc)):
 		for nDim in range(len(v.eName)):
@@ -57,8 +49,6 @@ def predictTest():
 			c = float(bVals[5])
 			bias = float(bVals[6])
 			scale = float(bVals[7])
-			#Var for storing differents CCC
-			ccc = []
 			#Concatenation of ARFF data
 			concFeats(wSize, wStep, nMod)
 			#Normalisation of Features
@@ -70,12 +60,12 @@ def predictTest():
 			#We do the prediction on Dev/Test
 			[cccs, preds] = unimodalPred(gs, c, feats, nDim, True)
 			#Post-treatement
-			[cccs, preds] = postTreatTest(gs, pred, cccs, bias, scale, nDim)
+			[cccs, preds] = postTreatTest(gs, preds, cccs, bias, scale, nDim)
 			#We save the predictions/cccs and GS
 			for s in v.aPart :
-				datas[s][nDim][nMod] = pred[s]
-			if (len(datas['gs'][nDim]) == 0 or len(datas['gs'][nDim]) > len(gs[nDim])):
-				datas['gs'][nDim] = gs[nDim]
+				datas[s][nDim][nMod] = preds[s]
+				if (len(datas['gs'][nDim]) == 0 or len(datas['gs'][nDim]) > len(gs[s][nDim])):
+					datas['gs'][nDim] = gs[s][nDim]
 			datas['cccs'][nDim][nMod] = [[round(cccs['dev'],3), round(cccs['test'],3)], round(wSize,2), round(wStep,2), round(dl,2), c, bias, scale]
 			printValTest(datas['cccs'],nMod, nDim)
 	saveObject(preds,"./datas.obj")

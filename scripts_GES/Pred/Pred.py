@@ -14,8 +14,9 @@ import GlobalsVars as v
 from multiprocessing import Process
 from scipy import signal
 sys.path.append("../Utils/")
-from PredUtils import unimodalPredPrep, cccCalc, resamplingTab,saveObject, restaurObject, unimodalPred
+from PredUtils import unimodalPredPrep, cccCalc, cutTab, predMulti, saveObject, restaurObject, initTabData, unimodalPred
 from GSMatching import gsOpen, gsMatch
+from LinearRegression import regression
 from NormConc import normFeatures,concGs, concFeats
 from Print import printBestVal, bestdelay, bestVal
 from Setup import setup
@@ -71,9 +72,8 @@ def unimodalPreds(nMod):
 			wStep = v.stepBeg[nMod]
 			while (wStep <= v.stepMax[nMod]) :
 				print(v.goodColor+v.nameMod[nMod]+" : Unimodal prediction in progress : "+str(wSize)+"/"+str(wStep)+"..."+v.endColor)
-				#Concatenation of features
+				#Concatenation & normalisation of features
 				concFeats(wSize, wStep, nMod)
-				#Normalisation of features
 				normFeatures(wSize,wStep, nMod)
 				#We open files for the unimodal prediction
 				feats = unimodalPredPrep(wSize, wStep, nMod)
@@ -93,6 +93,7 @@ def unimodalPreds(nMod):
 								if (len(data['cccs'][nDim][nMod]) == 0 or ccc > data['cccs'][nDim][nMod][0][0]):
 									data['dev'][nDim][nMod] = pred
 									data['cccs'][nDim][nMod] = [[round(ccc,3)], round(wSize,2), round(wStep,2), round(delay,2), v.C[comp], bias, scale]
+								if (len(data['gs'][nDim]) == 0 or len(data['gs'][nDim]) > len(gs['dev'][nDim])):								
 									data['gs'][nDim] = gs['dev'][nDim]
 								res.append([nDim, round(wSize,2), round(wStep,2), round(ccc,3), round(delay,2), v.C[comp], bias, scale])
 					delay += v.delStep[nMod]
@@ -112,7 +113,7 @@ def unimodalPreds(nMod):
 			datas['cccs'][nDim][nMod] = data['cccs'][nDim][nMod]
 			if (len(datas['gs'][nDim]) == 0 or len(datas['gs'][nDim]) > len(data['gs'][nDim])):
 				datas['gs'][nDim] = data['gs'][nDim]
-		saveObject(predsObj,"./datas.obj")
+		saveObject(datas,"./datas.obj")
 	except KeyboardInterrupt :
 		printBestVal(res, tPlt, nMod)
 		raise
@@ -123,15 +124,7 @@ def multimodalPreds():
 	try :
 		bVals = {}
 		saveObject(bVals,"./BestValues.obj")
-		datas = {}
-		for s in 'dev','gs','cccs':
-			datas[s] = []
-		for nDim in range(len(v.eName)):
-			for s in 'dev','gs','cccs':
-				datas[s].append([])
-			for nMod in range(len(v.desc)):
-				for s in 'dev','cccs' :
-					datas[s][nDim].append([])
+		datas = initTabData()
 		saveObject(datas,"./datas.obj")
 		ps = []
 		pActive = 1
@@ -153,7 +146,7 @@ def multimodalPreds():
 				ps[i].join()
 		#We now can do the linear regression
 		datas = restaurObject("./datas.obj")
-		regression(datas, cccs)
+		regression(datas, False)
 	except KeyboardInterrupt:
 		for i in range(len(ps)):
 			ps[i].terminate()

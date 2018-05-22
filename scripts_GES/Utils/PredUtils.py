@@ -15,6 +15,20 @@ from scipy import signal
 sys.path.append(v.labLinearPath)
 from liblinearutil import train, predict
 
+#Used to create the tab countaining all datas
+def initTabData():
+	datas = {}
+	for s in 'dev','test','gs','cccs':
+		datas[s] = []
+	for nDim in range(len(v.eName)):
+		for s in 'dev','test','gs','cccs':
+			datas[s].append([])
+		for nMod in range(len(v.desc)):
+			for s in 'dev','test','cccs' :
+				datas[s][nDim].append([])
+	return datas
+#End initTabData
+
 #Save an object on the disk using cPickle module
 def saveObject(obj, addr):
 	f = open(addr,"wb")
@@ -167,7 +181,7 @@ def unimodalPredPrep(wSize, wStep, nMod):
 
 #Unimodal prediction on partitions
 def unimodalPred(gs, c, feats, nDim, modeTest):
-	[gsPreds, cccs, preds] = [{} for i in range(3)]
+	[cccs, preds] = [{} for i in range(2)]
 	if (modeTest == True):
 		parts = ['dev','test']
 	else :

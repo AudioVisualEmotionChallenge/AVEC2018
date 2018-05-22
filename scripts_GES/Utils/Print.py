@@ -5,7 +5,7 @@ from PredUtils import restaurObject, saveObject
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def CSVtab(cccs, linReg, catReg, multReg):
+def CSVtab(cccs, linReg, catReg, multReg, part):
 	#Tab for unimodal CCC
 	#Labels
 	tabCCC = "Unimodal"
@@ -14,8 +14,8 @@ def CSVtab(cccs, linReg, catReg, multReg):
 	tabCCC += "\n"
 	#Data
 	for nDim in range(v.nDim):
-		for nPart in range(len(v.aPart)):
-			tabCCC+= v.eName[nDim]+" - "+v.aPart[nPart]
+		for nPart in range(len(part)):
+			tabCCC+= v.eName[nDim]+" - "+part[nPart]
 			for nMod in range(len(v.desc)):
 				tabCCC += ";"+str(cccs[nDim][nMod][0][nPart])
 			tabCCC += "\n"
@@ -28,8 +28,8 @@ def CSVtab(cccs, linReg, catReg, multReg):
 	tabCCC += "\n"
 	#Data
 	for nDim in range(v.nDim):
-		for nPart in range(len(v.aPart)):
-			tabCCC += v.eName[nDim]+" - "+v.aPart[nPart]
+		for nPart in range(len(part)):
+			tabCCC += v.eName[nDim]+" - "+part[nPart]
 			for nFunc in range(len(v.lFunc)):
 				best = bestCCCPartLinRegFunc(linReg,nFunc,nPart,nDim)
 				tabCCC += ";"+str(best[3][nDim][nPart])
@@ -49,8 +49,8 @@ def CSVtab(cccs, linReg, catReg, multReg):
 	tabCCC += "\n"
 	#Data
 	for nDim in range(v.nDim):
-		for nPart in range(len(v.aPart)):
-			tabCCC += v.eName[nDim]+" - "+v.aPart[nPart]
+		for nPart in range(len(part)):
+			tabCCC += v.eName[nDim]+" - "+part[nPart]
 			for nCat in range(len(v.catMod)):
 				for nFunc in range(len(v.lFunc)):
 					best = bestCCCPartLinRegFunc(catReg[nCat],nFunc,nPart,nDim)
@@ -65,8 +65,8 @@ def CSVtab(cccs, linReg, catReg, multReg):
 	tabCCC += "\n"
 	#Data
 	for nDim in range(v.nDim):
-		for nPart in range(len(v.aPart)):
-			tabCCC += v.eName[nDim]+" - "+v.aPart[nPart]
+		for nPart in range(len(part)):
+			tabCCC += v.eName[nDim]+" - "+part[nPart]
 			for nFunc in range(len(v.lFunc)):
 				best = bestCCCPartLinRegFunc(multReg,nFunc,nPart,nDim)
 				tabCCC += ";"+str(best[3][nDim][nPart])
@@ -76,6 +76,7 @@ def CSVtab(cccs, linReg, catReg, multReg):
 	f = open("./results.csv","wb")
 	f.write(str(tabCCC))
 	f.close()
+#End CSVTab
 			
 #Return the best ccc value for a window size, a window step and a delay given
 def bestdelay(cccs, wSize, wStep, delay):
