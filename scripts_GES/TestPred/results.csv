@@ -1,0 +1,29 @@
+Unimodal;eGeMAPSfunct;AUDeep;appearance;AU;ECG;HRHRV;EDA;SCL;SCR
+Arousal - dev;0.751;0.617;0.428;0.285;0.216;0.187;0.052;0.095;0.112
+Arousal - test;0.621;0.486;0.281;0.215;0.078;0.103;0.03;0.068;0.061
+Valence - dev;0.314;0.034;0.415;0.492;0.125;0.166;0.077;0.1;0.047
+Valence - test;0.203;0.027;0.389;0.378;0.047;0.06;0.075;0.1;0.062
+
+
+Multimodal - Multi-Representative;RegLin;Ridge;Lasso;Multitask-Lasso;ElasticNet;Multitask-ElasticNet;Best
+Arousal - dev;0.692;0.692;0.726;0.774;0.776;0.776;0.776
+Arousal - test;0.528;0.528;0.563;0.599;0.601;0.6;0.601
+Valence - dev;0.381;0.381;0.381;0.428;0.42;0.425;0.428
+Valence - test;0.31;0.31;0.31;0.336;0.328;0.332;0.336
+
+
+Multi-Representative;Audio;;;;;;;Video;;;;;;;Physio;;;;;;
+;RegLin;Ridge;Lasso;Multitask-Lasso;ElasticNet;Multitask-ElasticNet;Best;RegLin;Ridge;Lasso;Multitask-Lasso;ElasticNet;Multitask-ElasticNet;Best;RegLin;Ridge;Lasso;Multitask-Lasso;ElasticNet;Multitask-ElasticNet;Best
+Arousal - dev;0.737;0.737;0.737;0.715;0.705;0.698;0.752;0.327;0.327;0.327;0.324;0.324;0.324;0.414;0.052;0.052;0.052;0.117;0.117;0.117;0.117
+Arousal - test;0.599;0.599;0.599;0.589;0.587;0.583;0.621;0.232;0.232;0.232;0.274;0.274;0.274;0.27;0.046;0.046;0.046;0.045;0.045;0.045;0.045
+Valence - dev;0.192;0.192;0.192;0.248;0.248;0.248;0.314;0.335;0.335;0.335;0.335;0.335;0.335;0.377;0.091;0.091;0.091;0.081;0.086;0.081;0.127
+Valence - test;0.115;0.115;0.115;0.191;0.191;0.191;0.203;0.283;0.283;0.282;0.288;0.288;0.288;0.307;0.045;0.045;0.046;0.076;0.078;0.076;0.044
+
+
+Multi-modal Hierarchic;RegLin;Ridge;Lasso;Multitask-Lasso;ElasticNet;Multitask-ElasticNet;Best
+Arousal - dev;0.757;0.757;0.757;0.777;0.777;0.777;0.777
+Arousal - test;0.549;0.549;0.552;0.587;0.587;0.586;0.587
+Valence - dev;0.402;0.402;0.402;0.418;0.412;0.414;0.418
+Valence - test;0.298;0.298;0.298;0.296;0.291;0.305;0.296
+
+

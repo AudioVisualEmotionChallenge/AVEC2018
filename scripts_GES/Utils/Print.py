@@ -1,11 +1,14 @@
 #Author: Adrien Michaud
 import GlobalsVars as v
 import numpy as np
-from PredUtils import restaurObject, saveObject
+from PredUtils import restaurObject, saveObject, cccCalc
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def CSVtab(cccs, linReg, catReg, multReg, part):
+def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
+	cccs = datas['cccs']
 	#Tab for unimodal CCC
 	#Labels
 	tabCCC = "Unimodal"
@@ -15,63 +18,78 @@ def CSVtab(cccs, linReg, catReg, multReg, part):
 	#Data
 	for nDim in range(v.nDim):
 		for nPart in range(len(part)):
-			tabCCC+= v.eName[nDim]+" - "+part[nPart]
+			s = part[nPart]
+			tabCCC+= v.eName[nDim]+" - "+s
 			for nMod in range(len(v.desc)):
 				tabCCC += ";"+str(cccs[nDim][nMod][0][nPart])
 			tabCCC += "\n"
-	tabCCC += "\n"
+	tabCCC += "\n\n"
 	#Tab for multimodal - multi representative
 	#Labels
-	tabCCC += "Multimodal - Multi-Representation"
+	tabCCC += "Multimodal - Multi-Representative"
 	for nFunc in range(len(v.lFunc)):
 		tabCCC += ";"+v.lFunc[nFunc][2]
-	tabCCC += "\n"
+	tabCCC += ";Best\n"
 	#Data
 	for nDim in range(v.nDim):
 		for nPart in range(len(part)):
-			tabCCC += v.eName[nDim]+" - "+part[nPart]
+			s = part[nPart]
+			#All functions
+			tabCCC += v.eName[nDim]+" - "+s
 			for nFunc in range(len(v.lFunc)):
-				best = bestCCCPartLinRegFunc(linReg,nFunc,nPart,nDim)
+				best = bestCCCLinRegFunc(linReg, nFunc, nDim)
 				tabCCC += ";"+str(best[3][nDim][nPart])
-			tabCCC += "\n"
-	tabCCC += "\n"
+			#Best result
+			ccc = cccCalc(bLinReg[s][nDim],datas['gs'+s][nDim])
+			tabCCC += ";"+str(round(ccc,3))+"\n"
+	tabCCC += "\n\n"
 	#Tab for multirepresentative
 	#Labels
-	tabCCC += "Multi-Representationel"
+	tabCCC += "Multi-Representative"
 	for nCat in range(len(v.catMod)):
 		tabCCC += ";"+v.catMod[nCat]
-		for nFunc in range(len(v.lFunc)-1):
+		for nFunc in range(len(v.lFunc)):
 			tabCCC += ";"
 	tabCCC += "\n"
 	for nCat in range(len(v.catMod)):
 		for nFunc in range(len(v.lFunc)):
 			tabCCC += ";"+v.lFunc[nFunc][2]
+		tabCCC += ";Best"
 	tabCCC += "\n"
 	#Data
 	for nDim in range(v.nDim):
 		for nPart in range(len(part)):
-			tabCCC += v.eName[nDim]+" - "+part[nPart]
+			s = part[nPart]
+			tabCCC += v.eName[nDim]+" - "+s
 			for nCat in range(len(v.catMod)):
+				#All functions
 				for nFunc in range(len(v.lFunc)):
-					best = bestCCCPartLinRegFunc(catReg[nCat],nFunc,nPart,nDim)
+					best = bestCCCLinRegFunc(catReg[nCat], nFunc, nDim)
 					tabCCC += ";"+str(best[3][nDim][nPart])
+				#Best result
+				ccc = cccCalc(bCatReg[nCat][s][nDim],datas['gs'+s][nDim])
+				tabCCC += ";"+str(round(ccc,3))
 			tabCCC += "\n"
-	tabCCC += "\n"
+	tabCCC += "\n\n"
 	#Tab for multimodal multirepresentative
 	#Labels
-	tabCCC += "Multi-modal multi-representation"
+	tabCCC += "Multi-modal Hierarchic"
 	for nFunc in range(len(v.lFunc)):
 		tabCCC += ";"+v.lFunc[nFunc][2]
-	tabCCC += "\n"
+	tabCCC += ";Best\n"
 	#Data
 	for nDim in range(v.nDim):
 		for nPart in range(len(part)):
-			tabCCC += v.eName[nDim]+" - "+part[nPart]
+			s = part[nPart]
+			tabCCC += v.eName[nDim]+" - "+s
+			#All functions
 			for nFunc in range(len(v.lFunc)):
-				best = bestCCCPartLinRegFunc(multReg,nFunc,nPart,nDim)
+				best = bestCCCLinRegFunc(multReg, nFunc, nDim)
 				tabCCC += ";"+str(best[3][nDim][nPart])
-			tabCCC += "\n"
-	tabCCC += "\n"
+			#Best result
+			ccc = cccCalc(bMultReg[s][nDim],datas['gs'+s][nDim]) 
+			tabCCC += ";"+str(round(ccc,3))+"\n"
+	tabCCC += "\n\n"
 	#We write the file
 	f = open("./results.csv","wb")
 	f.write(str(tabCCC))
@@ -103,36 +121,54 @@ def bestVal(cccs, wSize, wStep):
 	return b, bD
 
 #Get the best CCC for a linear regression function and a partition
-def bestCCCPartLinRegFunc(linRegRes, nbFunc, nPart, nDim):
+def bestCCCLinRegFunc(linRegRes, nbFunc, nDim):
 	best = linRegRes[nbFunc][0]
 	for i in range(1,len(linRegRes[nbFunc])):
-		if (linRegRes[nbFunc][i][3][nDim][nPart] > best[3][nDim][nPart]):
+		if (linRegRes[nbFunc][i][3][nDim][0] > best[3][nDim][0]):
 			best = linRegRes[nbFunc][i]
 	return best
 #End bestCCCPartLinRegFunc
 
 #Get the best CCC for a linear regression and a partition
-def bestCCCPartLinReg(linRegRes,nPart, nDim):
+def bestCCCLinReg(linRegRes, nDim):
 	#We get the best ccc for the dimension and partition
-	best = bestCCCPartLinRegFunc(linRegRes,0,nPart, nDim)
+	best = bestCCCLinRegFunc(linRegRes,0, nDim)
 	for nbFunc in range(len(v.lFunc)):
-		res = bestCCCPartLinRegFunc(linRegRes,nbFunc,nPart, nDim)
-		if (res[3][nDim][nPart] > best[3][nDim][nPart]):
-				best = res
+		res = bestCCCLinRegFunc(linRegRes, nbFunc, nDim)
+		if (res[3][nDim][0] > best[3][nDim][0]):
+			best = res
 	return best
 #End bestCCCPartLinReg
 
+#Return the best CCC for a dimension and a partition in the cccs tab
+def bestDatasCCC(datas, nDim, part):
+	bestCCC = []
+	for s in range(len(part)):
+		bestCCC.append(-1)
+	n = 0
+	for nMod in range(len(datas['dev'][nDim])):
+		cccs = []
+		for s in part:
+			cccs.append(round(cccCalc(datas[s][nDim][nMod],datas['gs'+s][nDim]),3))
+		if (cccs[0] > bestCCC[0]) :
+			bestCCC = cccs
+			n = nMod
+	return bestCCC, n
+#End bestDatasCCC
+
 #Get the best results and print it for the linear regression
-def bestLinearRegression(linRegRes, nameMod):
-	bestLinReg = {}
+def bestLinearRegression(linRegRes, nameMod, part, datas):
+	blr = {}
+	for s in part :
+		blr[s] = []
 	for nDim in range(len(v.eName)):
-		for nPart in range(len(v.aPart)):
-			best = bestCCCPartLinReg(linRegRes,nPart, nDim)
-			if (bestLinReg.get(v.aPart[nPart],None) == None):
-				bestLinReg[v.aPart[nPart]] = []
-			bestLinReg[v.aPart[nPart]].append(best[4][v.aPart[nPart]][nDim])
+		best = bestCCCLinReg(linRegRes, nDim)
+		[cccs, mod] = bestDatasCCC(datas, nDim, part)
+		if (best[3][nDim][0] > cccs[0]):
+			for s in part:
+				blr[s].append(best[4][s][nDim])
 			#We print it
-			print ("Best linear regression for "+v.eName[nDim]+" on "+v.aPart[nPart]+" : "+str(best[3][nDim][nPart]))
+			print ("Best linear regression for "+v.eName[nDim]+" : "+str(best[3][nDim]))
 			if (v.debugMode == True):
 				print ("With func/complexity : "+str(best[0][2])+"/"+str(best[1]))
 				print ("Modality : Coefficient")
@@ -144,18 +180,25 @@ def bestLinearRegression(linRegRes, nameMod):
 						lenNMod = len(best[2][nDim])/2
 						for nMod in range(lenNMod):
 							print(v.eName[nDim][0:1]+" "+nameMod[nMod]+" : "+str(round(best[2][nDim][nMod+nDim*lenNMod],3)))
-			print("")
-	return bestLinReg
+		else :
+			for s in part:
+				blr[s].append(datas[s][nDim][mod])
+			print ("Best linear regression for "+v.eName[nDim]+" : "+str(cccs))
+			if (v.debugMode == True):
+				print ("Modality : "+nameMod[mod])
+		print("")
+	return blr
 #End bestLinearRegression
 
 #Print the CCC value and parameters
 def printValTest(cccs, nMod, nDim):
-	ccc = cccs[nMod][nDim]
+	ccc = cccs[nDim][nMod]
 	print(v.eName[nDim]+"/"+v.nameMod[nMod])
 	print("Value Dev/Test : "+str(ccc[0][0])+"/"+str(ccc[0][1]))
 	if (v.debugMode == True):
 		print("Window size/step/delay/complexity : "+str(ccc[1])+"/"+str(ccc[2])+"/"+str(ccc[3])+"/"+str(ccc[4]))
 		print("Bias/Scaling : "+str(ccc[5])+"/"+str(ccc[6]))
+		print("With function/alpha : "+str(ccc[7])+"/"+str(ccc[8]))
 	print("")
 #End printValue	
 
@@ -176,6 +219,7 @@ def printBestVal(cccs, tPlt, nMod):
 		if (v.debugMode == True):
 			print("Window size/step/delay/complexity : "+str(bVal[1])+"/"+str(bVal[2])+"/"+str(bVal[4])+"/"+str(bVal[5]))
 			print("Bias/Scaling "+v.eName[nDim]+" : "+str(bVal[6])+"/"+str(bVal[7]))
+			print("With function/alpha : "+str(bVal[8])+"/"+str(bVal[9]))
 		print("")
 		#We print it in graphical form
 		fig = plt.figure()

@@ -5,6 +5,7 @@ import GlobalsVars as v
 import arff
 import os
 import subprocess
+import warnings
 import time
 import numpy as np
 import sys
@@ -14,14 +15,16 @@ import cPickle
 from scipy import signal
 sys.path.append(v.labLinearPath)
 from liblinearutil import train, predict
+from sklearn import linear_model
+from sklearn.exceptions import ConvergenceWarning
 
 #Used to create the tab countaining all datas
 def initTabData():
 	datas = {}
-	for s in 'dev','test','gs','cccs':
+	for s in 'dev','test','cccs','gstrain','gsdev','gstest':
 		datas[s] = []
 	for nDim in range(len(v.eName)):
-		for s in 'dev','test','gs','cccs':
+		for s in 'dev','test','cccs','gstrain','gsdev','gstest':
 			datas[s].append([])
 		for nMod in range(len(v.desc)):
 			for s in 'dev','test','cccs' :
@@ -44,29 +47,39 @@ def restaurObject(addr):
 	return obj
 #End restaurObject
 
-#Used to uniformize tab
-def cutTab(tab):
-	#First we get the min size of the dimension
-	minTab = 0
-	for nDim in range(len(v.eName)):
-		for nMod in range(len(v.desc)):
-			if (len(tab[nDim][nMod]) < minTab or minTab == 0):
-				minTab = len(tab[nDim][nMod])
-	#We need now to cut all tab to reach this size
-	for nDim in range(len(v.eName)):
-		for nMod in range(len(v.desc)):
-			oneF = int(minTab/9)
-			lTabC = len(tab[nDim][nMod])
-			temp = []
-			for i in range(v.nbFPart):
-				#We copy the elements
-				for j in range(oneF):
-					ind = (int(lTabC/9)*i)+j
-					temp.append(tab[nDim][nMod][ind])
-			tab[nDim][nMod] = temp
+#Cut a tab to a size given
+def cutTab(tab,size):
+	lTab = len(tab)
+	oneF = int(size/9)
+	if (lTab != size):
+		temp = []
+		for i in range(v.nbFPart):
+			for j in range(oneF):
+				ind = (int(lTab/9)*i)+j-1
+				temp.append(tab[ind])
+		tab = temp
 	return tab
 #End cutTab
-		
+
+#Used to uniformize tab
+def cutTabs(datas, part):
+	#First we uniformize the GS
+	minSize = 0
+	for nDim in range(len(v.eName)):
+		for s in part :
+			if (minSize > len(datas['gs'+s][nDim]) or minSize == 0):
+				minSize = len(datas['gs'+s][nDim])
+	oneF = int(minSize/9)
+	#We cut all tab to reach this size
+	for nDim in range(len(v.eName)):
+		for s in part :
+			#Gold Standard Tab
+			datas['gs'+s][nDim] = cutTab(datas['gs'+s][nDim],minSize)
+			#Predictions tab
+			for nMod in range(len(v.desc)):
+				datas[s][nDim][nMod] = cutTab(datas[s][nDim][nMod],minSize)
+	return datas
+#End cutTabs
 
 #Used to resample the tab
 def resamplingTab(tab, size):
@@ -186,8 +199,11 @@ def unimodalPred(gs, c, feats, nDim, modeTest):
 		parts = ['dev','test']
 	else :
 		parts = ['dev']
+	#Liblinear
 	#Options for liblinear
 	options = "-s "+str(v.sVal)+" -c "+str(c)+" -B 1 -q"
+	function = "liblinear"
+	alpha = 0
 	#We learn the model on train
 	model = train(gs['train'][nDim],feats['train'],options)
 	#We predict on data
@@ -195,5 +211,36 @@ def unimodalPred(gs, c, feats, nDim, modeTest):
 		preds[s] = np.array(predict(gs[s][nDim],feats[s],model,"-q"))[0]
 		#We calculate the correlation and store it
 		cccs[s] = cccCalc(np.array(preds[s]),gs[s][nDim])
-	return cccs, preds
+	#We see if we can do better with sklearn
+	for nbFunc in range(len(v.lFunc)):
+		for c in v.parFunc[nbFunc]:
+			func = v.lFunc[nbFunc]
+			if (c != 0):
+				reg = func[0](alpha=c)
+			else :
+				reg = func[0]()
+			warnings.filterwarnings('ignore', category=ConvergenceWarning)
+			#One task prediction
+			if (func[1] == 0):
+				reg.fit(feats['train'],gs['train'][nDim])
+				for s in parts:
+					p = reg.predict(feats['dev'])
+					ccc = cccCalc(p,gs[s][nDim])
+					if (ccc > cccs[s]) : 
+						preds[s] = p
+						cccs[s] = ccc
+						function = func[2]
+						alpha = c
+			#Multi task prediction
+			else :
+				reg.fit(feats['train'],np.transpose(gs['train']))
+				for s in parts:
+					p = reg.predict(feats['dev'])[:,nDim]
+					ccc = cccCalc(p,gs[s][nDim])
+					if (ccc > cccs[s]) : 
+						preds[s] = p
+						cccs[s] = ccc
+						function = func[2]
+						alpha = c
+	return cccs, preds, function, alpha
 #Fin unimodalPred

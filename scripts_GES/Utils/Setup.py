@@ -27,6 +27,8 @@ def setupDescAndGs(modeTest) :
 		endOrNot = True
 		print("Creating all the folders necessary if it isn't done yet...")
 		#We create all the folders necessary if they don't exist
+		if (os.path.isdir("../Figures/") == False):
+			os.mkdir("../Figures/")
 		for i in range(len(v.desc)):
 			#DescriptorFile
 			if (os.path.isdir(v.descConc[i]) == False):

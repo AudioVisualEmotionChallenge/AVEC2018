@@ -29,10 +29,10 @@ fconf = ["eGeMAPS","","","",""]
 audioFeat = c.basePath+"features/audio/"
 videoFeat = c.basePath+"features/video/"
 physioFeat = c.basePath+"features/physio/"
-desc = [audioFeat+"eGeMAPSfunct/",audioFeat+"AUDeep/",videoFeat+"appearance/",videoFeat+"AU/",physioFeat+"ECG/", physioFeat+"HRHRV/", physioFeat+"EDA/", physioFeat+"SCL/", physioFeat+"SCR/"]
-nameMod = ["eGeMAPSfunct","AUDeep","appearance","AU","ECG", "HRHRV","EDA","SCL","SCR"]
+desc = [audioFeat+"eGeMAPSfunct/",audioFeat+"AUDeep/",audioFeat+"BoAW/",videoFeat+"appearance/",videoFeat+"AU/",videoFeat+"geometric/",videoFeat+"BoVW/",physioFeat+"ECG/", physioFeat+"HRHRV/", physioFeat+"EDA/", physioFeat+"SCL/", physioFeat+"SCR/"]
+nameMod = ["eGeMAPSfunct","AUDeep","BoAW","appearance","AU","geometric","BoVW","ECG", "HRHRV","EDA","SCL","SCR"]
 catMod = ["Audio","Video","Physio"]
-catModApp = [["eGeMAPSfunct","AUDeep"],["appearance","AU"],["ECG", "HRHRV","EDA","SCL","SCR"]]
+catModApp = [["eGeMAPSfunct","AUDeep","BoAW"],["appearance","AU","geometric","BoVW"],["ECG", "HRHRV","EDA","SCL","SCR"]]
 descConc = []
 for i in range(len(desc)):
 	descConc.append(desc[i]+"Conc/")
@@ -42,7 +42,7 @@ for i in range(len(desc)):
 #This is the name of the column we must remove in each descriptors
 removedColArff = ["name","class","frameTime","frametime","timeStamp","TimeStamp","timestamp"]
 #Name of the modalities that don't need normalisation
-noNorm = ["AUDeep"]
+noNorm = ["AUDeep","BoAW","BoVW"]
 
 #LIBLINEAR
 #Path of library LabLinear
@@ -104,17 +104,17 @@ ts=0.04
 #Sampling period for prediction
 tsp=0.4
 #Window Size
-sizeBeg = [3.0,0.0,3.0,3.0,2.0,2.0,2.0,2.0,2.0]
-sizeStep = [1.0,1.0,1.0,1.0,2.0,2.0,2.0,2.0,2.0]
-sizeMax = [9.0,0.0,9.0,9.0,16.0,16.0,16.0,16.0,16.0]
+sizeBeg = [3.0,0.0,3.0,3.0,3.0,3.0,3.0,2.0,2.0,2.0,2.0,2.0]
+sizeStep = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,2.0,2.0,2.0,2.0,2.0]
+sizeMax = [9.0,0.0,9.0,9.0,9.0,9.0,9.0,16.0,16.0,16.0,16.0,16.0]
 #Window Step
-stepBeg = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
-stepStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
-stepMax = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
+stepBeg = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
+stepStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
+stepMax = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
 #Delay
-delBeg = [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00]
-delStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
-delMax = [9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60]
+delBeg = [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00]
+delStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
+delMax = [9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60]
 #Complexity value used for the SVR
 C = [0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
 #Value used for the SVR

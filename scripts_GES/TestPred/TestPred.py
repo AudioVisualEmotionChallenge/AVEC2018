@@ -12,14 +12,14 @@ from sklearn import linear_model
 from Setup import setup
 from LinearRegression import regression
 from NormConc import normFeatures, concGs, concFeats
-from PredUtils import unimodalPredPrep, cccCalc, cutTab, predMulti, saveObject, restaurObject, initTabData, unimodalPred
+from PredUtils import unimodalPredPrep, cccCalc, cutTabs, predMulti, saveObject, restaurObject, initTabData, unimodalPred
 from Print import printValTest
 from GSMatching import gsOpen, gsMatch
 
 #Do the post treatement for test partition and save it
 def postTreatTest(gs, pred, ccc, bias, scale, nDim):
-	for s in 'dev','test':
-		gspt = np.array(gs[s])[:,nDim]
+	for s in v.aPart :
+		gspt = np.array(gs[s])[nDim]
 		if (bias != 0.0):
 			#We add the bias to the prediction and save if there is an improvement
 			pred[s] = np.array(pred[s]) + bias
@@ -58,17 +58,17 @@ def predictTest():
 			#We matche GoldStandards with parameters(wStep/fsize) and stock them
 			gs = gsMatch(v.matchGS[1], dl, wSize, nMod, True)
 			#We do the prediction on Dev/Test
-			[cccs, preds] = unimodalPred(gs, c, feats, nDim, True)
+			[cccs, preds, function, alpha] = unimodalPred(gs, c, feats, nDim, True)
 			#Post-treatement
 			[cccs, preds] = postTreatTest(gs, preds, cccs, bias, scale, nDim)
 			#We save the predictions/cccs and GS
 			for s in v.aPart :
 				datas[s][nDim][nMod] = preds[s]
-				if (len(datas['gs'][nDim]) == 0 or len(datas['gs'][nDim]) > len(gs[s][nDim])):
-					datas['gs'][nDim] = gs[s][nDim]
-			datas['cccs'][nDim][nMod] = [[round(cccs['dev'],3), round(cccs['test'],3)], round(wSize,2), round(wStep,2), round(dl,2), c, bias, scale]
+				if (len(datas['gs'+s][nDim]) == 0 or len(datas['gs'+s][nDim]) > len(gs[s][nDim])):
+					datas['gs'+s][nDim] = gs[s][nDim]
+			datas['cccs'][nDim][nMod] = [[round(cccs['dev'],3), round(cccs['test'],3)], round(wSize,2), round(wStep,2), round(dl,2), c, bias, scale, function, alpha]
 			printValTest(datas['cccs'],nMod, nDim)
-	saveObject(preds,"./datas.obj")
+	saveObject(datas,"./datas.obj")
 	datas = restaurObject("./datas.obj")
 	regression(datas, True)
 #End predictTest
