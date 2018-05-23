@@ -86,16 +86,16 @@ def unimodalPreds(nMod):
 							[b, bD] = bestVal(res, wSize, wStep)
 							if (not earlyStopDelay(bD, delay, nDim)):
 								#We do the prediction
-								[cccs, preds] = unimodalPred(gs, v.C[comp],feats, nDim, False)
+								[cccs, preds, function, alpha] = unimodalPred(gs, v.C[comp],feats, nDim, False)
 								#Post-treatement
 								[ccc, pred, bias, scale] = postTreatDev(cccs, preds, gs, nDim)
 								#We store the results
 								if (len(data['cccs'][nDim][nMod]) == 0 or ccc > data['cccs'][nDim][nMod][0][0]):
 									data['dev'][nDim][nMod] = pred
 									data['cccs'][nDim][nMod] = [[round(ccc,3)], round(wSize,2), round(wStep,2), round(delay,2), v.C[comp], bias, scale]
-								if (len(data['gs'][nDim]) == 0 or len(data['gs'][nDim]) > len(gs['dev'][nDim])):								
-									data['gs'][nDim] = gs['dev'][nDim]
-								res.append([nDim, round(wSize,2), round(wStep,2), round(ccc,3), round(delay,2), v.C[comp], bias, scale])
+								if (len(data['gsdev'][nDim]) == 0 or len(data['gsdev'][nDim]) > len(gs['dev'][nDim])):								
+									data['gsdev'][nDim] = gs['dev'][nDim]
+								res.append([nDim, round(wSize,2), round(wStep,2), round(ccc,3), round(delay,2), v.C[comp], bias, scale, function, alpha])
 					delay += v.delStep[nMod]
 				print(v.goodColor+v.nameMod[nMod]+" : Unimodal prediction finished : "+str(wSize)+"/"+str(wStep)+v.endColor)
 				if (v.debugMode == True):
@@ -111,8 +111,8 @@ def unimodalPreds(nMod):
 		for nDim in range(len(v.eName)):
 			datas['dev'][nDim][nMod] = data['dev'][nDim][nMod]
 			datas['cccs'][nDim][nMod] = data['cccs'][nDim][nMod]
-			if (len(datas['gs'][nDim]) == 0 or len(datas['gs'][nDim]) > len(data['gs'][nDim])):
-				datas['gs'][nDim] = data['gs'][nDim]
+			if (len(datas['gsdev'][nDim]) == 0 or len(datas['gsdev'][nDim]) > len(data['gsdev'][nDim])):
+				datas['gsdev'][nDim] = data['gsdev'][nDim]
 		saveObject(datas,"./datas.obj")
 	except KeyboardInterrupt :
 		printBestVal(res, tPlt, nMod)
