@@ -9,6 +9,11 @@ from mpl_toolkits.mplot3d import Axes3D
 
 def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 	cccs = datas['cccs']
+	bestVals = []
+	for nDim in range(len(v.eName)):
+		bestVals.append([])
+		for s in range(len(part)):
+			bestVals[nDim].append(-1.0)
 	#Tab for unimodal CCC
 	#Labels
 	tabCCC = "Unimodal"
@@ -41,6 +46,8 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 				tabCCC += ";"+str(best[3][nDim][nPart])
 			#Best result
 			ccc = cccCalc(bLinReg[s][nDim],datas['gs'+s][nDim])
+			if (ccc > bestVals[nDim][nPart]):
+					bestVals[nDim][nPart] = round(ccc,3)
 			tabCCC += ";"+str(round(ccc,3))+"\n"
 	tabCCC += "\n\n"
 	#Tab for multirepresentative
@@ -87,9 +94,19 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 				best = bestCCCLinRegFunc(multReg, nFunc, nDim)
 				tabCCC += ";"+str(best[3][nDim][nPart])
 			#Best result
-			ccc = cccCalc(bMultReg[s][nDim],datas['gs'+s][nDim]) 
+			ccc = cccCalc(bMultReg[s][nDim],datas['gs'+s][nDim])
+			if (ccc > bestVals[nDim][nPart]):
+					bestVals[nDim][nPart] = round(ccc,3)
 			tabCCC += ";"+str(round(ccc,3))+"\n"
 	tabCCC += "\n\n"
+	#We print the best results
+	print("Best results : ")
+	for nDim in range(len(v.eName)):
+		print(v.eName[nDim]+" : ",)
+		for nPart in range(len(part)):
+			print(part[nPart]+" : "+str(bestVals[nDim][nPart])+" ",)
+		print("")
+	print("More details in result.csv files")
 	#We write the file
 	f = open("./results.csv","wb")
 	f.write(str(tabCCC))
