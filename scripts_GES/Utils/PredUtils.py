@@ -12,6 +12,10 @@ import sys
 import scipy as sp
 import timeit
 import cPickle
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
 from scipy import signal
 sys.path.append(v.labLinearPath)
 from liblinearutil import train, predict
@@ -193,32 +197,37 @@ def unimodalPredPrep(wSize, wStep, nMod):
 #End unimodalPredPrep
 
 #Unimodal prediction on partitions
-def unimodalPred(gs, c, feats, nDim, modeTest):
-	[cccs, preds] = [{} for i in range(2)]
+def unimodalPred(gs, feats, nDim, modeTest):
 	if (modeTest == True):
 		parts = ['dev','test']
 	else :
 		parts = ['dev']
-	#Liblinear
-	#Options for liblinear
-	options = "-s "+str(v.sVal)+" -c "+str(c)+" -B 1 -q"
-	function = "liblinear"
-	alpha = 0
-	#We learn the model on train
-	model = train(gs['train'][nDim],feats['train'],options)
-	#We predict on data
+	[cccs, preds] = [{} for i in range(2)]
 	for s in parts:
-		preds[s] = np.array(predict(gs[s][nDim],feats[s],model,"-q"))[0]
-		#We calculate the correlation and store it
-		cccs[s] = cccCalc(np.array(preds[s]),gs[s][nDim])
+		cccs[s] = -1.0
+	#Liblinear
+	for comp in v.C:
+		#Options for liblinear
+		options = "-s "+str(v.sVal)+" -c "+str(comp)+" -B 1 -q"
+		#We learn the model on train
+		model = train(gs['train'][nDim],feats['train'],options)
+		#We predict on data
+		for s in parts:
+			pred = np.array(predict(gs[s][nDim],feats[s],model,"-q"))[0]
+			#We calculate the correlation and store it
+			ccc = cccCalc(np.array(pred),gs[s][nDim])
+			if (ccc > cccs[s]):
+				preds[s] = pred
+				cccs[s] = ccc
+				function = "liblinear"
+				alpha = comp
 	#We see if we can do better with sklearn
 	for nbFunc in range(len(v.lFunc)):
+		#tab = []
+		#tab2 = []
 		for c in v.parFunc[nbFunc]:
 			func = v.lFunc[nbFunc]
-			if (c != 0):
-				reg = func[0](alpha=c)
-			else :
-				reg = func[0]()
+			reg = func[0](alpha=c)
 			warnings.filterwarnings('ignore', category=ConvergenceWarning)
 			#One task prediction
 			if (func[1] == 0):
@@ -242,5 +251,28 @@ def unimodalPred(gs, c, feats, nDim, modeTest):
 						cccs[s] = ccc
 						function = func[2]
 						alpha = c
+			#tab.append(round(ccc,3))
+			#tab2.append(c)
+		#N = len(np.array(tab2))
+		#x2 = np.arange(N)
+		#colorspec = [[1,1,0],[1,0,0],[0,1,0],[0,1,1],[0,0,1],[1,0,1]]
+		#if (v.x < 5):
+		#	plt.plot(x2,np.array(tab), label=str(func[2]), color=colorspec[nbFunc],linewidth=0.1, marker='o',linestyle='dashed')
+		#	v.x += 1
+		#else :
+		#	plt.plot(x2,np.array(tab), color=colorspec[nbFunc], marker='o',linewidth=0.3,markersize=0.5,linestyle='dashed')
+		#plt.legend(loc='lower right')
+		#plt.title("CCC with alpha decrease by linear model")
+		#plt.xticks(x2,np.array(tab2))
+		#f = open("../Figures/plotSCR.png","wb")
+		#plt.savefig(f)
+		#f.close()
+		#print "plt saved"
 	return cccs, preds, function, alpha
 #Fin unimodalPred
+
+def isInt(string, limit):
+	for i in range(limit):
+		if (string == str(i)):
+			return True
+	return False

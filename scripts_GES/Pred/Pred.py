@@ -14,7 +14,7 @@ import GlobalsVars as v
 from multiprocessing import Process
 from scipy import signal
 sys.path.append("../Utils/")
-from PredUtils import unimodalPredPrep, cccCalc, cutTab, predMulti, saveObject, restaurObject, initTabData, unimodalPred
+from PredUtils import unimodalPredPrep, cccCalc, cutTab, predMulti, saveObject, restaurObject, initTabData, unimodalPred, isInt
 from GSMatching import gsOpen, gsMatch
 from LinearRegression import regression
 from NormConc import normFeatures,concGs, concFeats
@@ -59,8 +59,9 @@ def postTreatDev(cccs, preds, gs, nDim):
 #End postTreatementDev
 
 #Try all the possibilities given and find the best CCCs values and parameters for each dimensions
-def unimodalPreds(nMod):
+def unimodalPreds(nMod, debugMode):
 	try:
+		v.debugMode = debugMode
 		#Var for storing differents CCC
 		res = []
 		#Data for the graphic
@@ -71,7 +72,8 @@ def unimodalPreds(nMod):
 		while (wSize <= v.sizeMax[nMod]) :
 			wStep = v.stepBeg[nMod]
 			while (wStep <= v.stepMax[nMod]) :
-				print(v.goodColor+v.nameMod[nMod]+" : Unimodal prediction in progress : "+str(wSize)+"/"+str(wStep)+"..."+v.endColor)
+				if (v.debugMode == True):
+					print(v.goodColor+v.nameMod[nMod]+" : Unimodal prediction in progress : "+str(wSize)+"/"+str(wStep)+"..."+v.endColor)
 				#Concatenation & normalisation of features
 				concFeats(wSize, wStep, nMod)
 				normFeatures(wSize,wStep, nMod)
@@ -81,26 +83,25 @@ def unimodalPreds(nMod):
 				while (delay <= v.delMax[nMod]):
 					#We match GoldStandards with parameters(wSize, delay) and stock them
 					gs = gsMatch(v.matchGS[1], delay, wSize, nMod, False)
-					for comp in range(len(v.C)):
-						for nDim in range(len(v.eName)):
-							[b, bD] = bestVal(res, wSize, wStep)
-							if (not earlyStopDelay(bD, delay, nDim)):
-								#We do the prediction
-								[cccs, preds, function, alpha] = unimodalPred(gs, v.C[comp],feats, nDim, False)
-								#Post-treatement
-								[ccc, pred, bias, scale] = postTreatDev(cccs, preds, gs, nDim)
-								#We store the results
-								if (len(data['cccs'][nDim][nMod]) == 0 or ccc > data['cccs'][nDim][nMod][0][0]):
-									data['dev'][nDim][nMod] = pred
-									data['cccs'][nDim][nMod] = [[round(ccc,3)], round(wSize,2), round(wStep,2), round(delay,2), v.C[comp], bias, scale]
-								if (len(data['gsdev'][nDim]) == 0 or len(data['gsdev'][nDim]) > len(gs['dev'][nDim])):								
-									data['gsdev'][nDim] = gs['dev'][nDim]
-								res.append([nDim, round(wSize,2), round(wStep,2), round(ccc,3), round(delay,2), v.C[comp], bias, scale, function, alpha])
+					for nDim in range(len(v.eName)):
+						[b, bD] = bestVal(res, wSize, wStep)
+						if (not earlyStopDelay(bD, delay, nDim)):
+							#We do the prediction
+							[cccs, preds, function, alpha] = unimodalPred(gs, feats, nDim, False)
+							#Post-treatement
+							[ccc, pred, bias, scale] = postTreatDev(cccs, preds, gs, nDim)
+							#We store the results
+							if (len(data['cccs'][nDim][nMod]) == 0 or ccc > data['cccs'][nDim][nMod][0][0]):
+								data['dev'][nDim][nMod] = pred
+								data['cccs'][nDim][nMod] = [[round(ccc,3)], round(wSize,2), round(wStep,2), round(delay,2), alpha, bias, scale, function]
+							if (len(data['gsdev'][nDim]) == 0 or len(data['gsdev'][nDim]) > len(gs['dev'][nDim])):								
+								data['gsdev'][nDim] = gs['dev'][nDim]
+							res.append([nDim, round(wSize,2), round(wStep,2), round(ccc,3), round(delay,2), alpha, bias, scale, function])
 					delay += v.delStep[nMod]
-				print(v.goodColor+v.nameMod[nMod]+" : Unimodal prediction finished : "+str(wSize)+"/"+str(wStep)+v.endColor)
 				if (v.debugMode == True):
+					print(v.goodColor+v.nameMod[nMod]+" : Unimodal prediction finished : "+str(wSize)+"/"+str(wStep)+v.endColor)
 					print(v.nameMod[nMod]+" : Best value for "+str(wSize)+"/"+str(wStep)+" : Ar/Va "+str(b)+" DlAr/DlVa "+str(bD))
-				print("")
+					print("")
 				t = [wSize, wStep]
 				t.extend(b)
 				tPlt.append(t)
@@ -131,7 +132,7 @@ def multimodalPreds():
 		#For each modality
 		print(v.goodColor+"Multimodal prediction in progress..."+v.endColor)
 		for nMod in range(len(v.desc)):
-			p = Process(target=unimodalPreds,args=(nMod,))
+			p = Process(target=unimodalPreds,args=(nMod,v.debugMode))
 			ps.append(p)
 			p.start()
 			pActive += 1
@@ -159,7 +160,7 @@ def Pred(arg):
 	if (arg == None):
 		multimodalPreds()
 	else :
-		unimodalPreds(arg)
+		unimodalPreds(arg,v.debugMode)
 
 def main():
 	#These two lines are for windows threads
@@ -170,22 +171,22 @@ def main():
 			if (len(sys.argv) > 1) :
 				arg = sys.argv[1]
 				for i in range(len(sys.argv)):
-					if (sys.argv[i] == "--debug"):
+					if (str(sys.argv[i]) == "--debug" or str(sys.argv[i]) == "debug"):
 						v.debugMode = True
-				if (arg >= "0" and arg <= str(int(len(v.desc)))):
+				if (isInt(arg, len(v.desc))):
 					Pred(int(arg))
-				elif (arg == "help"):
+				elif (str(arg) == "help"):
 					print("For unimodal prediction, here the correspondance")
 					for i in range(len(v.desc)):
 						print i,v.nameMod[i]
-				elif (arg == "--debug"):
+				elif (str(arg) == "--debug" or str(arg) == "debug"):
 					Pred(None)
 				else :
 					print("Error on arguments")
 					print("For unimodal prediction, here the correspondance")
 					for i in range(len(v.desc)):
 						print i,v.nameMod[i]
-					print("For debug mode, type --debug")
+					print("For debug mode, type --debug or debug")
 			else :
 				Pred(None)
 		else :

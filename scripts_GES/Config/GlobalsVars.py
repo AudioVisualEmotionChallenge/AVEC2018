@@ -7,6 +7,7 @@ from sklearn import linear_model
 sys.path.append("../Utils/")
 import Config as c
 
+x=0
 #GOLD STANDARD
 #Baseline Folder of Gold Standard
 gsFolder = c.basePath+"labels/"
@@ -46,7 +47,7 @@ noNorm = ["AUDeep","BoAW","BoVW"]
 
 #LIBLINEAR
 #Path of library LabLinear
-labLinearPath = c.labLinearPath
+labLinearPath = "../liblinear-2.20/python/"
 
 #TEMPLATE FOR GOLD STANDARD
 #Template for the ARFF file
@@ -71,17 +72,15 @@ cccMode = c.cccMode
 
 #FUNCTION USED FOR LINEAR REGRESSION
 #0 = unidimentionnal regression/1 = multidimentionnal regression
-lFunc =[[linear_model.LinearRegression,0,"RegLin"],[linear_model.Ridge,0,"Ridge"],[linear_model.Lasso,0,"Lasso"],[linear_model.MultiTaskLasso,1,"Multitask-Lasso"], [linear_model.ElasticNet,1,"ElasticNet"],[linear_model.MultiTaskElasticNet,1,"Multitask-ElasticNet"]]
-parFunc = [[0.0],
-		[0.01,0.001,0.0001,0.00001,0.00001,0.0000001,0.00000001,0.000000001],
-		[0.01,0.001,0.0001,0.00001,0.00001,0.0000001,0.00000001,0.000000001],
-		[0.01,0.001,0.0001,0.00001,0.00001,0.0000001,0.00000001,0.000000001],
-		[0.01,0.001,0.0001,0.00001,0.00001,0.0000001,0.00000001,0.000000001],
-		[0.01,0.001,0.0001,0.00001,0.00001,0.0000001,0.00000001,0.000000001],
-		[0.01,0.001,0.0001,0.00001,0.00001,0.0000001,0.00000001,0.000000001],
-		[0.01,0.001,0.0001,0.00001,0.00001,0.0000001,0.00000001,0.000000001]]
+lFunc =[[linear_model.Ridge,0,"Ridge"],[linear_model.Lasso,0,"Lasso"],[linear_model.MultiTaskLasso,1,"Multitask-Lasso"], [linear_model.ElasticNet,1,"ElasticNet"],[linear_model.MultiTaskElasticNet,1,"Multitask-ElasticNet"]]
+parFunc = [[0.1],
+		[0.5,0.1,0.01,0.001,0.0001],
+		[0.5,0.1,0.01,0.001,0.0001],
+		[0.5,0.1,0.01,0.001,0.0001],
+		[0.5,0.1,0.01,0.001,0.0001],
+		[0.5,0.1,0.01,0.001,0.0001],
+		[0.5,0.1,0.01,0.001,0.0001]]
 #EMOTIONS (DIMENSIONS)
-nDim = 2
 eName = ["Arousal","Valence"]
 
 #Number of annotators
@@ -113,7 +112,7 @@ stepStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
 stepMax = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
 #Delay
 delBeg = [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00]
-delStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
+delStep = [0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20]
 delMax = [9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60]
 #Complexity value used for the SVR
 C = [0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]

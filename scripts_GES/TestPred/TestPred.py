@@ -58,7 +58,7 @@ def predictTest():
 			#We matche GoldStandards with parameters(wStep/fsize) and stock them
 			gs = gsMatch(v.matchGS[1], dl, wSize, nMod, True)
 			#We do the prediction on Dev/Test
-			[cccs, preds, function, alpha] = unimodalPred(gs, c, feats, nDim, True)
+			[cccs, preds, function, alpha] = unimodalPred(gs, feats, nDim, True)
 			#Post-treatement
 			[cccs, preds] = postTreatTest(gs, preds, cccs, bias, scale, nDim)
 			#We save the predictions/cccs and GS
@@ -66,7 +66,7 @@ def predictTest():
 				datas[s][nDim][nMod] = preds[s]
 				if (len(datas['gs'+s][nDim]) == 0 or len(datas['gs'+s][nDim]) > len(gs[s][nDim])):
 					datas['gs'+s][nDim] = gs[s][nDim]
-			datas['cccs'][nDim][nMod] = [[round(cccs['dev'],3), round(cccs['test'],3)], round(wSize,2), round(wStep,2), round(dl,2), c, bias, scale, function, alpha]
+			datas['cccs'][nDim][nMod] = [[round(cccs['dev'],3), round(cccs['test'],3)], round(wSize,2), round(wStep,2), round(dl,2), alpha, bias, scale, function]
 			printValTest(datas['cccs'],nMod, nDim)
 	saveObject(datas,"./datas.obj")
 	datas = restaurObject("./datas.obj")

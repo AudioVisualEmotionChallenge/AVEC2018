@@ -94,6 +94,7 @@ def concArff(sourceD, fNames, destinationD, fileName):
 	try :
 		fNames = sorted(fNames)
 		arffs = {}
+		long = 0
 		b = 0
 		#We verify that the file dont already exist
 		if (not os.path.isfile(destinationD+fileName)) :
@@ -102,8 +103,16 @@ def concArff(sourceD, fNames, destinationD, fileName):
 					#We search for the corresponding descriptor with the parameters
 					if (i == 0):
 						arffs = arff.load(open(sourceD+fNames[i],"rb"))
+						long = len(arffs['data'])
 					else :
 						d = arff.load(open(sourceD+fNames[i],"rb"))
+						if (len(d['data']) != long):
+							while(len(d['data']) != long):
+								lastInd = len(d['data'])-1
+								if (len(d['data']) > long):
+									del(d['data'][lastInd])
+								else :
+									d['data'].append(d['data'][lastInd])
 						arffs['data'] += d['data']
 				else:
 					b = 1

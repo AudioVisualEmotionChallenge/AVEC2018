@@ -16,7 +16,7 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 		tabCCC += ";"+v.nameMod[nMod]
 	tabCCC += "\n"
 	#Data
-	for nDim in range(v.nDim):
+	for nDim in range(len(v.eName)):
 		for nPart in range(len(part)):
 			s = part[nPart]
 			tabCCC+= v.eName[nDim]+" - "+s
@@ -31,7 +31,7 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 		tabCCC += ";"+v.lFunc[nFunc][2]
 	tabCCC += ";Best\n"
 	#Data
-	for nDim in range(v.nDim):
+	for nDim in range(len(v.eName)):
 		for nPart in range(len(part)):
 			s = part[nPart]
 			#All functions
@@ -57,7 +57,7 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 		tabCCC += ";Best"
 	tabCCC += "\n"
 	#Data
-	for nDim in range(v.nDim):
+	for nDim in range(len(v.eName)):
 		for nPart in range(len(part)):
 			s = part[nPart]
 			tabCCC += v.eName[nDim]+" - "+s
@@ -78,7 +78,7 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 		tabCCC += ";"+v.lFunc[nFunc][2]
 	tabCCC += ";Best\n"
 	#Data
-	for nDim in range(v.nDim):
+	for nDim in range(len(v.eName)):
 		for nPart in range(len(part)):
 			s = part[nPart]
 			tabCCC += v.eName[nDim]+" - "+s
@@ -98,23 +98,23 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 			
 #Return the best ccc value for a window size, a window step and a delay given
 def bestdelay(cccs, wSize, wStep, delay):
-	b = np.zeros(v.nDim)
-	for i in range(v.nDim):
+	b = np.zeros(len(v.eName))
+	for i in range(len(v.eName)):
 		b[i] = -1
 	for i in range(len(cccs)):
-		for nDim in range(v.nDim):
+		for nDim in range(len(v.eName)):
 			if (cccs[i][0] == nDim and round(cccs[i][1],2) == round(wSize,2) and round(cccs[i][2],2) == round(wStep,2) and round(cccs[i][4],2) == round(delay,2) and cccs[i][3] > b[nDim]):
 				b[nDim] = cccs[i][3]
 	return b	
 
 #Return the best ccc value for a window size and a windows step given
 def bestVal(cccs, wSize, wStep):
-	b = np.zeros(v.nDim)
-	for i in range(v.nDim):
+	b = np.zeros(len(v.eName))
+	for i in range(len(v.eName)):
 		b[i] = -1
-	bD = np.zeros(v.nDim)
+	bD = np.zeros(len(v.eName))
 	for i in range(len(cccs)):
-		for nDim in range(v.nDim):
+		for nDim in range(len(v.eName)):
 			if (cccs[i][0] == nDim and round(cccs[i][1],2) == round(wSize,2) and round(cccs[i][2],2) == round(wStep,2) and cccs[i][3] > b[nDim]):
 				b[nDim] = cccs[i][3]
 				bD[nDim] = cccs[i][4]
@@ -196,9 +196,9 @@ def printValTest(cccs, nMod, nDim):
 	print(v.eName[nDim]+"/"+v.nameMod[nMod])
 	print("Value Dev/Test : "+str(ccc[0][0])+"/"+str(ccc[0][1]))
 	if (v.debugMode == True):
-		print("Window size/step/delay/complexity : "+str(ccc[1])+"/"+str(ccc[2])+"/"+str(ccc[3])+"/"+str(ccc[4]))
+		print("Window size/step/delay : "+str(ccc[1])+"/"+str(ccc[2])+"/"+str(ccc[3]))
 		print("Bias/Scaling : "+str(ccc[5])+"/"+str(ccc[6]))
-		print("With function/alpha : "+str(ccc[7])+"/"+str(ccc[8]))
+		print("With function/alpha : "+str(ccc[7])+"/"+str(ccc[4]))
 	print("")
 #End printValue	
 
@@ -208,19 +208,19 @@ def printBestVal(cccs, tPlt, nMod):
 	cccs = np.array(cccs)
 	tPlt = np.array(tPlt)
 	bVals = []
-	for nDim in range(v.nDim):
-		bVal = cccs[0]
-		for i in range(1,len(cccs)):
-			if (cccs[i][0] == nDim and cccs[i][3] > bVal[3]):
+	for nDim in range(len(v.eName)):
+		bVal = None
+		for i in range(len(cccs)):
+			if ((bVal is None and int(cccs[i][0]) == int(nDim)) or (int(cccs[i][0]) == int(nDim) and float(cccs[i][3]) > float(bVal[3]))):
 				bVal = cccs[i]
 		#We print the results
-		print("Best value : "+v.nameMod[nMod]+" "+v.eName[nDim]+" : "+str(bVal[3]))
-		bVals.append(bVal)
 		if (v.debugMode == True):
-			print("Window size/step/delay/complexity : "+str(bVal[1])+"/"+str(bVal[2])+"/"+str(bVal[4])+"/"+str(bVal[5]))
+			print("Best value : "+v.nameMod[nMod]+" "+v.eName[nDim]+" : "+str(bVal[3]))
+			print("Window size/step/delay : "+str(bVal[1])+"/"+str(bVal[2])+"/"+str(bVal[4]))
 			print("Bias/Scaling "+v.eName[nDim]+" : "+str(bVal[6])+"/"+str(bVal[7]))
-			print("With function/alpha : "+str(bVal[8])+"/"+str(bVal[9]))
+			print("With function/complexity : "+str(bVal[8])+"/"+str(bVal[5]))
 		print("")
+		bVals.append(bVal)
 		#We print it in graphical form
 		fig = plt.figure()
 		ax = fig.add_subplot(111, projection='3d')
