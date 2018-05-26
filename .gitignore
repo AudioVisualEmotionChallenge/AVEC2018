@@ -1,5 +1,6 @@
-
 *.png
 *.pyc
 *.obj
-*.obj
+*.csv
+./scripts_GES/Figures/
+*.csv#

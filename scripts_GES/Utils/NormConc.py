@@ -5,6 +5,7 @@ import GlobalsVars as v
 from PredUtils import arffToNan, removeColArff
 import os
 import arff
+import warnings
 import numpy as np
 
 #NORMALISATION OF FILES
@@ -13,6 +14,7 @@ import numpy as np
 def normFeaturesFile(wSize, wStep, norm, pb, nMod):
 	try :
 		valKey = {}
+		warnings.filterwarnings('ignore', category=UnicodeWarning)
 		dFile = v.descConc[nMod]+v.tPart+"_"+str(wSize)+"_"+str(wStep)+".arff"
 		if (os.path.isfile(dFile) == True):
 			#For AUDeep, no normalisation but we need to copy files in norm folder
@@ -93,6 +95,7 @@ def normFeatures(wSize, wStep, nMod):
 def concArff(sourceD, fNames, destinationD, fileName):
 	try :
 		fNames = sorted(fNames)
+		warnings.filterwarnings('ignore', category=UnicodeWarning)
 		arffs = {}
 		long = 0
 		b = 0

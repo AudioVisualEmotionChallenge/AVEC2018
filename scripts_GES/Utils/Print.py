@@ -26,7 +26,7 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 			s = part[nPart]
 			tabCCC+= v.eName[nDim]+" - "+s
 			for nMod in range(len(v.desc)):
-				tabCCC += ";"+str(cccs[nDim][nMod][0][nPart])
+				tabCCC += ";"+str(cccs[nDim][nMod][0][nPart])+" - "+str(cccs[nDim][nMod][7])
 			tabCCC += "\n"
 	tabCCC += "\n\n"
 	#Tab for multimodal - multi representative
@@ -45,7 +45,7 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 				best = bestCCCLinRegFunc(linReg, nFunc, nDim)
 				tabCCC += ";"+str(best[3][nDim][nPart])
 			#Best result
-			ccc = cccCalc(bLinReg[s][nDim],datas['gs'+s][nDim])
+			ccc = bLinReg[s][nDim][1]
 			if (ccc > bestVals[nDim][nPart]):
 					bestVals[nDim][nPart] = round(ccc,3)
 			tabCCC += ";"+str(round(ccc,3))+"\n"
@@ -54,30 +54,25 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 	#Labels
 	tabCCC += "Multi-Representative"
 	for nCat in range(len(v.catMod)):
-		tabCCC += ";"+v.catMod[nCat]
-		for nFunc in range(len(v.lFunc)):
-			tabCCC += ";"
-	tabCCC += "\n"
-	for nCat in range(len(v.catMod)):
 		for nFunc in range(len(v.lFunc)):
 			tabCCC += ";"+v.lFunc[nFunc][2]
 		tabCCC += ";Best"
 	tabCCC += "\n"
 	#Data
-	for nDim in range(len(v.eName)):
-		for nPart in range(len(part)):
-			s = part[nPart]
-			tabCCC += v.eName[nDim]+" - "+s
-			for nCat in range(len(v.catMod)):
+	for nCat in range(len(v.catMod)):
+		tabCCC += v.catMod[nCat]+"\n"
+		for nDim in range(len(v.eName)):
+			for nPart in range(len(part)):
+				s = part[nPart]
+				tabCCC += v.eName[nDim]+" - "+s
 				#All functions
 				for nFunc in range(len(v.lFunc)):
 					best = bestCCCLinRegFunc(catReg[nCat], nFunc, nDim)
 					tabCCC += ";"+str(best[3][nDim][nPart])
 				#Best result
-				ccc = cccCalc(bCatReg[nCat][s][nDim],datas['gs'+s][nDim])
-				tabCCC += ";"+str(round(ccc,3))
-			tabCCC += "\n"
-	tabCCC += "\n\n"
+				ccc = bCatReg[nCat][s][nDim][1]
+				tabCCC += ";"+str(round(ccc,3))+"\n"
+		tabCCC += "\n\n"
 	#Tab for multimodal multirepresentative
 	#Labels
 	tabCCC += "Multi-modal Hierarchic"
@@ -94,7 +89,7 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 				best = bestCCCLinRegFunc(multReg, nFunc, nDim)
 				tabCCC += ";"+str(best[3][nDim][nPart])
 			#Best result
-			ccc = cccCalc(bMultReg[s][nDim],datas['gs'+s][nDim])
+			ccc = bMultReg[s][nDim][1]
 			if (ccc > bestVals[nDim][nPart]):
 					bestVals[nDim][nPart] = round(ccc,3)
 			tabCCC += ";"+str(round(ccc,3))+"\n"
@@ -181,9 +176,10 @@ def bestLinearRegression(linRegRes, nameMod, part, datas):
 	for nDim in range(len(v.eName)):
 		best = bestCCCLinReg(linRegRes, nDim)
 		[cccs, mod] = bestDatasCCC(datas, nDim, part)
+		print cccs[0]
 		if (best[3][nDim][0] > cccs[0]):
 			for s in part:
-				blr[s].append(best[4][s][nDim])
+				blr[s].append([best[4][s][nDim],best[3][nDim][0]])
 			#We print it
 			print ("Best linear regression for "+v.eName[nDim]+" : "+str(best[3][nDim]))
 			if (v.debugMode == True):
@@ -199,7 +195,7 @@ def bestLinearRegression(linRegRes, nameMod, part, datas):
 							print(v.eName[nDim][0:1]+" "+nameMod[nMod]+" : "+str(round(best[2][nDim][nMod+nDim*lenNMod],3)))
 		else :
 			for s in part:
-				blr[s].append(datas[s][nDim][mod])
+				blr[s].append([datas[s][nDim][mod],cccs])
 			print ("Best linear regression for "+v.eName[nDim]+" : "+str(cccs))
 			if (v.debugMode == True):
 				print ("Modality : "+nameMod[mod])

@@ -43,7 +43,7 @@ def gsMatch(method, dl, wSize, nMod, modeTest):
 					ind = int(calcul)
 					if (ind >= tFS+tFS*i):
 						ind = tFS+tFS*i-1
-					vals = [ar[ind][2],va[ind][2]]
+					vals = [ar[ind][0],va[ind][0]]
 				#Else we use the mean method : we do the mean of each value in the window 
 				else :	
 					calcul = ((v.tsp*float(j)+dl)/v.ts)+float(tFS*i)
@@ -60,7 +60,7 @@ def gsMatch(method, dl, wSize, nMod, modeTest):
 							moy[1] += va[k][2]
 						vals = [moy[0]/(indA-ind),moy[1]/(indA-ind)]
 					else:
-						vals = [ar[ind][2],va[ind][2]]
+						vals = [ar[ind][0],va[ind][0]]
 				#if (gs.get(s+"_ind",None) == None):
 				#	gs[s] = []
 				#gs[s+"_ind"] = ind

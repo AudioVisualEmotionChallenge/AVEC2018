@@ -219,7 +219,7 @@ def unimodalPred(gs, feats, nDim, modeTest):
 			if (ccc > cccs[s]):
 				preds[s] = pred
 				cccs[s] = ccc
-				function = "liblinear"
+				function = "SVR"
 				alpha = comp
 	#We see if we can do better with sklearn
 	for nbFunc in range(len(v.lFunc)):
