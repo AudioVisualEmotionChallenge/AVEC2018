@@ -65,5 +65,4 @@ For the Audio Prediction :
 - Unzip liblinear and put the address to the python folder within
 - Set up the project (#HOW TO SET UP)
 
-#HOW TO INSTALL PYTHON AND ALL LIBRARY IN MACOS
-#TODO
+#HOW TO INSTALL PYTHON AND ALL LIBRARY IN MACOS (not tested)
