@@ -12,22 +12,45 @@ The emotion recognition system exploits audio, video and physiological signals, 
 
 The architecture of the recognition system is hierarchical and starts with a series of models learned on the training set for each modality and each representation. The models include Support Vector Machines (liblinear with L2-L2 dual form of the regression solver), and generalised linear models (ridge regression, lasso, multi-task lasso, elastic net, and multi-task elastic net) from the scikit machine learning toolbox. Optimisation of each model is performed on the development partition by performing a grid-search over the following parameters: window size, time delay uniformly applied to the gold-standard, regularisation coefficients (complexity for SVR, alpha for generalised linear models) and post-processing parameters (bias and scaling factor); features of each set (training, development and test) are standardised using the first two statistical moments computed on the training set. Selection of the best model and its corresponding hyper-parameters is done on the development partition. Two different late fusion strategies are then compared: one that fuses all predictions obtained by the different modalities (audio, video, and physiogical) and their corresponding representation (functionals, bags-of-words, and unsupervised deep learning), and another that fuses each represantation of the different modalities, and then the obtained series of predictions over the modalities. Optimisation of the regression models used for the fusion processes includes only the regularisation parameter alpha. Replication of the best performing series of predictions is done in case the fusion deteriorates the performance.
 
-
-#REQUIREMENT
+#LIBRARY DEPENDENCIES
 
 These are the following library you need to install to use the baseline scripts for the AVEC 2018 GES:
 - Numpy
 - Scipy
 - Matplotlib
-- Liblinear (2.20) : don't forget to set up the config file with base folder for python
+- Liblinear (2.20)
 - Liac-arff (2.1.1)
 - Sklearn (0.19.1)
 
+#HOW TO INSTALL ON LINUX (tested on Ubuntu 14.04 and 16.04)
+
+- Install python2.7: "sudo apt-get install python"
+- Install pip: "sudo apt-get install pip"
+- Install the libraries: "python -m pip install --user numpy scipy matplotlib liac-arff sklearn"
+- Install liblinear (pip has not the latest version): http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/liblinear.cgi?+http://www.csie.ntu.edu.tw/~cjlin/liblinear+zip
+- Unzip liblinear and put the address to the python folder within
+- Set up the project (#HOW TO SET UP)
+
+#HOW TO INSTALL ON WINDOWS (tested on Windows 7 - 64bits)
+
+- Download python2.7, https://www.python.org/downloads/release/python-2715/
+- Install python using "Windows x86-64 MSI installer"
+- Set up environment variables following this tutorial: https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation
+- Install pip: https://bootstrap.pypa.io/get-pip.py
+- Open a CMD in administrator mode
+- Go to the folder where get-pip.py is and run "python get-pip.py", this will install it. Environment variables should be set for pip but if you can't lauch it from everywhere you need to add these too.
+- Install the libraries: "python -m pip install --user numpy scipy matplotlib liac-arff sklearn" on cmd
+- Install liblinear (pip has not the latest version): http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/liblinear.cgi?+http://www.csie.ntu.edu.tw/~cjlin/liblinear+zip
+- Unzip liblinear and put the address to the python folder within
+- Set up the project (#HOW TO SET UP)
+
+#HOW TO INSTALL ON MACOS (not tested)
+
+-  feedbacks welcome!
+
 #HOW TO SET UP
 
-First of all you must set all the variables in the Config/Config.py file.
-Please be sure to put a / at the end of each folder.
-The base folders will be those of the AVEC_2018 GES repository; structure and name of the files must be preserved.
+First of all you must set the three variables in the Config/Config.py file: (i) folder containing the dataset (the one from the AVEC 2018 GES data repository with exact structure and name of the files), (ii) version of the gold-standard to use, and (iii) number of threads available to run the emotion recognition system.
 
 #HOW TO RUN
 
@@ -41,28 +64,5 @@ For the Audio Prediction :
 - If you don't put any argument the multimodal prediction will launch.
 - Otherwise you can put a number for the modality (for the number correspondance, type "python AudioPred.py help")
 
-#HOW TO INSTALL PYTHON AND ALL LIBRARY IN WINDOWS (tested on Windows 7 - 64bits)
 
-- Download python2.7, you can get it here : https://www.python.org/downloads/release/python-2715/
-- Take the "Windows x86-64 MSI installer"
-- After installation, environment variables must be set, there is a tutorial here : https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation
-  You should set "PYTHON_HOME" to "c:\Python27" (or the path you have installed python) and to var "path", you must add "%PYTHON_HOME%;%PYTHON_HOME%\Scripts\;"
-- Install pip, download link here : https://bootstrap.pypa.io/get-pip.py
-- Open a CMD in administrator mode
-- Go to the folder where get-pip.py is (cd PATH)
-- Run "python get-pip.py", this will install it (Environment variables should be set for pip but if you can't lauch it from everywhere you need to add these too)
-- Install the libraries : "python -m pip install --user numpy scipy matplotlib liac-arff sklearn" on cmd
-- Install liblinear (pip have not the last version) : http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/liblinear.cgi?+http://www.csie.ntu.edu.tw/~cjlin/liblinear+zip
-- Unzip liblinear and put the address to the python folder within
-- Set up the project (#HOW TO SET UP)
 
-#HOW TO INSTALL PYTHON AND ALL LIBRARY IN LINUX (tested on Ubuntu 16.04/14.04)
-
-- First install python2.7 : "sudo apt-get install python"
-- Install pip : "sudo apt-get install pip"
-- Install the libraries : "python -m pip install --user numpy scipy matplotlib liac-arff sklearn"
-- Install liblinear (pip have not the last version) : http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/liblinear.cgi?+http://www.csie.ntu.edu.tw/~cjlin/liblinear+zip
-- Unzip liblinear and put the address to the python folder within
-- Set up the project (#HOW TO SET UP)
-
-#HOW TO INSTALL PYTHON AND ALL LIBRARY IN MACOS (not tested)
