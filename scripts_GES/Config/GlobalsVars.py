@@ -74,12 +74,12 @@ cccMode = c.cccMode
 #0 = unidimentionnal regression/1 = multidimentionnal regression
 lFunc =[[linear_model.Ridge,0,"Ridge"],[linear_model.Lasso,0,"Lasso"],[linear_model.MultiTaskLasso,1,"Multitask-Lasso"], [linear_model.ElasticNet,1,"ElasticNet"],[linear_model.MultiTaskElasticNet,1,"Multitask-ElasticNet"]]
 parFunc = [[0.1],
-		[0.5,0.1,0.01,0.001,0.0001],
-		[0.5,0.1,0.01,0.001,0.0001],
-		[0.5,0.1,0.01,0.001,0.0001],
-		[0.5,0.1,0.01,0.001,0.0001],
-		[0.5,0.1,0.01,0.001,0.0001],
-		[0.5,0.1,0.01,0.001,0.0001]]
+		[0.1,0.01,0.001,0.0001],
+		[0.1,0.01,0.001,0.0001],
+		[0.1,0.01,0.001,0.0001],
+		[0.1,0.01,0.001,0.0001],
+		[0.1,0.01,0.001,0.0001],
+		[0.1,0.01,0.001,0.0001]]
 #EMOTIONS (DIMENSIONS)
 eName = ["Arousal","Valence"]
 
