@@ -44,7 +44,7 @@ Two different late fusion strategies are then compared:
 Optimisation of the regression models used for the fusion processes includes only the regularisation parameter alpha. 
 Replication of the best performing series of predictions is done in case the fusion deteriorates the performance.
 
-#REQUIREMENT
+#LIBRARY DEPENDENCIES
 These are the following library you need to install to use these scripts :
 - Numpy
 - Scipy
@@ -72,7 +72,7 @@ For the Audio Prediction :
 - Otherwise you can put a number for the modality (for the number correspondance, type "python AudioPred.py help")
 - You can type "debug" or "--debug" if you want to have infos on what's going on
 
-#HOW TO INSTALL PYTHON AND ALL LIBRARY IN WINDOWS (tested on Windows 7 - 64bits)
+#HOW TO INSTALL ON WINDOWS (tested on Windows 7 - 64bits)
 - Download python2.7, you can get it here : https://www.python.org/downloads/release/python-2715/
 - Take the "Windows x86-64 MSI installer"
 - After installation, environment variables must be set, there is a tutorial here : https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation
@@ -86,7 +86,7 @@ For the Audio Prediction :
 - Then go to the python folder within liblinear and compile it too
 - Set up the project (#HOW TO SET UP)
 
-#HOW TO INSTALL PYTHON AND ALL LIBRARY IN LINUX (tested on Ubuntu 16.04/14.04)
+#HOW TO INSTALL ON LINUX (tested on Ubuntu 16.04/14.04)
 - First install python2.7 : "sudo apt-get install python"
 - Install pip : "sudo apt-get install pip"
 - Install the libraries : "python -m pip install --user numpy scipy matplotlib liac-arff sklearn"
