@@ -13,7 +13,7 @@ from Setup import setupGS
 def openingRatingIndividual():
 	rGoldIndiv = {}
 	files = listFiles()
-	for i in range(v.nDim):
+	for i in range(len(v.eName)):
 		 for f in files[i][0]:
 			csvs = np.genfromtxt(files[i][1]+f, delimiter=';')
 			if (rGoldIndiv.get(v.eName[i],None) == None):
@@ -73,7 +73,7 @@ def listFiles():
 def ratersAgreement(rGoldIndiv, combnk, files):
 	res = []
 	#For each file and each combination of raters, we get statistics about there agreement on rating
-	for i in range(v.nDim):
+	for i in range(len(v.eName)):
 		statF = []
 		for f, fname in enumerate(files[i][0]):
 			stats = []
@@ -92,7 +92,7 @@ def raterAgreement(ra, combnk, files):
 	aRa = []
 	for a in range(v.nAn):
 		rater = []
-		for i in range(v.nDim):
+		for i in range(len(v.eName)):
 			dimension = []
 			for f, fname in enumerate(files[i][0]):
 				valuesAgr = []
@@ -112,7 +112,7 @@ def raterAgreement(ra, combnk, files):
 
 #Center all the goldStandard
 def cccCentring(ra, combnk, files, aRa, rGoldIndiv):
-	for i in range(v.nDim):
+	for i in range(len(v.eName)):
 		for f, fname in enumerate(files[i][0]):
 			meanByF = []
 			wghRater = []
