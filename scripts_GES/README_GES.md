@@ -1,4 +1,4 @@
-# Baseline scripts of the AVEC 2018 GES.
+# Baseline scripts of the AVEC 2018 GES
 
 #GENERAL DESCRIPTION OF THE SYSTEM
 
