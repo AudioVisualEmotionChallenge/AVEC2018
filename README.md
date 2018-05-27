@@ -4,6 +4,7 @@ Baseline scripts of the 8th Audio/Visual Emotion Challenge
 ## Structure: ##
 
 scripts_CES/:  
+
 Baseline scripts (Python 2) for the Cross-cultural Emotion Sub-Challenge (CES)
 
 * extract\_audio\_features.py: Extract acoustic features over time (either eGeMAPS LLDs or MFCCs + delta + acceleration) for all audio files in the folder 'audio/'. Features are stored in the folder 'audio_features/'. The feature script to be extracted needs to be configured in line 11.
