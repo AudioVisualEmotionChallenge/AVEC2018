@@ -18,7 +18,14 @@ Baseline scripts (Python 2) for the Cross-cultural Emotion Sub-Challenge (CES)
 
 
 scripts_GES/:
-Baseline scripts (Python 2) for the GES Challenge
+
+Baseline scripts (Python 2) for the Gold-standard Emotion Sub-Challenge (GES)
+
+* GoldStandardCreation/GSCreation.py: Create gold-standard from indivudal ratings of emotion labels.
+
+* Pred/Pred.py: Run multimodal emotion recognition based on a given gold-standard.
+
+* Config/Config.py: Configuration file for all scripts.
 
 See the readme_GES.md in the folder for setup and informations
 
