@@ -68,7 +68,7 @@ debugMode = False
 earlystop = 3
 
 #CCC MODE
-cccMode = c.cccMode
+cccMode = 1
 
 #FUNCTION USED FOR LINEAR REGRESSION
 #0 = unidimentionnal regression/1 = multidimentionnal regression
