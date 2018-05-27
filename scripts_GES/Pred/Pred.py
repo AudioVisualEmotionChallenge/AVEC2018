@@ -123,7 +123,7 @@ def unimodalPreds(nMod, debugMode):
 #Try all the possibilities given and find the best CCCs values and parameters for each dimensions
 def multimodalPreds():
 	try :
-		'''bVals = {}
+		bVals = {}
 		saveObject(bVals,"./BestValues.obj")
 		datas = initTabData()
 		saveObject(datas,"./datas.obj")
@@ -145,7 +145,7 @@ def multimodalPreds():
 		for i in range(len(ps)):
 			if (ps[i].is_alive()):
 				ps[i].join()
-		#We now can do the linear regression'''
+		#We now can do the linear regression
 		datas = restaurObject("./datas.obj")
 		regression(datas, False)
 	except KeyboardInterrupt:

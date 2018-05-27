@@ -53,11 +53,9 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 	#Tab for multirepresentative
 	#Labels
 	tabCCC += "Multi-Representative"
-	for nCat in range(len(v.catMod)):
-		for nFunc in range(len(v.lFunc)):
-			tabCCC += ";"+v.lFunc[nFunc][2]
-		tabCCC += ";Best"
-	tabCCC += "\n"
+	for nFunc in range(len(v.lFunc)):
+		tabCCC += ";"+v.lFunc[nFunc][2]
+	tabCCC += ";Best\n"
 	#Data
 	for nCat in range(len(v.catMod)):
 		tabCCC += v.catMod[nCat]+"\n"
@@ -72,7 +70,7 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 				#Best result
 				ccc = bCatReg[nCat][s][nDim][1]
 				tabCCC += ";"+str(round(ccc,3))+"\n"
-		tabCCC += "\n\n"
+	tabCCC += "\n\n"
 	#Tab for multimodal multirepresentative
 	#Labels
 	tabCCC += "Multi-modal Hierarchic"
@@ -97,9 +95,9 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 	#We print the best results
 	print("Best results : ")
 	for nDim in range(len(v.eName)):
-		print(v.eName[nDim]+" : ",)
+		print v.eName[nDim]+" : ",
 		for nPart in range(len(part)):
-			print(part[nPart]+" : "+str(bestVals[nDim][nPart])+" ",)
+			print part[nPart]+" : "+str(bestVals[nDim][nPart])+" ",
 		print("")
 	print("More details in result.csv files")
 	#We write the file
@@ -158,10 +156,10 @@ def bestDatasCCC(datas, nDim, part):
 	for s in range(len(part)):
 		bestCCC.append(-1)
 	n = 0
-	for nMod in range(len(datas['dev'][nDim])):
+	for nMod in range(len(datas['cccs'][nDim])):
 		cccs = []
-		for s in part:
-			cccs.append(round(cccCalc(datas[s][nDim][nMod],datas['gs'+s][nDim]),3))
+		for nPart in range(len(part)):
+			cccs.append(round(datas['cccs'][nDim][nMod][0][nPart],3))
 		if (cccs[0] > bestCCC[0]) :
 			bestCCC = cccs
 			n = nMod
@@ -176,10 +174,9 @@ def bestLinearRegression(linRegRes, nameMod, part, datas):
 	for nDim in range(len(v.eName)):
 		best = bestCCCLinReg(linRegRes, nDim)
 		[cccs, mod] = bestDatasCCC(datas, nDim, part)
-		print cccs[0]
 		if (best[3][nDim][0] > cccs[0]):
-			for s in part:
-				blr[s].append([best[4][s][nDim],best[3][nDim][0]])
+			for nPart in range(len(part)):
+				blr[part[nPart]].append([best[4][part[nPart]][nDim],best[3][nDim][nPart]])
 			#We print it
 			print ("Best linear regression for "+v.eName[nDim]+" : "+str(best[3][nDim]))
 			if (v.debugMode == True):
@@ -194,8 +191,8 @@ def bestLinearRegression(linRegRes, nameMod, part, datas):
 						for nMod in range(lenNMod):
 							print(v.eName[nDim][0:1]+" "+nameMod[nMod]+" : "+str(round(best[2][nDim][nMod+nDim*lenNMod],3)))
 		else :
-			for s in part:
-				blr[s].append([datas[s][nDim][mod],cccs])
+			for nPart in range(len(part)):
+				blr[part[nPart]].append([datas[part[nPart]][nDim][mod],cccs[nPart]])
 			print ("Best linear regression for "+v.eName[nDim]+" : "+str(cccs))
 			if (v.debugMode == True):
 				print ("Modality : "+nameMod[mod])

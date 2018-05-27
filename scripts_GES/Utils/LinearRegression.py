@@ -109,8 +109,8 @@ def regression(datas, modeTest):
 				for nDim in range(len(v.eName)):
 					datasM[s].append([])
 			for nDim in range(len(v.eName)):
-				datasM[s][nDim].append(bCatReg[nCat][s][nDim])
-	for s in 'gstrain','gsdev','gstest':
+				datasM[s][nDim].append(bCatReg[nCat][s][nDim][0])
+	for s in 'gstrain','gsdev','gstest','cccs':
 		datasM[s] = copy.deepcopy(datas[s])
 	#Fusion of the multi representative way
 	print("Multirepresentative :")
