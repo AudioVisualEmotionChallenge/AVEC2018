@@ -64,7 +64,7 @@ def main():
     learning_rate = 0.001    # default is 0.001
     num_iter      = 50       # Number of Iterations
     num_units_1   = 64       # Number of LSTM units in LSTM layer 2
-    num_units_2   = 64       # Number of LSTM units in LSTM layer 2
+    num_units_2   = 32       # Number of LSTM units in LSTM layer 2
     bidirectional = False    # True/False
     dropout       = 0.1      # Dropout
     
@@ -185,7 +185,7 @@ def evaluate_partition(pred, gold):
     pred_all = np.array([])
     gold_all = np.array([])
     for n in range(0, len(gold)):
-        # padding
+        # cropping to length of original sequence
         len_original = len(gold[n])
         pred_n = pred[n,:len_original,0]
         # global concatenation - evaluation
