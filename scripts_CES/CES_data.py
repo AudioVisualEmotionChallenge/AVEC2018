@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.signal
 
 # Helper functions
 def get_num_lines(filename, skip_header=False):
@@ -47,8 +46,7 @@ def load_features(path_features='../audio_features_xbow/', partition='Train_DE',
     features = np.empty((num_inst, max_seq_len, num_features))
     for n in range(0, num_inst):
         F = read_csv(path_features + '/' + partition + '_' + str(n+1).zfill(2) + '.csv', delim=';', skip_header=skip_header)
-        if F.shape[0]<max_seq_len:
-            features[n,:,:] = np.concatenate((F, np.zeros((max_seq_len - F.shape[0], num_features))))  # zero padding
+        features[n,:,:] = np.concatenate((F, np.zeros((max_seq_len - F.shape[0], num_features))))  # zero padding
     return features
 
 
