@@ -49,6 +49,7 @@ def load_features(path_features='../audio_features_xbow/', partition='Train_DE',
         if F.shape[0]>max_seq_len:
             F = F[:max_seq_len,:]  # cropping
         features[n,:,:] = np.concatenate((F, np.zeros((max_seq_len - F.shape[0], num_features))))  # zero padding
+    
     return features
 
 
@@ -70,10 +71,9 @@ def load_labels(path_labels='../labels/', partition='Train_DE', num_inst=34, max
             # original length
             labels_original_t.append(yn)
             # padded to maximum length
-            if yn.shape[0] < max_seq_len:
-                yn_padded = np.concatenate((yn, np.zeros((max_seq_len - yn.shape[0], 1))))  # zero padding
-            labels_padded_t[n,:,:] = yn_padded
-        
+            if yn.shape[0] > max_seq_len:
+                yn = yn[:max_seq_len]
+            labels_padded_t[n,:,:] = np.concatenate((yn, np.zeros((max_seq_len - yn.shape[0], 1))))  # zero padding        
         labels_original.append(labels_original_t)
         labels_padded.append(labels_padded_t)
     
