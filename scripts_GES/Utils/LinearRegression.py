@@ -80,6 +80,8 @@ def regression(datas, modeTest):
 		part = ['dev']
 	#We fix the size of the tab of prediction
 	datas = cutTabs(datas, part)
+	#We get the context
+	datas = takeContext(datas, part)
 	#Multimodal hierachic representation, we use all modality
 	datasC = copy.deepcopy(datas)
 	print ("Multimodal hierarchic : ")

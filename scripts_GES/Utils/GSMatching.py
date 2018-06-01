@@ -18,13 +18,12 @@ def gsOpen(modeTest):
 #End goldStandardOpen
 
 #Apply the gold standards to the differents parameters and treatments
-def gsMatch(method, dl, wSize, nMod, modeTest):
+def gsMatch(method, dl, wSize, nMod, trainLen, modeTest):
 	if (v.gsBase == None):
 		#We open files for the Gold Standard Matching
 		v.gsBase = gsOpen(modeTest)
 	#Tab who will countain the matching
 	gs = {}
-	trainLen = len(arff.load(open(v.descNorm[nMod]+"train_"+str(wSize)+"_"+str(v.tsp)+".arff","rb"))['data'])
 	tFD = trainLen/9
 	for s in v.part :
 		if (modeTest != True and s == "test"):
@@ -61,9 +60,6 @@ def gsMatch(method, dl, wSize, nMod, modeTest):
 						vals = [moy[0]/(indA-ind),moy[1]/(indA-ind)]
 					else:
 						vals = [ar[ind][0],va[ind][0]]
-				#if (gs.get(s+"_ind",None) == None):
-				#	gs[s] = []
-				#gs[s+"_ind"] = ind
 				if (gs.get(s,None) == None):
 					gs[s] = []
 				gs[s].append(vals)

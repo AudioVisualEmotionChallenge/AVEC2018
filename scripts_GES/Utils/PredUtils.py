@@ -5,22 +5,14 @@ import GlobalsVars as v
 import arff
 import os
 import subprocess
-import warnings
 import time
 import numpy as np
 import sys
 import scipy as sp
 import timeit
 import cPickle
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-from matplotlib.font_manager import FontProperties
 from scipy import signal
-sys.path.append(v.labLinearPath)
-from liblinearutil import train, predict
 from sklearn import linear_model
-from sklearn.exceptions import ConvergenceWarning
 
 #Used to create the tab countaining all datas
 def initTabData():
@@ -50,6 +42,31 @@ def restaurObject(addr):
 	f.close()
 	return obj
 #End restaurObject
+
+#Augment the tab to take context in the linear regression
+def takeContext(datas, part):
+	for s in part:
+		for nDim in range(len(v.eName)):
+			for nMod in range(len(v.nameMod)):
+				for i in range(len(datas[s][nDim][nMod])):
+					nSample = len(datas[s][nDim][nMod][i])
+					temp = []
+					for j in range(v.cSize):
+						if (v.cMode == "left"):
+							ind = i-j
+						elif (v.cMode == "right"):
+							ind = i+v.cSize-j
+						else :
+							ind = i+int(v.cSize/2)-j
+						if (ind < 0):
+							ind = 0
+						elif (ind > len(datas[s][nDim][nMod])-1):
+							ind = len(datas[s][nDim][nMod])-1
+						temp.extends(datas[s][nDim][nMod][ind])
+					datas[s][nDim][nMod][i] = temp
+	return datas
+#End takeContext
+					
 
 #Cut a tab to a size given
 def cutTab(tab,size):
@@ -193,83 +210,8 @@ def unimodalPredPrep(wSize, wStep, nMod):
 		feats[s] = np.array(feats[s]['data'])
 		#We resample it to be at a wSize of v.tsp
 		feats[s] = resamplingTab(feats[s], trainLen)
-	return feats
+	return feats, trainLen
 #End unimodalPredPrep
-
-#Unimodal prediction on partitions
-def unimodalPred(gs, feats, nDim, modeTest):
-	if (modeTest == True):
-		parts = ['dev','test']
-	else :
-		parts = ['dev']
-	[cccs, preds] = [{} for i in range(2)]
-	for s in parts:
-		cccs[s] = -1.0
-	#Liblinear
-	for comp in v.C:
-		#Options for liblinear
-		options = "-s "+str(v.sVal)+" -c "+str(comp)+" -B 1 -q"
-		#We learn the model on train
-		model = train(gs['train'][nDim],feats['train'],options)
-		#We predict on data
-		for s in parts:
-			pred = np.array(predict(gs[s][nDim],feats[s],model,"-q"))[0]
-			#We calculate the correlation and store it
-			ccc = cccCalc(np.array(pred),gs[s][nDim])
-			if (ccc > cccs[s]):
-				preds[s] = pred
-				cccs[s] = ccc
-				function = "SVR"
-				alpha = comp
-	#We see if we can do better with sklearn
-	for nbFunc in range(len(v.lFunc)):
-		#tab = []
-		#tab2 = []
-		for c in v.parFunc[nbFunc]:
-			func = v.lFunc[nbFunc]
-			reg = func[0](alpha=c)
-			warnings.filterwarnings('ignore', category=ConvergenceWarning)
-			#One task prediction
-			if (func[1] == 0):
-				reg.fit(feats['train'],gs['train'][nDim])
-				for s in parts:
-					p = reg.predict(feats['dev'])
-					ccc = cccCalc(p,gs[s][nDim])
-					if (ccc > cccs[s]) : 
-						preds[s] = p
-						cccs[s] = ccc
-						function = func[2]
-						alpha = c
-			#Multi task prediction
-			else :
-				reg.fit(feats['train'],np.transpose(gs['train']))
-				for s in parts:
-					p = reg.predict(feats['dev'])[:,nDim]
-					ccc = cccCalc(p,gs[s][nDim])
-					if (ccc > cccs[s]) : 
-						preds[s] = p
-						cccs[s] = ccc
-						function = func[2]
-						alpha = c
-			#tab.append(round(ccc,3))
-			#tab2.append(c)
-		#N = len(np.array(tab2))
-		#x2 = np.arange(N)
-		#colorspec = [[1,1,0],[1,0,0],[0,1,0],[0,1,1],[0,0,1],[1,0,1]]
-		#if (v.x < 5):
-		#	plt.plot(x2,np.array(tab), label=str(func[2]), color=colorspec[nbFunc],linewidth=0.1, marker='o',linestyle='dashed')
-		#	v.x += 1
-		#else :
-		#	plt.plot(x2,np.array(tab), color=colorspec[nbFunc], marker='o',linewidth=0.3,markersize=0.5,linestyle='dashed')
-		#plt.legend(loc='lower right')
-		#plt.title("CCC with alpha decrease by linear model")
-		#plt.xticks(x2,np.array(tab2))
-		#f = open("../Figures/plotSCR.png","wb")
-		#plt.savefig(f)
-		#f.close()
-		#print "plt saved"
-	return cccs, preds, function, alpha
-#Fin unimodalPred
 
 def isInt(string, limit):
 	for i in range(limit):

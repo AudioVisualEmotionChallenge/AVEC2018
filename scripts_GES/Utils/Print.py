@@ -181,15 +181,21 @@ def bestLinearRegression(linRegRes, nameMod, part, datas):
 			print ("Best linear regression for "+v.eName[nDim]+" : "+str(best[3][nDim]))
 			if (v.debugMode == True):
 				print ("With func/complexity : "+str(best[0][2])+"/"+str(best[1]))
-				print ("Modality : Coefficient")
+				print ("Modality : Coefficients")
 				if (best[0][1] == 0):
 					for nMod in range(len(best[2][nDim])):
-						print(nameMod[nMod]+" : "+str(round(best[2][nDim][nMod],3)))
+						print(nameMod[nMod]+" : ",)
+						for i in range(cSize):
+							print(str(round(best[2][nDim][nMod*i],3))+ " ",)
+						print("")
 				else :
 					for nDim in range(len(v.eName)):
 						lenNMod = len(best[2][nDim])/2
 						for nMod in range(lenNMod):
-							print(v.eName[nDim][0:1]+" "+nameMod[nMod]+" : "+str(round(best[2][nDim][nMod+nDim*lenNMod],3)))
+							print(v.eName[nDim][0:1]+" "+nameMod[nMod]+" : ",)
+							for i in range(cSize):
+								print(str(round(best[2][nDim][nMod+nDim*lenNMod],3))+" ",)
+							print("")
 		else :
 			for nPart in range(len(part)):
 				blr[part[nPart]].append([datas[part[nPart]][nDim][mod],cccs[nPart]])

@@ -1,4 +1,4 @@
-# Baseline scripts of the AVEC 2018 GES
+#Baseline scripts of the AVEC 2018 GES
 
 #GENERAL DESCRIPTION OF THE SYSTEM
 
@@ -73,8 +73,10 @@ To perform monomodal/multimodal emotion recognition:
 - Go in the Pred folder
 - Type "python Pred.py ARGS"
 - If you don't put any argument the multimodal prediction will launch.
+- If you don't put "full" or "--full", the predictions will only use SVR
 - Otherwise you can put a number for the modality (for the number correspondance, type "python Pred.py help")
 - You can add the option "debug" or "--debug" if you want a higher verbose level
+- You can add "full" or "--full" if you want to test linear model on the predictions (the script may take up to 24h)
 
 #HOW TO SET UP YOUR SCRIPT WITH YOUR GOLD STANDARD
 

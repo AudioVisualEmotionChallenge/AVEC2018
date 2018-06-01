@@ -63,23 +63,27 @@ else :
 	errColor = ''
 	endColor = ''
 
-#DEBUG MODE
+#Debug mode and full mode
 debugMode = False
+fullMode = False
 earlystop = 3
 
 #CCC MODE
 cccMode = 1
+#Size of the context for linear regression (number of frames)
+cSize = 10
+cMode = "left" #left/right/center
 
 #FUNCTION USED FOR LINEAR REGRESSION
 #0 = unidimentionnal regression/1 = multidimentionnal regression
 lFunc =[[linear_model.Ridge,0,"Ridge"],[linear_model.Lasso,0,"Lasso"],[linear_model.MultiTaskLasso,1,"Multitask-Lasso"], [linear_model.ElasticNet,1,"ElasticNet"],[linear_model.MultiTaskElasticNet,1,"Multitask-ElasticNet"]]
-parFunc = [[0.1],
-		[0.1,0.01,0.001,0.0001],
-		[0.1,0.01,0.001,0.0001],
-		[0.1,0.01,0.001,0.0001],
-		[0.1,0.01,0.001,0.0001],
-		[0.1,0.01,0.001,0.0001],
-		[0.1,0.01,0.001,0.0001]]
+parFunc = [[1],
+		[0.01,0.005,0.001,0.0005,0.0001],
+		[0.01,0.005,0.001,0.0005,0.0001],
+		[0.01,0.005,0.001,0.0005,0.0001],
+		[0.01,0.005,0.001,0.0005,0.0001],
+		[0.01,0.005,0.001,0.0005,0.0001],
+		[0.01,0.005,0.001,0.0005,0.0001]]
 #EMOTIONS (DIMENSIONS)
 eName = ["Arousal","Valence"]
 
@@ -115,6 +119,7 @@ delBeg = [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00]
 delStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
 delMax = [9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60,9.60]
 #Complexity value used for the SVR
-C = [0.00001, 0.00002, 0.00005, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
+#0.00001, 0.00002, 0.00005
+C = [0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
 #Value used for the SVR
 sVal = 12
