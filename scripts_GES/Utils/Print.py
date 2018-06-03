@@ -1,7 +1,7 @@
 #Author: Adrien Michaud
 import GlobalsVars as v
 import numpy as np
-from PredUtils import restaurObject, saveObject, cccCalc
+from PredUtils import restaurObject, saveObject, cccCalc, tabContext
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -26,7 +26,7 @@ def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 			s = part[nPart]
 			tabCCC+= v.eName[nDim]+" - "+s
 			for nMod in range(len(v.desc)):
-				tabCCC += ";"+str(cccs[nDim][nMod][0][nPart])+" - "+str(cccs[nDim][nMod][7])
+				tabCCC += ";"+str(cccs[nDim][nMod][0][nPart])+" - "+str(cccs[nDim][nMod][7])+" - "+str(cccs[nDim][nMod][1])+"/"+str(cccs[nDim][nMod][3])
 			tabCCC += "\n"
 	tabCCC += "\n\n"
 	#Tab for multimodal - multi representative
@@ -143,7 +143,7 @@ def bestCCCLinRegFunc(linRegRes, nbFunc, nDim):
 def bestCCCLinReg(linRegRes, nDim):
 	#We get the best ccc for the dimension and partition
 	best = bestCCCLinRegFunc(linRegRes,0, nDim)
-	for nbFunc in range(len(v.lFunc)):
+	for nbFunc in range(1,len(v.lFunc)):
 		res = bestCCCLinRegFunc(linRegRes, nbFunc, nDim)
 		if (res[3][nDim][0] > best[3][nDim][0]):
 			best = res
@@ -159,8 +159,9 @@ def bestDatasCCC(datas, nDim, part):
 	for nMod in range(len(datas['cccs'][nDim])):
 		cccs = []
 		for nPart in range(len(part)):
-			cccs.append(round(datas['cccs'][nDim][nMod][0][nPart],3))
-		if (cccs[0] > bestCCC[0]) :
+			if (datas['cccs'][nDim][nMod] != []):
+				cccs.append(round(datas['cccs'][nDim][nMod][0][nPart],3))
+		if (cccs != [] and cccs[0] > bestCCC[0]):
 			bestCCC = cccs
 			n = nMod
 	return bestCCC, n
@@ -176,29 +177,35 @@ def bestLinearRegression(linRegRes, nameMod, part, datas):
 		[cccs, mod] = bestDatasCCC(datas, nDim, part)
 		if (best[3][nDim][0] > cccs[0]):
 			for nPart in range(len(part)):
-				blr[part[nPart]].append([best[4][part[nPart]][nDim],best[3][nDim][nPart]])
+				blr[part[nPart]].append([best[4][part[nPart]][nDim],best[3][nDim][nPart],[]])
 			#We print it
 			print ("Best linear regression for "+v.eName[nDim]+" : "+str(best[3][nDim]))
 			if (v.debugMode == True):
+				cMode = best[5]
+				cSize = best[6]
 				print ("With func/complexity : "+str(best[0][2])+"/"+str(best[1]))
+				print ("With context mode/size : "+str(cMode)+"/"+str(cSize))
 				print ("Modality : Coefficients")
 				if (best[0][1] == 0):
-					for nMod in range(len(best[2][nDim])):
-						print(nameMod[nMod]+" : ",)
-						for i in range(cSize):
-							print(str(round(best[2][nDim][nMod*i],3))+ " ",)
+					nombreMod = int(len(best[2][nDim])/cSize)
+					for nMod in range(nombreMod):
+						print nameMod[nMod]+" : ",
+						for size in range(cSize):
+							ind = (nMod*cSize)+size
+							print str(round(best[2][nDim][ind],3))+ " ",
 						print("")
 				else :
-					for nDim in range(len(v.eName)):
-						lenNMod = len(best[2][nDim])/2
+					for dim in range(len(v.eName)):
+						lenNMod = int(len(best[2][nDim])/cSize)
 						for nMod in range(lenNMod):
-							print(v.eName[nDim][0:1]+" "+nameMod[nMod]+" : ",)
-							for i in range(cSize):
-								print(str(round(best[2][nDim][nMod+nDim*lenNMod],3))+" ",)
+							print v.eName[dim][0:1]+" "+nameMod[nMod]+" : ",
+							for size in range(cSize):
+								ind = (nMod*cSize)+size
+								print str(round(best[2][dim][ind],3))+" ",
 							print("")
 		else :
 			for nPart in range(len(part)):
-				blr[part[nPart]].append([datas[part[nPart]][nDim][mod],cccs[nPart]])
+				blr[part[nPart]].append([datas[part[nPart]][nDim][mod],cccs[nPart],datas['cccs'][nDim][mod]])
 			print ("Best linear regression for "+v.eName[nDim]+" : "+str(cccs))
 			if (v.debugMode == True):
 				print ("Modality : "+nameMod[mod])

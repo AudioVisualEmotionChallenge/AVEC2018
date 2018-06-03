@@ -22,6 +22,9 @@ from liblinearutil import train, predict
 
 
 def unimodalPredTest(gs, feats, nDim, func, c):
+	[cccs, preds] = [{} for i in range(2)]
+	for s in v.aPart:
+		cccs[s] = -1.0
 	warnings.filterwarnings('ignore', category=ConvergenceWarning)
 	if (func == "SVR"):
 		#Options for liblinear
@@ -37,25 +40,22 @@ def unimodalPredTest(gs, feats, nDim, func, c):
 				preds[s] = pred
 				cccs[s] = ccc
 	else :
-		fun = None
-		funT = None
-		for f in range(len(v.lFunc)):
+		for f in v.lFunc:
 			if (f[2] == func):
-				fun = f[0]
-				funT = f[1]
-		reg = func[0](alpha=c)
-		if (func[1] == 0):
+				fun = f
+		reg = fun[0](alpha=c)
+		if (fun[1] == 0):
 			reg.fit(feats['train'],gs['train'][nDim])
 			for s in v.aPart:
-				p = reg.predict(feats['dev'])
+				p = reg.predict(feats[s])
 				ccc = cccCalc(p,gs[s][nDim])
 				if (ccc > cccs[s]) : 
 					preds[s] = p
 					cccs[s] = ccc
 		else:
 			reg.fit(feats['train'],np.transpose(gs['train']))
-			for s in parts:
-				p = reg.predict(feats['dev'])[:,nDim]
+			for s in v.aPart:
+				p = reg.predict(feats[s])[:,nDim]
 				ccc = cccCalc(p,gs[s][nDim])
 				if (ccc > cccs[s]) : 
 					preds[s] = p

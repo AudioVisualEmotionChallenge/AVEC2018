@@ -1,0 +1,272 @@
+Creating all the folders necessary if it isn't done yet...
+Verifying files...
+End of verifying files
+
+Concatenation of Gold Standards in progress...
+Concatenated Gold Standards/was already/problems : 0/4/0
+
+Test prediction in progress...
+eGeMAPSfunct : Concatenated files/was already/problems : 0/3/0
+eGeMAPSfunct : Normalised files/was already/problems : 0/3/0
+Arousal/eGeMAPSfunct
+Value Dev/Test : 0.749/0.628
+Window size/step/delay : 6.0/0.4/3.2
+Bias/Scaling : -0.0369848309085/1.22963333958
+With function/alpha : SVR/0.0005
+
+eGeMAPSfunct : Concatenated files/was already/problems : 0/3/0
+eGeMAPSfunct : Normalised files/was already/problems : 0/3/0
+Valence/eGeMAPSfunct
+Value Dev/Test : 0.319/0.195
+Window size/step/delay : 7.0/0.4/4.0
+Bias/Scaling : 0.0185876588532/0.0
+With function/alpha : SVR/0.05
+
+AUDeep : Concatenated files/was already/problems : 0/3/0
+AUDeep : Normalised files/was already/problems : 0/3/0
+Arousal/AUDeep
+Value Dev/Test : 0.621/0.495
+Window size/step/delay : 0.0/0.4/2.8
+Bias/Scaling : -0.0460609468737/1.59203838989
+With function/alpha : Lasso/0.001
+
+AUDeep : Concatenated files/was already/problems : 0/3/0
+AUDeep : Normalised files/was already/problems : 0/3/0
+Valence/AUDeep
+Value Dev/Test : 0.22/0.158
+Window size/step/delay : 0.0/0.4/2.4
+Bias/Scaling : 0.0/0.0
+With function/alpha : ElasticNet/0.0005
+
+BoAW : Concatenated files/was already/problems : 0/3/0
+BoAW : Normalised files/was already/problems : 0/3/0
+Arousal/BoAW
+Value Dev/Test : 0.76/0.651
+Window size/step/delay : 6.0/0.4/0.0
+Bias/Scaling : -0.0436827534324/1.33183135043
+With function/alpha : SVR/0.0005
+
+BoAW : Concatenated files/was already/problems : 0/3/0
+BoAW : Normalised files/was already/problems : 0/3/0
+Valence/BoAW
+Value Dev/Test : 0.364/0.346
+Window size/step/delay : 7.0/0.4/0.0
+Bias/Scaling : -0.0431663660106/1.79753696778
+With function/alpha : Lasso/0.001
+
+appearance : Concatenated files/was already/problems : 0/3/0
+appearance : Normalised files/was already/problems : 0/3/0
+Arousal/appearance
+Value Dev/Test : 0.483/0.312
+Window size/step/delay : 5.0/0.4/2.8
+Bias/Scaling : -0.0664605939273/1.73896854634
+With function/alpha : Multitask-Lasso/0.005
+
+appearance : Concatenated files/was already/problems : 0/3/0
+appearance : Normalised files/was already/problems : 0/3/0
+Valence/appearance
+Value Dev/Test : 0.416/0.382
+Window size/step/delay : 5.0/0.4/2.0
+Bias/Scaling : 0.0036326975142/1.29269563695
+With function/alpha : SVR/0.001
+
+AU : Concatenated files/was already/problems : 0/3/0
+AU : Normalised files/was already/problems : 0/3/0
+Arousal/AU
+Value Dev/Test : 0.309/0.233
+Window size/step/delay : 3.0/0.4/2.4
+Bias/Scaling : -0.0580574814346/2.58165272996
+With function/alpha : Lasso/0.001
+
+AU : Concatenated files/was already/problems : 0/3/0
+AU : Normalised files/was already/problems : 0/3/0
+Valence/AU
+Value Dev/Test : 0.482/0.373
+Window size/step/delay : 5.0/0.4/2.4
+Bias/Scaling : 0.0030787530675/1.58107149821
+With function/alpha : SVR/0.001
+
+geometric : Concatenated files/was already/problems : 0/3/0
+geometric : Normalised files/was already/problems : 0/3/0
+Arousal/geometric
+Value Dev/Test : 0.344/0.241
+Window size/step/delay : 4.0/0.4/2.4
+Bias/Scaling : -0.0560480244752/2.64402395455
+With function/alpha : Lasso/0.005
+
+geometric : Concatenated files/was already/problems : 0/3/0
+geometric : Normalised files/was already/problems : 0/3/0
+Valence/geometric
+Value Dev/Test : 0.504/0.433
+Window size/step/delay : 6.0/0.4/2.8
+Bias/Scaling : 0.0141709602565/1.30335295823
+With function/alpha : SVR/0.0005
+
+BoVW : Concatenated files/was already/problems : 0/3/0
+BoVW : Normalised files/was already/problems : 0/3/0
+Arousal/BoVW
+Value Dev/Test : 0.197/0.23
+Window size/step/delay : 3.0/0.4/0.4
+Bias/Scaling : -0.0714750649298/2.14387419825
+With function/alpha : Ridge/1.0
+
+BoVW : Concatenated files/was already/problems : 0/3/0
+BoVW : Normalised files/was already/problems : 0/3/0
+Valence/BoVW
+Value Dev/Test : 0.395/0.433
+Window size/step/delay : 7.0/0.4/0.0
+Bias/Scaling : -0.0183743420901/1.64374414359
+With function/alpha : Multitask-Lasso/0.001
+
+ECG : Concatenated files/was already/problems : 0/3/0
+ECG : Normalised files/was already/problems : 0/3/0
+Arousal/ECG
+Value Dev/Test : 0.234/0.085
+Window size/step/delay : 2.0/0.4/0.0
+Bias/Scaling : -0.0718174615578/3.4368324877
+With function/alpha : Multitask-Lasso/0.0005
+
+ECG : Concatenated files/was already/problems : 0/3/0
+ECG : Normalised files/was already/problems : 0/3/0
+Valence/ECG
+Value Dev/Test : 0.157/0.049
+Window size/step/delay : 8.0/0.4/0.8
+Bias/Scaling : 0.0154209197698/2.01602108508
+With function/alpha : Lasso/0.0005
+
+HRHRV : Concatenated files/was already/problems : 0/3/0
+HRHRV : Normalised files/was already/problems : 0/3/0
+Arousal/HRHRV
+Value Dev/Test : 0.202/0.098
+Window size/step/delay : 2.0/0.4/0.0
+Bias/Scaling : -0.094916514672/4.82738516485
+With function/alpha : Ridge/1.0
+
+HRHRV : Concatenated files/was already/problems : 0/3/0
+HRHRV : Normalised files/was already/problems : 0/3/0
+Valence/HRHRV
+Value Dev/Test : 0.181/0.066
+Window size/step/delay : 10.0/0.4/0.0
+Bias/Scaling : -0.060337367269/0.0
+With function/alpha : SVR/0.5
+
+EDA : Concatenated files/was already/problems : 0/3/0
+EDA : Normalised files/was already/problems : 0/3/0
+Arousal/EDA
+Value Dev/Test : 0.095/0.061
+Window size/step/delay : 2.0/0.4/0.0
+Bias/Scaling : -0.0665663917334/4.95601488874
+With function/alpha : SVR/0.05
+
+EDA : Concatenated files/was already/problems : 0/3/0
+EDA : Normalised files/was already/problems : 0/3/0
+Valence/EDA
+Value Dev/Test : 0.107/0.102
+Window size/step/delay : 10.0/0.4/0.4
+Bias/Scaling : -0.0396720600308/2.4751867963
+With function/alpha : SVR/0.2
+
+SCL : Concatenated files/was already/problems : 0/3/0
+SCL : Normalised files/was already/problems : 0/3/0
+Arousal/SCL
+Value Dev/Test : 0.099/0.061
+Window size/step/delay : 16.0/0.4/1.2
+Bias/Scaling : -0.0566683114489/5.51021109571
+With function/alpha : SVR/1.0
+
+SCL : Concatenated files/was already/problems : 0/3/0
+SCL : Normalised files/was already/problems : 0/3/0
+Valence/SCL
+Value Dev/Test : 0.098/0.101
+Window size/step/delay : 6.0/0.4/0.0
+Bias/Scaling : 0.0/0.0
+With function/alpha : SVR/1.0
+
+SCR : Concatenated files/was already/problems : 0/3/0
+SCR : Normalised files/was already/problems : 0/3/0
+Arousal/SCR
+Value Dev/Test : 0.104/0.061
+Window size/step/delay : 2.0/0.4/0.4
+Bias/Scaling : -0.0565034869165/4.74181582948
+With function/alpha : SVR/1.0
+
+SCR : Concatenated files/was already/problems : 0/3/0
+SCR : Normalised files/was already/problems : 0/3/0
+Valence/SCR
+Value Dev/Test : 0.055/0.071
+Window size/step/delay : 8.0/0.4/0.0
+Bias/Scaling : -0.0370477098657/0.0
+With function/alpha : SVR/0.2
+
+Multimodal hierarchic : 
+Best linear regression for Arousal : [0.76, 0.651]
+Modality : BoAW
+
+Best linear regression for Valence : [0.504, 0.433]
+Modality : geometric
+
+Multimodal representative : 
+Category : Audio
+Best linear regression for Arousal : [0.772, 0.641]
+With func/complexity : ElasticNet/0.005
+With context mode/size : right/11
+Modality : Coefficients
+A eGeMAPSfunct :  0.0  0.0  0.003  0.009  0.013  0.014  0.016  0.027  0.032  0.04  0.063  
+A AUDeep :  0.033  0.042  0.042  0.037  0.032  0.026  0.017  0.0  0.0  0.0  0.0  
+A BoAW :  0.042  0.044  0.053  0.064  0.075  0.076  0.061  0.043  0.026  0.012  0.0  
+V eGeMAPSfunct :  0.0  0.0  0.005  0.007  0.009  0.011  0.011  0.013  0.014  0.016  0.025  
+V AUDeep :  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  
+V BoAW :  0.109  0.084  0.058  0.033  0.006  0.0  0.0  0.0  0.0  0.0  0.0  
+
+Best linear regression for Valence : [0.364, 0.346]
+Modality : BoAW
+
+Category : Video
+Best linear regression for Arousal : [0.491, 0.39]
+With func/complexity : Multitask-Lasso/0.0005
+With context mode/size : center/11
+Modality : Coefficients
+A appearance :  0.288  0.0  0.01  0.056  0.026  0.04  0.024  0.0  0.005  0.0  0.114  
+A AU :  0.023  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  -0.038  
+A geometric :  0.175  0.0  0.0  0.0  0.001  0.035  0.0  0.0  0.0  0.0  0.0  
+A BoVW :  0.042  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  
+V appearance :  0.116  0.0  0.001  0.004  0.002  0.004  0.003  0.0  0.001  0.0  0.047  
+V AU :  0.139  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.031  
+V geometric :  0.393  0.0  0.0  0.0  0.002  0.035  0.0  0.0  0.0  0.0  0.0  
+V BoVW :  0.01  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  
+
+Best linear regression for Valence : [0.504, 0.433]
+Modality : geometric
+
+Category : Physio
+Best linear regression for Arousal : [0.234, 0.085]
+Modality : ECG
+
+Best linear regression for Valence : [0.181, 0.066]
+Modality : HRHRV
+
+Multirepresentative :
+Best linear regression for Arousal : [0.79, 0.651]
+With func/complexity : Ridge/1
+With context mode/size : left/1
+Modality : Coefficients
+Audio :  0.768  
+Video :  0.197  
+Physio :  0.067  
+
+Best linear regression for Valence : [0.566, 0.533]
+With func/complexity : Multitask-Lasso/0.005
+With context mode/size : right/3
+Modality : Coefficients
+A Audio :  0.382  0.0  0.0  
+A Video :  0.215  0.0  0.0  
+A Physio :  0.0  0.0  0.0  
+V Audio :  0.186  0.0  0.0  
+V Video :  0.314  0.0  0.0  
+V Physio :  0.0  0.0  0.0  
+
+Best results : 
+Arousal :  dev : 0.79  test : 0.651  
+Valence :  dev : 0.566  test : 0.533  
+More details in result.csv files
+

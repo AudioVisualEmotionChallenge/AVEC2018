@@ -6,7 +6,7 @@ sys.path.append("../Config/")
 import GlobalsVars as v
 sys.path.append("../Utils/")
 from Setup import setup
-from PredUtils import cutTabs, predMulti, cccCalc
+from PredUtils import cutTabs, predMulti, cccCalc, tabContext
 from GSMatching import gsOpen, gsMatch
 from Print import bestLinearRegression, CSVtab
 sys.path.append(v.labLinearPath)
@@ -15,20 +15,30 @@ from sklearn import linear_model
 #Do the linear regression and store results for each function tested
 def linearRegression(datas, part):
 	res = []
-	#We test functions and store results
 	for nbFunc in range(len(v.lFunc)):
 		res.append([])
-		for c in v.parFunc[nbFunc]:
-			func = v.lFunc[nbFunc]
-			if (func[1] == 0):
-				res[nbFunc].append(linRegMono(datas, func, c, part))
-			else :
-				res[nbFunc].append(linRegMult(datas, func, c, part))
+	#We test each combinaise of contexts
+	for cMode in v.cModes:
+		for cSize in v.cSizes:
+			#We need to increase the context
+			datasCont = copy.deepcopy(datas)
+			for s in part:
+				for nDim in range(len(v.eName)):
+					for nMod in range(len(datas[s][nDim])):
+						datasCont[s][nDim][nMod] = tabContext(datas[s][nDim][nMod],cMode,cSize)
+			#We test functions and store results
+			for nbFunc in range(len(v.lFunc)):
+				for c in v.parFunc[nbFunc]:
+					func = v.lFunc[nbFunc]
+					if (func[1] == 0):
+						res[nbFunc].append(linRegMono(datasCont, func, c, part, cMode, cSize))
+					else :
+						res[nbFunc].append(linRegMult(datasCont, func, c, part, cMode, cSize))
 	return res
 
 #Do the multimodal unidimensional linear regression and store the results
-def linRegMono(datas, func, c, part):
-	res = [func,c,[],[],{}]
+def linRegMono(datas, func, c, part, cMode, cSize):
+	res = [func,c,[],[],{}, cMode, cSize]
 	#Now we do the linear regression
 	for nDim in range(len(v.eName)):
 		#Getting the coefficient for each modality on Dev
@@ -36,29 +46,40 @@ def linRegMono(datas, func, c, part):
 			reg = func[0](alpha=c)
 		else :
 			reg = func[0]()
-		reg.fit(np.transpose(datas['dev'][nDim]),datas['gsdev'][nDim])
+		for nMod in range(len(datas['dev'][nDim])):
+			if (nMod == 0):
+				preds = datas['dev'][nDim][nMod]
+			else :
+				preds = np.concatenate((preds,datas['dev'][nDim][nMod]),axis=1)
+		reg.fit(preds,datas['gsdev'][nDim])
 		res[2].append(reg.coef_)
 		#Doing the new prediction
 		cccs = []
 		for s in part :
 			if (res[4].get(s,None) == None):
 				res[4][s] = []
-			res[4][s].append(predMulti(res[2][nDim],datas[s],nDim,0))
-			cccs.append(round(cccCalc(res[4][s][nDim],datas['gs'+s][nDim]),3))
+			pred = predMulti(res[2][nDim],datas[s],nDim,0, cSize)
+			res[4][s].append(pred)
+			cccs.append(round(cccCalc(pred,datas['gs'+s][nDim]),3))
 		res[3].append(cccs)
 	return res
 #End linRegMono
 
 #Do the multimodal multidimentionnal linear regression and print the results
-def linRegMult(datas, func, c, part):
-	res = [func,c,[],[],{}]
+def linRegMult(datas, func, c, part, cMode, cSize):
+	res = [func,c,[],[],{}, cMode, cSize]
 	#Getting the coefficient for each modality on Dev
 	if (c != 0):
 		reg = func[0](alpha=c)
 	else :
 		reg = func[0]()
-	concPreds = np.concatenate((np.transpose(datas['dev'][0]),np.transpose(datas['dev'][1])),axis=1)
-	reg.fit(concPreds,np.transpose(datas['gsdev']))
+	for nDim in range(len(v.eName)):
+		for nMod in range(len(datas['dev'][nDim])):
+			if (nMod == 0):
+				preds = datas['dev'][nDim][nMod]
+			else :
+				preds = np.concatenate((preds,datas['dev'][nDim][nMod]),axis=1)
+	reg.fit(preds,np.transpose(datas['gsdev']))
 	res[2] = reg.coef_
 	#Doing the new prediction
 	cccs = []
@@ -67,7 +88,7 @@ def linRegMult(datas, func, c, part):
 		for s in part :
 			if (res[4].get(s,None) == None):
 				res[4][s] = []
-			res[4][s].append(predMulti(reg.coef_,datas[s],nDim,1))
+			res[4][s].append(predMulti(reg.coef_,datas[s],nDim,1, cSize))
 			cccs.append(round(cccCalc(res[4][s][nDim],datas['gs'+s][nDim]),3))
 		res[3].append(cccs)
 	return res
@@ -80,13 +101,11 @@ def regression(datas, modeTest):
 		part = ['dev']
 	#We fix the size of the tab of prediction
 	datas = cutTabs(datas, part)
-	#We get the context
-	datas = takeContext(datas, part)
 	#Multimodal hierachic representation, we use all modality
 	datasC = copy.deepcopy(datas)
 	print ("Multimodal hierarchic : ")
 	linReg = linearRegression(datasC, part)
-	bLinReg = bestLinearRegression(linReg, v.nameMod, part, datas)
+	bLinReg = bestLinearRegression(linReg, v.nameMod, part, datasC)
 	#Multireprensentative, we do it for each category of modality
 	print ("Multimodal representative : ")
 	catReg = []
@@ -112,7 +131,12 @@ def regression(datas, modeTest):
 					datasM[s].append([])
 			for nDim in range(len(v.eName)):
 				datasM[s][nDim].append(bCatReg[nCat][s][nDim][0])
-	for s in 'gstrain','gsdev','gstest','cccs':
+		if (datasM.get('cccs',None) == None):
+			datasM['cccs']=[]
+			for nDim in range(len(v.eName)):
+				datasM['cccs'].append([])
+				datasM['cccs'][nDim].append(bCatReg[nCat]['dev'][nDim][2])
+	for s in 'gstrain','gsdev','gstest':
 		datasM[s] = copy.deepcopy(datas[s])
 	#Fusion of the multi representative way
 	print("Multirepresentative :")

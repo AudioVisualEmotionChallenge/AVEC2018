@@ -7,7 +7,6 @@ from sklearn import linear_model
 sys.path.append("../Utils/")
 import Config as c
 
-x=0
 #GOLD STANDARD
 #Baseline Folder of Gold Standard
 gsFolder = c.basePath+"labels/"
@@ -70,9 +69,9 @@ earlystop = 3
 
 #CCC MODE
 cccMode = 1
-#Size of the context for linear regression (number of frames)
-cSize = 10
-cMode = "left" #left/right/center
+#Size of the context for linear regression and mode of it (number of frames)
+cSizes = [1,3,5,7,9,11]
+cModes = ["left","right","center"]
 
 #FUNCTION USED FOR LINEAR REGRESSION
 #0 = unidimentionnal regression/1 = multidimentionnal regression

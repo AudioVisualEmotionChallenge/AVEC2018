@@ -43,30 +43,26 @@ def restaurObject(addr):
 	return obj
 #End restaurObject
 
-#Augment the tab to take context in the linear regression
-def takeContext(datas, part):
-	for s in part:
-		for nDim in range(len(v.eName)):
-			for nMod in range(len(v.nameMod)):
-				for i in range(len(datas[s][nDim][nMod])):
-					nSample = len(datas[s][nDim][nMod][i])
-					temp = []
-					for j in range(v.cSize):
-						if (v.cMode == "left"):
-							ind = i-j
-						elif (v.cMode == "right"):
-							ind = i+v.cSize-j
-						else :
-							ind = i+int(v.cSize/2)-j
-						if (ind < 0):
-							ind = 0
-						elif (ind > len(datas[s][nDim][nMod])-1):
-							ind = len(datas[s][nDim][nMod])-1
-						temp.extends(datas[s][nDim][nMod][ind])
-					datas[s][nDim][nMod][i] = temp
-	return datas
-#End takeContext
-					
+#Augment the tab to take context
+def tabContext(datas, cMode, cSize):
+	tab = []
+	for i in range(len(datas)):
+		temp = []
+		for j in range(cSize):
+			if (cMode == "left"):
+				ind = i-j
+			elif (cMode == "right"):
+				ind = i+cSize-j
+			else :
+				ind = i+int(cSize/2)-j
+			if (ind < 0):
+				ind = 0
+			elif (ind > len(datas)-1):
+				ind = len(datas)-1
+			temp.append(datas[ind])
+		tab.append(temp)
+	return tab
+#End tabContext			
 
 #Cut a tab to a size given
 def cutTab(tab,size):
@@ -167,17 +163,22 @@ def removeColArff(arff):
 #Fin removeColArff
 
 #Returning the multimodal prediction according to coef
-def predMulti(coef, preds, nDim, funcType):
+def predMulti(coef, preds, nDim, funcType, cSize):
 	pred = []
 	for i in range(len(preds[nDim][0])):
 		p = 0
 		if (funcType == 0):
 			for nMod in range(len(preds[nDim])):
-				p += coef[nMod]*preds[nDim][nMod][i]
+				for size in range(cSize):
+					ind = size*nMod+nMod
+					p += coef[ind]*preds[nDim][nMod][i][size]
 		else:
 			for dim in range(len(v.eName)):
 				for nMod in range(len(preds[nDim])):
-					p+= coef[nDim][nMod+dim*len(preds[nDim])]*preds[dim][nMod][i]
+					for size in range(cSize):
+						nbMod = len(preds[nDim])
+						ind = (nMod*cSize)+size
+						p+= coef[dim][ind]*preds[dim][nMod][i][size]
 		pred.append(p)
 	return pred
 #Put to 0 NaN values in ARFF
