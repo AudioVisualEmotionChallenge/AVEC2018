@@ -219,7 +219,7 @@ def Pred(arg):
 		saveObject(datas,"./datas.obj")
 	#Creation best values object
 	bVals = {}
-	if (os.path.isfile("./BestValues.obj") != False):
+	if (os.path.isfile("./BestValues.obj") == False):
 		saveObject(bVals,"./BestValues.obj")
 	#UnimodalPred or MultimodalPred
 	if (arg == None):
