@@ -2,15 +2,17 @@
 import sys
 import numpy as np
 import copy
+import warnings
 sys.path.append("../Config/")
 import GlobalsVars as v
 sys.path.append("../Utils/")
 from Setup import setup
 from PredUtils import cutTabs, predMulti, cccCalc, tabContext
 from GSMatching import gsOpen, gsMatch
-from Print import bestLinearRegression, CSVtab
+from Print import bestLinearRegression, CSVtab, bestCCCLinReg, linearRegTab
 sys.path.append(v.labLinearPath)
 from sklearn import linear_model
+from sklearn.exceptions import ConvergenceWarning
 
 #Do the linear regression and store results for each function tested
 def linearRegression(datas, part):
@@ -39,6 +41,7 @@ def linearRegression(datas, part):
 #Do the multimodal unidimensional linear regression and store the results
 def linRegMono(datas, func, c, part, cMode, cSize):
 	res = [func,c,[],[],{}, cMode, cSize]
+	warnings.filterwarnings('ignore', category=ConvergenceWarning)
 	#Now we do the linear regression
 	for nDim in range(len(v.eName)):
 		#Getting the coefficient for each modality on Dev
@@ -68,6 +71,7 @@ def linRegMono(datas, func, c, part, cMode, cSize):
 #Do the multimodal multidimentionnal linear regression and print the results
 def linRegMult(datas, func, c, part, cMode, cSize):
 	res = [func,c,[],[],{}, cMode, cSize]
+	warnings.filterwarnings('ignore', category=ConvergenceWarning)
 	#Getting the coefficient for each modality on Dev
 	if (c != 0):
 		reg = func[0](alpha=c)
@@ -105,6 +109,7 @@ def regression(datas, modeTest):
 	datasC = copy.deepcopy(datas)
 	print ("Multimodal hierarchic : ")
 	linReg = linearRegression(datasC, part)
+	linearRegTab(linReg, "MultHierar")
 	bLinReg = bestLinearRegression(linReg, v.nameMod, part, datasC)
 	#Multireprensentative, we do it for each category of modality
 	print ("Multimodal representative : ")
@@ -122,6 +127,7 @@ def regression(datas, modeTest):
 					del(dataCat['cccs'][nDim][nMod])
 					nMod -= 1
 		catReg.append(linearRegression(dataCat, part))
+		linearRegTab(catReg[nCat], v.catMod[nCat])
 		print("Category : "+v.catMod[nCat])
 		bCatReg.append(bestLinearRegression(catReg[nCat],v.catModApp[nCat], part, dataCat))
 		for s in part:
@@ -141,6 +147,7 @@ def regression(datas, modeTest):
 	#Fusion of the multi representative way
 	print("Multirepresentative :")
 	multReg = linearRegression(datasM, part)
+	linearRegTab(multReg, "multirep")
 	bMultReg = bestLinearRegression(multReg,v.catMod, part, datasM)
 	#Write the csv with results
 	CSVtab(datas,linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part)

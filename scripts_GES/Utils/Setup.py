@@ -38,12 +38,12 @@ def setupDescAndGs(modeTest) :
 		setupGS()
 		#We verify that each files for the prediction are here
 		print ("Verifying files...")
-		for nDim in range(len(v.desc)):
-			files = os.listdir(v.desc[nDim])
-			wSize = v.sizeBeg[nDim]
-			while (wSize <= v.sizeMax[nDim]) :
-				wStep = v.stepBeg[nDim]
-				while (wStep <= v.stepMax[nDim]) :
+		for nMod in range(len(v.desc)):
+			files = os.listdir(v.desc[nMod])
+			wSize = v.sizeBeg[nMod]
+			while (wSize <= v.sizeMax[nMod]) :
+				wStep = v.stepBeg[nMod]
+				while (wStep <= v.stepMax[nMod]) :
 					for s in "train","dev","test":
 						for i in range(1,v.nbFPart):
 							found = False
@@ -53,10 +53,10 @@ def setupDescAndGs(modeTest) :
 									found = True
 							if (found == False):
 								#One file is missing
-								print(v.nameMod[nDim]+" : "+name+" file is missing !")
+								print(v.nameMod[nMod]+" : "+name+" file is missing !")
 								endOrNot = False
-					wStep += v.stepStep[nDim]
-				wSize += v.sizeStep[nDim]
+					wStep += v.stepStep[nMod]
+				wSize += v.sizeStep[nMod]
 		#We verify files for gold standard too
 		for fold in range(len(v.ags)):
 			files = os.listdir(v.ags[fold])

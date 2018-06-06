@@ -7,6 +7,36 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+#Print plot for linear regression for comparing context size
+def linearRegTab(regRes, name):
+	for nDim in range(len(v.eName)):
+		b = bestCCCLinReg(regRes, nDim)
+		bFunc = 0
+		for nbFunc in range(len(v.lFunc)):
+			if(b[0][2] == v.lFunc[nbFunc][2]):
+				bFunc = nbFunc
+		for cMode in v.cModes:
+			res = []
+			res2 = []
+			for cSize in v.cSizes:
+				best = -1.0
+				for i in range(len(regRes[bFunc])):
+					if (regRes[bFunc][i][5] == cMode and regRes[bFunc][i][6] == cSize and regRes[bFunc][i][3][nDim][0] > best):
+						best = regRes[bFunc][i][3][nDim][0]
+				res.append(best)
+				res2.append(round((cSize-1)*0.4,2))
+			plt.plot(res2,res, label=cMode,linewidth=0.5, marker='o',linestyle='dashed')
+		plt.legend(loc='best')
+		plt.ylabel("CCC")
+		plt.xlabel("Size of context in seconds")
+		f = open("../Figures/plotContext"+name+v.eName[nDim]+v.lFunc[bFunc][2]+".png","wb")
+		plt.savefig(f)
+		f.close()
+		plt.clf()
+		print "plt saved"
+#End linearRegTab
+
+#Do a CSV containing results
 def CSVtab(datas, linReg, bLinReg, catReg, bCatReg, multReg, bMultReg, part):
 	cccs = datas['cccs']
 	bestVals = []
@@ -115,7 +145,8 @@ def bestdelay(cccs, wSize, wStep, delay):
 		for nDim in range(len(v.eName)):
 			if (cccs[i][0] == nDim and round(cccs[i][1],2) == round(wSize,2) and round(cccs[i][2],2) == round(wStep,2) and round(cccs[i][4],2) == round(delay,2) and cccs[i][3] > b[nDim]):
 				b[nDim] = cccs[i][3]
-	return b	
+	return b
+#End bestdelay	
 
 #Return the best ccc value for a window size and a windows step given
 def bestVal(cccs, wSize, wStep):

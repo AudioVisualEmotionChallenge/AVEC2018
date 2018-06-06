@@ -29,10 +29,10 @@ fconf = ["eGeMAPS","","","",""]
 audioFeat = c.basePath+"features/audio/"
 videoFeat = c.basePath+"features/video/"
 physioFeat = c.basePath+"features/physio/"
-desc = [audioFeat+"eGeMAPSfunct/",audioFeat+"AUDeep/",audioFeat+"BoAW/",videoFeat+"appearance/",videoFeat+"AU/",videoFeat+"geometric/",videoFeat+"BoVW/",physioFeat+"ECG/", physioFeat+"HRHRV/", physioFeat+"EDA/", physioFeat+"SCL/", physioFeat+"SCR/"]
-nameMod = ["eGeMAPSfunct","AUDeep","BoAW","appearance","AU","geometric","BoVW","ECG", "HRHRV","EDA","SCL","SCR"]
+desc = [audioFeat+"eGeMAPSfunct/",audioFeat+"BoAW/",audioFeat+"DeepSpectrum/",videoFeat+"appearance/",videoFeat+"geometric/",videoFeat+"AU/",videoFeat+"BoVW/",physioFeat+"ECG/", physioFeat+"HRHRV/", physioFeat+"EDA/", physioFeat+"SCL/", physioFeat+"SCR/"]
+nameMod = ["eGeMAPS","BoAW","DeepSpectrum","appearance","geometric","AU","BoVW","ECG", "HRHRV","EDA","SCL","SCR"]
 catMod = ["Audio","Video","Physio"]
-catModApp = [["eGeMAPSfunct","AUDeep","BoAW"],["appearance","AU","geometric","BoVW"],["ECG", "HRHRV","EDA","SCL","SCR"]]
+catModApp = [["eGeMAPS","BoAW","DeepSpectrum"],["appearance","geometric","AU","BoVW"],["ECG", "HRHRV","EDA","SCL","SCR"]]
 descConc = []
 for i in range(len(desc)):
 	descConc.append(desc[i]+"Conc/")
@@ -42,7 +42,9 @@ for i in range(len(desc)):
 #This is the name of the column we must remove in each descriptors
 removedColArff = ["name","class","frameTime","frametime","timeStamp","TimeStamp","timestamp","Instance_name"]
 #Name of the modalities that don't need normalisation
-noNorm = ["AUDeep","BoAW","BoVW"]
+noNorm = ["DeepSpectrum","BoAW","BoVW"]
+#Name of the modalities that will be normalise by file
+fileNorm = ["ECG", "HRHRV","EDA","SCL","SCR"]
 
 #LIBLINEAR
 #Path of library LabLinear
@@ -71,7 +73,7 @@ earlystop = 3
 cccMode = 1
 #Size of the context for linear regression and mode of it (number of frames)
 cSizes = [1,3,5,7,9,11]
-cModes = ["left","right","center"]
+cModes = ["left","center","right"]
 
 #FUNCTION USED FOR LINEAR REGRESSION
 #0 = unidimentionnal regression/1 = multidimentionnal regression
@@ -106,9 +108,9 @@ ts=0.04
 #Sampling period for prediction
 tsp=0.4
 #Window Size
-sizeBeg = [3.0,0.0,3.0,3.0,3.0,3.0,3.0,2.0,2.0,2.0,2.0,2.0]
+sizeBeg = [3.0,3.0,0.0,3.0,3.0,3.0,3.0,2.0,2.0,2.0,2.0,2.0]
 sizeStep = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,2.0,2.0,2.0,2.0,2.0]
-sizeMax = [9.0,0.0,9.0,9.0,9.0,9.0,9.0,16.0,16.0,16.0,16.0,16.0]
+sizeMax = [9.0,9.0,0.0,9.0,9.0,9.0,9.0,16.0,16.0,16.0,16.0,16.0]
 #Window Step
 stepBeg = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]
 stepStep = [0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40,0.40]

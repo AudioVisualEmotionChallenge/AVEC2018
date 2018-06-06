@@ -181,6 +181,8 @@ def predMulti(coef, preds, nDim, funcType, cSize):
 						p+= coef[dim][ind]*preds[dim][nMod][i][size]
 		pred.append(p)
 	return pred
+#End predMulti
+
 #Put to 0 NaN values in ARFF
 def arffNan(arff):
 	for ind, att in enumerate(arff['attributes']):
@@ -188,6 +190,7 @@ def arffNan(arff):
 			if (val[ind] == "?" or val[ind] == None or val[ind] == np.nan):
 				val[ind] = 0.0
 	return arff
+#End arffNan
 
 #Put to NaN ? or None values in ARFF:
 def arffToNan(arff):
@@ -196,6 +199,7 @@ def arffToNan(arff):
 			if (val[ind] == "?" or val[ind] == None):
 				val[ind] = np.nan
 	return arff
+#End arffToNan
 
 #Load and prepare files for the unimodal prediction
 def unimodalPredPrep(wSize, wStep, nMod):

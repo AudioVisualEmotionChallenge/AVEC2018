@@ -215,10 +215,12 @@ def Pred(arg):
 	concGs(False)
 	#Creation datas object
 	datas = initTabData()
-	saveObject(datas,"./datas.obj")
+	if (os.path.isfile("./datas.obj") == False):
+		saveObject(datas,"./datas.obj")
 	#Creation best values object
 	bVals = {}
-	saveObject(bVals,"./BestValues.obj")
+	if (os.path.isfile("./BestValues.obj") != False):
+		saveObject(bVals,"./BestValues.obj")
 	#UnimodalPred or MultimodalPred
 	if (arg == None):
 		multimodalPreds()
@@ -238,6 +240,8 @@ def main():
 						v.debugMode = True
 					if (str(sys.argv[i]) == "--full" or str(sys.argv[i]) == "full"):
 						v.fullMode = True
+				if (v.fullMode == True):
+					print("Full mode : now doing predictions with linear regression.")
 				if (isInt(arg, len(v.desc))):
 					Pred(int(arg))
 				elif (str(arg) == "help"):

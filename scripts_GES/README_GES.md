@@ -44,6 +44,9 @@ Two different late fusion strategies are then compared:
 Optimisation of the regression models used for the fusion processes includes only the regularisation parameter alpha. 
 Replication of the best performing series of predictions is done in case the fusion deteriorates the performance.
 
+Fusions are also contextualised to see if it could improve the CCC.
+This is done by stacking frame and testing it with differents type of context : left/center/right.
+
 #LIBRARY DEPENDENCIES
 
 These are the following library you need to install to use these scripts:
