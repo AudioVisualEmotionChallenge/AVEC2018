@@ -33,7 +33,7 @@ def linearRegTab(regRes, name):
 		plt.savefig(f)
 		f.close()
 		plt.clf()
-		print "plt saved"
+		#print "plt saved"
 #End linearRegTab
 
 #Do a CSV containing results
