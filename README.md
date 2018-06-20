@@ -1,8 +1,6 @@
 # AVEC_2018
 Baseline scripts of the 8th Audio/Visual Emotion Challenge
 
-## Structure:
-
 ## extract_features/:
 
 Baseline scripts (Python 2) for audio/visual features extraction from audio/visual recordings; main functions:
