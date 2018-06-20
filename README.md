@@ -1,7 +1,7 @@
 # AVEC_2018
 Baseline scripts of the 8th Audio/Visual Emotion Challenge
 
-## Structure: ##
+## Structure:
 
 ## extract_features/:
 
@@ -15,7 +15,7 @@ Baseline scripts (Python 2) for audio/visual features extraction from audio/visu
 
 See the readme.md in the folder for setup and informations.
 
-## scripts_BDS/:##
+## scripts_BDS/:
 
 Baseline scripts (Matlab) for the Bipolar Disorder Sub-Challenge (BDS); main functions:
 
@@ -25,7 +25,7 @@ Baseline scripts (Matlab) for the Bipolar Disorder Sub-Challenge (BDS); main fun
 
 See the readme_BDS.md in the folder for setup and informations.
 
-## scripts_CES/:##
+## scripts_CES/:
 
 Baseline scripts (Python 2) for the Cross-cultural Emotion Sub-Challenge (CES); main functions:
 
@@ -35,7 +35,7 @@ Baseline scripts (Python 2) for the Cross-cultural Emotion Sub-Challenge (CES); 
 
 See the readme_CES.md in the folder for setup and informations.
 
-## scripts_GES/:##
+## scripts_GES/:
 
 Baseline scripts (Python 2) for the Gold-standard Emotion Sub-Challenge (GES); main functions:
 
