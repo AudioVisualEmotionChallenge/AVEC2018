@@ -7,11 +7,11 @@ Baseline scripts of the 8th Audio/Visual Emotion Challenge
 
 Baseline scripts (Python 2) for audio/visual features extraction from audio/visual recordings; main functions:
 
-* extract\_audio\_features.py: Extract acoustic features over time (either eGeMAPS LLDs or MFCCs + delta + acceleration) using openSMILE.
+* extract\_audio\_features.py: Extract acoustic features over time (either eGeMAPS LLDs or MFCCs + delta + acceleration) using openSMILE (http://audeering.com/technology/opensmile/).
 
-* extract\_video\_features.py: Extract visual features (FAU likelihoods) for all video files.
+* extract\_video\_features.py: Extract visual features (FAU likelihoods) for all video files using openFace (https://github.com/TadasBaltrusaitis/OpenFace/).
 
-* generate\_xbow.py: Generate Bag-of-Words representations from audio or visual descriptors.
+* generate\_xbow.py: Generate Bag-of-Words representations from audio or visual descriptors, using openXBOW (https://github.com/openXBOW/openXBOW).
 
 See the readme.md in the folder for setup and informations.
 
