@@ -1,4 +1,4 @@
-#Baseline scripts of the AVEC 2018 BDS
+# Baseline scripts of the AVEC 2018 BDS
 
 The scripts reproduce the baseline results of the AVEC 2018 BDS.
 
@@ -8,7 +8,7 @@ The official metric to evaluate the performance is the unweighted average recall
 
 	UAR = 1/3 * (recall(remission) + recall(hypo-mania) + recall(mania))
 
-#SYSTEM ARCHITECTURE
+# SYSTEM ARCHITECTURE
 
 The baseline recognition system exploits audio and video signals, with different representations that are either hand-crafted or learned in an unsupervised way. The architecture of the recognition system is a simple late fusion of the best performing audio and video representations using linear Support Vector Regression. 
 
@@ -33,11 +33,11 @@ Fusion of each best audio representation with the one obtained from video data, 
 (TEST) eGeMAPS + FAUs: 57.41, Deep Spectrum + FAUs: 44.44
 
 
-#LIBRARY DEPENDENCIES
+# LIBRARY DEPENDENCIES
 
 Besides using Matlab (or Octave), the liblinear library (https://github.com/cjlin1/liblinear) needs to be installed to use these scripts.
 
-#HOW TO SET UP
+# HOW TO SET UP
 
 You only need to provide the local folder containing the baseline scripts and the baseline features, and the path to the liblinear library in the Config.m file.
 
@@ -47,7 +47,7 @@ local_folder/
 	scripts_BDS/
 	labels_metadata.csv
 
-#HOW TO RUN
+# HOW TO RUN
 
 To replicate the baseline results, simply run the main.m file.
 Both modality and representation specific results can be replicated independently using the corresponding script; classification_audio/video/audiovideo_MFCCs/eGeMAPS/DeepSpectrum/AUs/BoW_frame/turn/session.m; the script running fusion must be performed after the replication of the modality dependent results as it requires the a posteriori probabilities.
