@@ -1,5 +1,5 @@
-# Audio/Visual Emotion Challenge 2018
-Baseline scripts of the 8th Audio/Visual Emotion Challenge
+# Audio/Visual Emotion Challenge (AVEC) 2018
+Baseline scripts of the 8th Audio/Visual Emotion Challenge.
 
 ## extract_features/:
 
