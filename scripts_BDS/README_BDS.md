@@ -29,7 +29,6 @@ Performance on the test set for the best two representations for audio and the b
 Fusion of each best audio representation with the one obtained from video data, which is performed by another SVMs model learned on the a posteriori probabilities estimated from the frame-level or turn-level decisions, or by a logistic function for the session-level features, i.e., FAUs, performs as follows:
 
 (DEV)  eGeMAPS + FAUs: 60.32, Deep Spectrum + FAUs: 63.49
-
 (TEST) eGeMAPS + FAUs: 57.41, Deep Spectrum + FAUs: 44.44
 
 
