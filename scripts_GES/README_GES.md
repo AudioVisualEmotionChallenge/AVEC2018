@@ -13,7 +13,7 @@ The emotion recognition system exploits audio, video and physiological signals, 
 More precisely, audio features include:
 - functionals of Low-Level-Descriptors using the eGeMAPS hand-crafted feature set with openSMILE; fixed analysis windows with size ranging from 3 seconds to 9 seconds,
 - Bags-of-Audio-Words using openXBOW; codebook size is 100, soft assignment, words computed from 12 MFCCs + log energy, with delta and delta-delta; same window size as used for eGeMAPS,
-- unsupervised features using auDeep; a representation of the raw waveform is learned by a deep autoencoder where sparse features are obtained by the activation function of each neuron of the hidden to last layer connection. 
+- unsupervised features using Deep Spectrum; a representation of the spectrogram of the waveform is obtained by feeding the obtained images into AlexNet, a deep pre-trained model used to recognise objects from images. 
 
 Video features include:
 - functionals of appearance and geometric based features (same set as used in the AVEC 2016 MASC Sub-challenfge),
@@ -44,8 +44,7 @@ Two different late fusion strategies are then compared:
 Optimisation of the regression models used for the fusion processes includes only the regularisation parameter alpha. 
 Replication of the best performing series of predictions is done in case the fusion deteriorates the performance.
 
-Fusions are also contextualised to see if it could improve the CCC.
-This is done by stacking frame and testing it with differents type of context : left/center/right.
+Fusions are also contextualised using either, past, future, or past+future information with different size of context; frames are simply stacked in a higher dimensional vector. The type and size of context are optimised as hyper-parameters of the model.
 
 #LIBRARY DEPENDENCIES
 
