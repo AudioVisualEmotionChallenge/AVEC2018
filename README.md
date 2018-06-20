@@ -5,7 +5,13 @@ Baseline scripts of the 8th Audio/Visual Emotion Challenge
 
 scripts_BDS/:  
 
-Baseline scripts (Python 2) for the Bipolar Disorder Sub-Challenge (BDS) - coming soon!
+Baseline scripts (Matlab) for the Bipolar Disorder Sub-Challenge (BDS)
+
+* main.m: Reproduce all baseline recognition results.
+
+* config.m: Configuration file for the scripts (path to data and liblinear).
+
+See the readme_BDS.md in the folder for setup and informations.
 
 scripts_CES/:  
 
