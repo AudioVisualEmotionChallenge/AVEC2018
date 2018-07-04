@@ -104,7 +104,7 @@ To perform monomodal/multimodal emotion recognition:
 #HOW TO INSTALL ON LINUX (tested on Ubuntu 16.04/14.04)
 
 - First install python2.7 : "sudo apt-get install python"
-- Install pip : "sudo apt-get install pip"
+- Install pip : "sudo apt-get install python-pip"
 - Install the libraries : "python -m pip install --user numpy scipy matplotlib liac-arff sklearn"
 - Go in the liblinear-2.20 folder in the repository, you need to compile it (make)
 - Then go to the python folder within liblinear and compile it too (make)
